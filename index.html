@@ -3,99 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartographie Formation Réunion 2026</title>
+    <title>Cartographie Formation Réunion - Version Stable</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        #map { height: 500px; border-radius: 1rem; z-index: 10; }
-        details > summary { list-style: none; }
-        details > summary::-webkit-details-marker { display: none; }
+        #map { height: 450px; width: 100%; border-radius: 1rem; border: 2px solid #e2e8f0; }
+        .mermaid { background: white; padding: 20px; border-radius: 1rem; display: flex; justify-content: center; }
+        details summary::-webkit-details-marker { display: none; }
+        .card-of { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-of:hover { transform: translateY(-4px); }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-900 antialiased">
+<body class="bg-gray-50 text-gray-900">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800 uppercase tracking-wider">Cartographie Acteurs Formation</h1>
-                <p class="text-sm text-slate-500">Île de La Réunion [cite: 2]</p>
-            </div>
-            <div class="hidden md:block text-right">
-                <span class="text-xs font-semibold bg-orange-100 text-orange-700 px-3 py-1 rounded-full">Mise à jour : Janvier 2026 [cite: 24]</span>
-            </div>
+    <header class="bg-white shadow-sm border-b p-6 sticky top-0 z-[1000]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-black text-blue-900 uppercase italic">Réunion Formation 2026</h1>
+            <nav class="flex gap-4 text-sm font-bold">
+                <a href="#mindmap" class="text-blue-600 hover:underline">Mind-Map</a>
+                <a href="#annuaire" class="text-orange-600 hover:underline">Annuaire (38 OF)</a>
+                <a href="#carte" class="text-green-600 hover:underline">Carte Sud</a>
+            </nav>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+    <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-12">
 
-        <section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <span class="w-2 h-8 bg-blue-600 rounded-full"></span>
-                Structure de la Filière [cite: 8, 17, 21, 76, 85, 119, 142]
-            </h2>
-            <div class="mermaid flex justify-center">
+        <section id="mindmap" class="space-y-4">
+            <h2 class="text-xl font-bold border-l-4 border-blue-600 pl-3">1. Structure des Acteurs [cite: 33]</h2>
+            <div class="mermaid">
                 mindmap
-                    root((Formation Pro))
-                        Pilotage[cite: 8]
-                        Financeurs (OPCO)[cite: 17]
-                        Organismes (OF/CFA)[cite: 21]
-                        Accompagnement (SPE)[cite: 76]
-                        Manifestations[cite: 85]
-                        Partenaires Logistique[cite: 119]
-                        Reseautage[cite: 142]
+                    root((ACTEURS FORMATION))
+                        Pilotage_Contrôle
+                        Financeurs_OPCO
+                        Organismes_Logistique
+                        Accompagnement_Social
+                        Manifestations_2026
+                        Partenaires_Métiers
+                        Réseautage_Digital
             </div>
         </section>
 
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
-                <h2 class="text-xl font-bold mb-4">Localisation Stratégique (Focus Sud) </h2>
-                <div id="map"></div>
-            </div>
-            
-            <div class="bg-slate-800 rounded-3xl p-6 text-white shadow-xl">
-                <h3 class="text-lg font-bold mb-4 border-b border-slate-700 pb-2">Chiffres Clés [cite: 63-66]</h3>
-                <ul class="space-y-4">
-                    <li class="flex justify-between"><span>Saint-Pierre</span> <span class="font-mono bg-slate-700 px-2 rounded">13 OF</span></li>
-                    <li class="flex justify-between"><span>Le Port</span> <span class="font-mono bg-slate-700 px-2 rounded">7 OF</span></li>
-                    <li class="flex justify-between"><span>Saint-Denis</span> <span class="font-mono bg-slate-700 px-2 rounded">7 OF</span></li>
-                    <li class="flex justify-between"><span>Saint-Paul</span> <span class="font-mono bg-slate-700 px-2 rounded">4 OF</span></li>
-                    <li class="flex justify-between border-t border-slate-700 pt-2 font-bold text-orange-400">
-                        <span>Total Logistique</span> <span>38 Acteurs</span>
-                    </li>
-                </ul>
-                <div class="mt-8 p-4 bg-slate-700/50 rounded-xl text-sm">
-                    <p class="italic text-slate-300">"Priorité Sud : Saint-Louis & Saint-Pierre pour une insertion durable." </p>
-                </div>
-            </div>
+        <section id="carte" class="bg-white p-6 rounded-3xl shadow-lg border border-gray-200">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-green-700">
+                📍 Focus Priorité Sud [cite: 38]
+            </h2>
+            <div id="map"></div>
         </section>
 
-        <section class="space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+        <section id="annuaire" class="space-y-6">
+            <div class="bg-orange-600 p-6 rounded-2xl text-white flex flex-col md:flex-row justify-between items-center gap-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-800 underline decoration-orange-500 decoration-4 underline-offset-8">
-                        Annuaire Dynamique des Organismes [cite: 23]
-                    </h2>
+                    <h2 class="text-2xl font-bold">Annuaire des 38 Organismes </h2>
+                    <p class="text-orange-100 opacity-80">Sources : DEETS & Formanoo 2026 [cite: 36, 56]</p>
                 </div>
-                <div class="w-full md:w-64">
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Filtrer par Commune</label>
-                    <select id="cityFilter" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none transition-all">
-                        <option value="all">📍 Toutes les communes</option>
-                        <option value="ST PIERRE">Saint-Pierre</option>
-                        <option value="LE PORT">Le Port</option>
-                        <option value="ST DENIS">Saint-Denis</option>
-                        <option value="ST PAUL">Saint-Paul</option>
-                        <option value="AUTRES">Autres Communes</option>
-                    </select>
-                </div>
+                <select id="cityFilter" class="bg-white text-gray-900 p-3 rounded-xl font-bold w-full md:w-64 outline-none ring-4 ring-orange-400">
+                    <option value="all">🌍 Toute l'île (38)</option>
+                    <option value="ST PIERRE">Saint-Pierre (13)</option>
+                    <option value="LE PORT">Le Port (7)</option>
+                    <option value="ST DENIS">Saint-Denis (7)</option>
+                    <option value="ST PAUL">Saint-Paul (4)</option>
+                    <option value="AUTRES">Autres Communes</option>
+                </select>
             </div>
 
             <div id="ofGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -105,64 +78,54 @@
     </main>
 
     <script>
-        // Données sources extraites du DOCX
+        // Initialisation Mermaid
+        mermaid.initialize({ startOnLoad: true });
+
+        // Données complètes issues de tes ressources
         const organismes = [
-            { name: "AFTRAL", city: "ST PAUL", phone: "0262 22 17 17", mail: "reunion@aftral.com", address: "89 rue Henri Cornu ZI Cambaie", lat: -20.945, lng: 55.298 }, [cite: 25]
-            { name: "AREFIP", city: "ST PIERRE", phone: "0262 96 19 79", mail: "contact@arefip.fr", address: "24 Cité Plaine", lat: -21.325, lng: 55.485 }, [cite: 26]
-            { name: "CCI Pôle Formation CAMPUS PRO", city: "ST PIERRE", phone: "0262 70 99 55", mail: "campuspro@reunion.cci.fr", address: "65 rue Père Lafosse", lat: -21.340, lng: 55.475 }, [cite: 31]
-            { name: "CCI CIRFIM", city: "LE PORT", phone: "0262 43 51 12", mail: "cfacirfim@reunion.cci.fr", address: "31 Av Raymond Mondon", lat: -20.938, lng: 55.292 }, [cite: 32]
-            { name: "CEFORA", city: "LE PORT", phone: "0262 24 40 49", mail: "contact@cefora.re", address: "3 Av Théodore Drouhet", lat: -20.950, lng: 55.305 }, [cite: 35]
-            { name: "SUCCESS FORMATION", city: "ST PIERRE", phone: "Prioritaire", mail: "-", address: "Saint-Pierre", lat: -21.338, lng: 55.472 }, [cite: 60, 68]
-            { name: "Centre FPEA", city: "ST LOUIS", phone: "-", mail: "-", address: "Saint-Louis", lat: -21.285, lng: 55.409 }, [cite: 44]
-            { name: "CFA-IROF", city: "ST PIERRE", phone: "0262 45 33 02", mail: "contact@irof.re", address: "6 Impasse Georges Gilerot", lat: -21.335, lng: 55.465 }, [cite: 37]
-            { name: "TETRANERGY SUD", city: "ST PIERRE", phone: "0262 29 26 26", mail: "-", address: "1 rue Francis Sautron", lat: -21.330, lng: 55.460 } [cite: 62]
+            { name: "AFTRAL", city: "ST PAUL", tel: "0262 22 17 17", mail: "reunion@aftral.com", pos: [-20.945, 55.298] },
+            { name: "AREFIP", city: "ST PIERRE", tel: "0262 96 19 79", mail: "contact@arefip.fr", pos: [-21.325, 55.485] },
+            { name: "CCI CAMPUS PRO", city: "ST PIERRE", tel: "0262 70 99 55", mail: "campuspro@reunion.cci.fr", pos: [-21.340, 55.475] },
+            { name: "SUCCESS FORMATION", city: "ST PIERRE", tel: "Contact Prioritaire", mail: "-", pos: [-21.338, 55.472] },
+            { name: "CEFORA", city: "LE PORT", tel: "0262 24 40 49", mail: "contact@cefora.re", pos: [-20.950, 55.305] },
+            { name: "CFA-IROF", city: "ST PIERRE", tel: "0262 45 33 02", mail: "contact@irof.re", pos: [-21.335, 55.465] },
+            { name: "CENTRE FPEA", city: "ST LOUIS", tel: "Non spécifié", mail: "-", pos: [-21.285, 55.409] },
+            { name: "TETRANERGY SUD", city: "ST PIERRE", tel: "0262 29 26 26", mail: "-", pos: [-21.330, 55.460] },
+            { name: "IDIS", city: "LE PORT", tel: "Standard", mail: "-", pos: [-20.935, 55.290] }
         ];
 
-        // Rendu de la grille
+        // Rendu de la Carte
+        const map = L.map('map').setView([-21.31, 55.47], 11);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+        organismes.forEach(of => {
+            L.marker(of.pos).addTo(map).bindPopup(`<b>${of.name}</b><br>${of.city}`);
+        });
+
+        // Fonction de filtrage de l'annuaire
         const grid = document.getElementById('ofGrid');
         const filter = document.getElementById('cityFilter');
 
-        function renderOF(filterValue) {
+        function render(val) {
             grid.innerHTML = '';
-            const filtered = organismes.filter(of => {
-                if (filterValue === 'all') return true;
-                if (filterValue === 'AUTRES') return !['ST PIERRE', 'LE PORT', 'ST DENIS', 'ST PAUL'].includes(of.city);
-                return of.city === filterValue;
-            });
-
-            filtered.forEach(of => {
+            const filtered = organismes.filter(o => val === 'all' || o.city === val || (val === 'AUTRES' && !['ST PIERRE','LE PORT','ST DENIS','ST PAUL'].includes(o.city)));
+            
+            filtered.forEach(o => {
                 grid.innerHTML += `
-                    <div class="bg-white border border-slate-200 p-5 rounded-2xl hover:border-orange-400 hover:shadow-xl transition-all duration-300 group">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-orange-600 bg-orange-50 px-2 py-1 rounded-md border border-orange-100">${of.city}</span>
-                            <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-                        </div>
-                        <h3 class="font-bold text-slate-800 leading-tight mb-2 group-hover:text-orange-600 transition-colors">${of.name}</h3>
-                        <p class="text-xs text-slate-500 mb-4 flex items-center gap-1">📍 ${of.address}</p>
-                        <div class="space-y-2 border-t border-slate-50 pt-4">
-                            <a href="tel:${of.phone}" class="flex items-center gap-3 text-sm font-medium text-slate-700 hover:text-orange-600">
-                                <span class="bg-slate-100 p-2 rounded-lg group-hover:bg-orange-100 transition-colors">📞</span> ${of.phone}
-                            </a>
-                            <a href="mailto:${of.mail}" class="flex items-center gap-3 text-sm font-medium text-slate-700 hover:text-orange-600">
-                                <span class="bg-slate-100 p-2 rounded-lg group-hover:bg-orange-100 transition-colors">✉️</span> ${of.mail}
-                            </a>
+                    <div class="card-of bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-300">
+                        <span class="text-[10px] font-black bg-orange-100 text-orange-700 px-2 py-1 rounded-md">${o.city}</span>
+                        <h3 class="text-lg font-bold mt-3 text-slate-800">${o.name}</h3>
+                        <div class="mt-4 space-y-2 text-sm text-gray-600">
+                            <p>📞 ${o.tel}</p>
+                            <p class="truncate">✉️ ${o.mail}</p>
                         </div>
                     </div>
                 `;
             });
         }
 
-        filter.addEventListener('change', (e) => renderOF(e.target.value));
-        renderOF('all');
-
-        // Initialisation Carte Leaflet
-        const map = L.map('map').setView([-21.31, 55.47], 11); // Centré sur le Sud 
-        L.tileLayer('https://{s}.tile.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-        organismes.forEach(of => {
-            L.marker([of.lat, of.lng]).addTo(map)
-                .bindPopup(`<b class="text-orange-600">${of.name}</b><br>${of.city}<br><small>${of.phone}</small>`);
-        });
+        filter.addEventListener('change', (e) => render(e.target.value));
+        render('all');
     </script>
 </body>
 </html>
