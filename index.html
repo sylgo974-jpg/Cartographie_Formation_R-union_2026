@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Cartographie FP Réunion 2026 — Mind map + Carte</title>
 
-  <!-- Leaflet (carte) -->
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
   <style>
-    /* ==========================================================
-      PALETTE UTILISATEUR (imposée)
-      ========================================================== */
     :root{
       --c0:#000000;  /* noir */
       --c1:#fc772c;  /* orange */
@@ -22,9 +19,6 @@
 
       --textOnDark: rgba(255,255,255,.92);
       --mutedOnDark: rgba(255,255,255,.72);
-
-      --stroke: rgba(255,255,255,.16);
-      --panel: rgba(255,255,255,.08);
 
       --shadow: 0 24px 80px rgba(0,0,0,.55);
       --shadowSoft: 0 14px 45px rgba(0,0,0,.35);
@@ -44,8 +38,6 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color: var(--textOnDark);
       overflow-x:hidden;
-
-      /* fond: noir + halos orange/rouge + un soupçon de gris */
       background:
         radial-gradient(900px 600px at 18% 22%, rgba(252,119,44,.20), transparent 60%),
         radial-gradient(900px 700px at 78% 20%, rgba(206,42,69,.20), transparent 55%),
@@ -56,32 +48,12 @@
 
     /* décor */
     .bg-shapes{position:fixed; inset:0; pointer-events:none; opacity:.95;}
-    .plus{
-      position:absolute; width:34px; height:34px;
-      opacity:.65; filter: drop-shadow(0 10px 25px rgba(0,0,0,.6));
-    }
-    .plus:before,.plus:after{
-      content:""; position:absolute; inset:0; margin:auto;
-      background:rgba(252,119,44,.65); border-radius:2px;
-    }
+    .plus{position:absolute; width:34px; height:34px; opacity:.65; filter: drop-shadow(0 10px 25px rgba(0,0,0,.6));}
+    .plus:before,.plus:after{content:""; position:absolute; inset:0; margin:auto; background:rgba(252,119,44,.65); border-radius:2px;}
     .plus:before{width:6px; height:34px;}
     .plus:after{width:34px; height:6px;}
-    .tri{
-      position:absolute; width:0; height:0;
-      border-left:16px solid transparent;
-      border-right:16px solid transparent;
-      border-bottom:26px solid rgba(241,215,188,.20);
-      transform: rotate(-18deg);
-      opacity:.7;
-    }
-    .ring{
-      position:absolute; width:46px; height:46px;
-      border:6px solid rgba(206,42,69,.35);
-      border-right-color: transparent;
-      border-top-color: transparent;
-      border-radius:999px;
-      opacity:.70;
-    }
+    .tri{position:absolute; width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent; border-bottom:26px solid rgba(241,215,188,.20); transform: rotate(-18deg); opacity:.7;}
+    .ring{position:absolute; width:46px; height:46px; border:6px solid rgba(206,42,69,.35); border-right-color: transparent; border-top-color: transparent; border-radius:999px; opacity:.70;}
 
     header{
       padding: 18px 18px 10px;
@@ -95,9 +67,7 @@
     header h1{margin:0; font-size: clamp(18px, 2.1vw, 28px)}
     header p{margin:6px 0 0; color: var(--mutedOnDark); font-size: 14px; line-height:1.45; max-width: 92ch}
 
-    .switch{
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center;
-    }
+    .switch{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center;}
     .chip{
       border: 1px solid rgba(255,255,255,.18);
       background: rgba(255,255,255,.10);
@@ -116,15 +86,9 @@
       border-color: rgba(255,255,255,.22);
     }
 
-    .wrap{
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 10px 18px 18px;
-    }
-
+    .wrap{max-width: 1400px; margin: 0 auto; padding: 10px 18px 18px;}
     .view{display:none;}
     .view.active{display:block;}
-
     .card{
       background: rgba(255,255,255,.07);
       border: 1px solid rgba(255,255,255,.14);
@@ -134,15 +98,10 @@
       backdrop-filter: blur(10px);
     }
 
-    /* ==========================================================
+    /* =======================
       VIEW 1 — MIND MAP
-      ========================================================== */
-    .mm-grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-      align-items:stretch;
-    }
+    ======================= */
+    .mm-grid{display:grid; grid-template-columns: 1.1fr .9fr; gap: 14px; align-items:stretch;}
 
     .mindmap{
       position:relative;
@@ -161,7 +120,7 @@
 
     .stage{
       position:relative;
-      width: min(580px, 100%);
+      width: min(680px, 100%); /* plus large = plus d’air */
       aspect-ratio: 1 / 1;
       display:grid;
       place-items:center;
@@ -178,15 +137,7 @@
       z-index:0;
     }
 
-    svg.connectors{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      z-index:1;
-      pointer-events:none;
-      overflow:visible;
-    }
+    svg.connectors{position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; overflow:visible;}
     .link{
       stroke: rgba(241,215,188,.35);
       stroke-width: 2;
@@ -194,13 +145,9 @@
       stroke-linecap:round;
       stroke-dasharray: 8 8;
       opacity:.85;
-      transition: opacity var(--dur) var(--ease), stroke-dasharray var(--dur) var(--ease);
+      transition: opacity var(--dur) var(--ease), stroke-dasharray var(--dur) var(--ease), stroke var(--dur) var(--ease);
     }
-    .link.is-active{
-      opacity:1;
-      stroke-dasharray:none;
-      stroke: rgba(252,119,44,.95);
-    }
+    .link.is-active{opacity:1; stroke-dasharray:none; stroke: rgba(252,119,44,.95);}
 
     .hub{
       position:relative;
@@ -216,26 +163,7 @@
       z-index:3;
       color: #000;
     }
-    .hub .tag{
-      position:absolute;
-      top:-14px;
-      left:50%;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg, rgba(252,119,44,.95), rgba(206,42,69,.90));
-      color:#fff;
-      font-weight:900;
-      font-size: 12px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.35);
-      letter-spacing:.2px;
-    }
-    .hub .center-title{
-      font-weight: 950;
-      font-size: clamp(12px, 1.6vw, 15px);
-      line-height:1.15;
-      text-align:center;
-    }
+    .hub .center-title{font-weight: 950; font-size: clamp(12px, 1.6vw, 15px); line-height:1.15; text-align:center;}
 
     .node{
       position:absolute;
@@ -254,59 +182,25 @@
       cursor:pointer;
       user-select:none;
       z-index:2;
-
       transform: translate(-50%,-50%) translateZ(0);
       transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), filter var(--dur) var(--ease);
       outline:none;
     }
-    .node:hover{
-      transform: translate(-50%,-50%) scale(1.04);
-      filter: brightness(1.02);
-      box-shadow: 0 18px 45px rgba(0,0,0,.45);
-    }
-    .node.is-active{
-      transform: translate(-50%,-50%) scale(1.08);
-      box-shadow: 0 22px 55px rgba(0,0,0,.55);
-      outline: 2px solid rgba(252,119,44,.70);
-    }
-    .node:focus-visible{
-      box-shadow: 0 0 0 4px rgba(252,119,44,.35), 0 22px 55px rgba(0,0,0,.55);
-    }
+    .node:hover{transform: translate(-50%,-50%) scale(1.04); filter: brightness(1.02); box-shadow: 0 18px 45px rgba(0,0,0,.45);}
+    .node.is-active{transform: translate(-50%,-50%) scale(1.08); box-shadow: 0 22px 55px rgba(0,0,0,.55); outline: 2px solid rgba(252,119,44,.70);}
+    .node:focus-visible{box-shadow: 0 0 0 4px rgba(252,119,44,.35), 0 22px 55px rgba(0,0,0,.55);}
+
     .node .tag{
-      position:absolute;
-      top:-12px;
-      left:12px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding: 7px 10px;
-      border-radius: 12px;
-      color:#fff;
-      font-weight:950;
-      font-size: 11px;
+      position:absolute; top:-12px; left:12px;
+      display:flex; align-items:center; gap:8px;
+      padding: 7px 10px; border-radius: 12px;
+      color:#fff; font-weight:950; font-size: 11px;
       box-shadow: 0 12px 28px rgba(0,0,0,.35);
-      letter-spacing:.2px;
-      white-space:nowrap;
+      letter-spacing:.2px; white-space:nowrap;
     }
-    .node .tag .dot{
-      width:10px; height:10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.92);
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,.12);
-    }
-    .node .label{
-      font-weight: 950;
-      font-size: 13px;
-      line-height:1.15;
-      padding-top: 10px;
-    }
-    .node .mini{
-      display:block;
-      margin-top:6px;
-      font-size: 11px;
-      font-weight: 900;
-      color: rgba(92,100,107,.95);
-    }
+    .node .tag .dot{width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.92); box-shadow: inset 0 0 0 2px rgba(0,0,0,.12);}
+    .node .label{font-weight: 950; font-size: 13px; line-height:1.15; padding-top: 10px;}
+    .node .mini{display:block; margin-top:6px; font-size: 11px; font-weight: 900; color: rgba(92,100,107,.95);}
 
     .panel{
       border-radius: var(--radius);
@@ -322,15 +216,11 @@
     .panel-header{
       background: linear-gradient(90deg, rgba(252,119,44,.95), rgba(206,42,69,.90));
       padding: 14px 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .panel-header h2{margin:0; font-size: 14px; letter-spacing:.2px;}
     .panel-header .badge{
-      font-size: 11px;
-      font-weight: 950;
+      font-size: 11px; font-weight: 950;
       background: rgba(0,0,0,.20);
       border: 1px solid rgba(255,255,255,.18);
       padding: 6px 10px;
@@ -349,15 +239,11 @@
       transform-origin: top;
       transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
     }
-    .mm-card.is-enter{
-      opacity:0;
-      transform: translateY(8px) scale(.98);
-    }
+    .mm-card.is-enter{opacity:0; transform: translateY(8px) scale(.98);}
     .mm-card h3{margin:0 0 8px; font-size: 15px; letter-spacing:.2px;}
     .mm-card p{margin:0 0 10px; color: rgba(0,0,0,.82); font-size: 13px; line-height:1.45;}
     .mm-card ul{margin: 0 0 10px; padding-left: 18px; color: rgba(0,0,0,.82); font-size: 13px; line-height:1.45;}
     .mm-card li{margin: 6px 0}
-
     .pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top: 10px;}
     .pill{
       background: linear-gradient(90deg, rgba(92,100,107,.95), rgba(0,0,0,.92));
@@ -372,8 +258,7 @@
 
     .panel-footer{
       padding: 12px 16px 14px;
-      display:flex;
-      gap:10px;
+      display:flex; gap:10px;
       border-top: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.10);
     }
@@ -393,36 +278,20 @@
       background: linear-gradient(90deg, rgba(252,119,44,.95), rgba(206,42,69,.90));
       border-color: rgba(255,255,255,.22);
     }
+    .mm-card a{color: #000; font-weight: 950; text-decoration: underline; text-underline-offset: 2px;}
 
-    .mm-card a{
-      color: #000;
-      font-weight: 950;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    /* ==========================================================
+    /* =======================
       VIEW 2 — CARTE + TABLE
-      ========================================================== */
-    .map-grid{
-      display:grid;
-      grid-template-columns: 1.35fr .85fr;
-      gap: 14px;
-      align-items:stretch;
-    }
-
+    ======================= */
+    .map-grid{display:grid; grid-template-columns: 1.35fr .85fr; gap: 14px; align-items:stretch;}
     .map-head{
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.10);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
     }
     .map-head b{font-size: 13px}
     .map-head span{display:block; font-size: 12px; color: var(--mutedOnDark); margin-top:3px}
-
     #map{width:100%; min-height: 650px;}
 
     .side{display:flex; flex-direction:column; min-height: 650px;}
@@ -430,15 +299,9 @@
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.10);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+      display:flex; flex-direction:column; gap:10px;
     }
-    .filters{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
+    .filters{display:grid; grid-template-columns: 1fr; gap: 8px;}
     .filters input, .filters select{
       width:100%;
       padding: 10px 10px;
@@ -449,13 +312,7 @@
       outline:none;
     }
     .filters input::placeholder{color: rgba(255,255,255,.55)}
-    .meta{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      color: var(--mutedOnDark);
-      font-size: 12px;
-    }
+    .meta{display:flex; justify-content:space-between; gap:10px; color: var(--mutedOnDark); font-size: 12px;}
     .note{
       padding: 10px 12px;
       border-radius: 14px;
@@ -481,6 +338,7 @@
     tr.row{cursor:pointer; transition: background var(--dur) var(--ease);}
     tr.row:hover{background: rgba(255,255,255,.06)}
     tr.row.active{background: rgba(252,119,44,.16); outline: 1px solid rgba(252,119,44,.32);}
+
     .badge{
       display:inline-block;
       padding: 4px 8px;
@@ -493,6 +351,8 @@
     }
     .badge.ok{background: rgba(241,215,188,.12)}
     .badge.no{background: rgba(206,42,69,.18)}
+
+    .custom-marker{background: transparent; border: none;}
 
     @media (max-width: 1050px){
       .mm-grid, .map-grid{grid-template-columns: 1fr}
@@ -515,8 +375,7 @@
     <div>
       <h1>Cartographie acteurs FP Réunion (2026)</h1>
       <p>
-        Deux modes : <b>Mind map (7 branches)</b> et <b>Carte + table par commune</b>.
-        La carte place uniquement les acteurs qui ont une <b>adresse postale</b> (géocodage OSM + cache).
+        Deux modes : <b>Mind map</b> et <b>Carte</b>. Clique une branche : tu arrives direct sur la carte filtrée sur la catégorie.
       </p>
     </div>
     <div class="switch" role="tablist" aria-label="Changer de vue">
@@ -539,7 +398,6 @@
             <svg class="connectors" id="mmSvg" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg>
 
             <div class="hub" id="mmHub">
-              <div class="tag">Thème central</div>
               <div class="center-title" id="mmCenterTitle">Acteurs formation pro<br>Réunion (2026)</div>
             </div>
           </div>
@@ -554,18 +412,14 @@
           <div class="panel-body">
             <div class="mm-card is-enter" id="mmCard">
               <h3>📌 À propos du document</h3>
-              <p>
-                Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).
-              </p>
+              <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
               <ul>
                 <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
-                <li><b>Focus</b> : île complète avec priorité Sud (Saint-Louis, Saint-Pierre)</li>
-                <li><b>Orientation</b> : formation + accompagnement social pour insertion durable</li>
+                <li><b>Focus</b> : île complète avec priorité Sud</li>
+                <li><b>Orientation</b> : formation + accompagnement social</li>
               </ul>
               <div class="pill-row" aria-hidden="true">
-                <span class="pill">Réunion</span>
-                <span class="pill">Insertion</span>
-                <span class="pill">Annuaire</span>
+                <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
               </div>
             </div>
           </div>
@@ -584,12 +438,12 @@
         <section class="card">
           <div class="map-head">
             <div>
-              <b>Carte</b>
-              <span>Marqueur ↔ ligne synchronisés • Filtre par commune</span>
+              <b>Carte (catégories)</b>
+              <span>Filtre catégorie + commune • Marqueur ↔ ligne</span>
             </div>
             <div class="map-actions">
               <button class="btn" id="fitBtn" type="button">Ajuster la vue</button>
-              <button class="btn" id="regeoBtn" type="button">Re-géocoder (force)</button>
+              <button class="btn" id="regeoBtn" type="button">Re-géocoder</button>
               <button class="btn primary" id="clearBtn" type="button">Tout afficher</button>
             </div>
           </div>
@@ -599,6 +453,9 @@
         <aside class="card side">
           <div class="side-head">
             <div class="filters">
+              <select id="catSel">
+                <option value="TOUTES">Toutes catégories</option>
+              </select>
               <select id="communeSel">
                 <option value="TOUTES">Toutes communes</option>
               </select>
@@ -611,8 +468,7 @@
             </div>
 
             <div class="note">
-              ⚠️ Géocodage via Nominatim/OSM (internet requis).  
-              1 requête/sec + cache navigateur (<code>localStorage</code>).
+              ⚠️ Géocodage via Nominatim/OSM (internet requis). 1 req/sec + cache navigateur.
             </div>
           </div>
 
@@ -621,6 +477,7 @@
               <thead>
                 <tr>
                   <th>Acteur</th>
+                  <th>Catégorie</th>
                   <th>Commune</th>
                   <th>Adresse</th>
                   <th>Carte</th>
@@ -638,9 +495,7 @@
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <script>
-    /* ==========================================================
-      UTIL
-      ========================================================== */
+    /* UTIL */
     function escapeHTML(str){
       return String(str)
         .replaceAll("&","&amp;")
@@ -652,211 +507,94 @@
     function degToRad(deg){ return deg * Math.PI / 180; }
     function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-    /* ==========================================================
-      VIEW SWITCH
-      ========================================================== */
+    /* VIEW SWITCH */
     const btnMind = document.getElementById("btnMind");
     const btnMap  = document.getElementById("btnMap");
     const viewMind = document.getElementById("viewMind");
     const viewMap  = document.getElementById("viewMap");
-
     let mapInitialized = false;
 
     function setView(name){
       const isMind = name === "mind";
-
       viewMind.classList.toggle("active", isMind);
       viewMap.classList.toggle("active", !isMind);
-
       btnMind.classList.toggle("active", isMind);
       btnMap.classList.toggle("active", !isMind);
-
       btnMind.setAttribute("aria-selected", String(isMind));
       btnMap.setAttribute("aria-selected", String(!isMind));
 
       if(!isMind){
         initMapOnce();
-        setTimeout(() => {
-          if(window.__map) window.__map.invalidateSize();
-        }, 80);
+        setTimeout(() => { if(window.__map) window.__map.invalidateSize(); }, 80);
       }
     }
-
     btnMind.addEventListener("click", () => setView("mind"));
     btnMap.addEventListener("click",  () => setView("map"));
 
-    /* ==========================================================
-      1) MIND MAP — Données (7 branches)
-      Couleurs : on recycle UNIQUEMENT ta palette (5 couleurs)
-      ========================================================== */
-    const PALETTE = ["#fc772c", "#ce2a45", "#5c646b", "#000000", "#f1d7bc"]; // uniquement tes couleurs
+    /* CATEGORIES + COULEURS */
+    const CAT_LABEL = {
+      PILOTAGE:"Pilotage",
+      FINANCEUR:"Financeur / OPCO",
+      OF:"Organisme de formation",
+      SPE:"SPE / Insertion",
+      RESEAU:"Réseau / Partenaire"
+    };
 
+    function categoryColor(cat){
+      switch(cat){
+        case "PILOTAGE": return "#000000";
+        case "FINANCEUR": return "#5c646b";
+        case "OF": return "#fc772c";
+        case "SPE": return "#ce2a45";
+        case "RESEAU": return "#f1d7bc";
+        default: return "#5c646b";
+      }
+    }
+
+    /* =======================
+      1) MIND MAP — DATA
+    ======================= */
     const MM_DATA = {
       centerTitle: "Acteurs formation pro — Réunion (2026)",
       branches: [
-        { id:"b1", title:"Pilotage & contrôle", subtitle:"Institutionnel / contrôle OF", icon:"🏛️",
-          content:{
-            intro:"Instances de pilotage et contrôle : DEETS Réunion, Région Réunion, dispositifs liés (apprentissage, certifications, VAE, FSE…).",
-            sections:[
-              { heading:"DEETS Réunion", bullets:[
-                "Siège : 112 rue de la République, 97400 Saint-Denis",
-                "Téléphone : 02 62 94 07 07",
-                "Email : deets-974.direction@deets.gouv.fr",
-                "Rôles clés : contrôle OF / agréments / VAE / apprentissage / certifications",
-                "Pôle contrôle : 12 Lot. Lemerle, 97400 Saint-Denis | 02 62 90 21 41"
-              ]},
-              { heading:"Région Réunion", bullets:[
-                "Rôles annoncés : programmation FP / apprentissage / FSE / CPRDFOP"
-              ]}
-            ],
-            pills:["DEETS","Région","Contrôle"]
-          }
-        },
-        { id:"b2", title:"Financeurs (OPCO)", subtitle:"11 OPCO par branche", icon:"💶",
-          content:{
-            intro:"Les 11 OPCO interviennent par branches professionnelles (extrait du document). Ressource citée : trouver-mon-opco.fr",
-            sections:[
-              { heading:"Exemples (extrait)", bullets:[
-                "OPCO Mobilités : Transports, logistique — 01 49 71 55 00",
-                "OPCO EP : Artisanat, proximité — 01 45 63 36 36",
-                "AKTO : Services, intérim, OF — 01 44 87 30 00",
-                "OPCO Atlas : Banque, numérique — 01 53 20 58 00",
-                "… + (Santé, OCAPIAT, Opcommerce, Constructys, Uniformation, AFDAS, OPCO 2i)"
-              ]}
-            ],
-            links:[{label:"Ressource citée : trouver-mon-opco.fr", url:"https://www.trouver-mon-opco.fr"}],
-            pills:["OPCO","Financement","Branches pro"]
-          }
-        },
-        { id:"b3", title:"Organismes de formation", subtitle:"Logistique + CFA/OF FPA", icon:"🏫",
-          content:{
-            intro:"Liste complète annoncée : 38 OF/CFA logistique (source indiquée : Formanoo — 22/01/2026).",
-            sections:[
-              { heading:"Extraits (logistique)", bullets:[
-                "AFTRAL — St Paul — 0262 22 17 17 — reunion@aftral.com",
-                "AREFIP — St Pierre — 0262 96 19 79 — contact@arefip.fr",
-                "CCI Campus Pro — St Pierre — 0262 70 99 55 — campuspro@reunion.cci.fr",
-                "CEFORA — Le Port — 0262 24 40 49 — contact@cefora.re",
-                "SUCCESS FORMATION — St Pierre",
-                "TETRANERGY Sud — St Pierre — 0262 29 26 26"
-              ]},
-              { heading:"Résumé par commune (annoncé)", bullets:[
-                "St Pierre (13) | Le Port (7) | St Denis (7) | St Paul (4)",
-                "Ste Marie (1) | St Louis (1) | St Andre (1) | Les Avirons (1) | Bras Panon (1) | L’Étang-Salé (1) | Ste Clotilde (1)"
-              ]}
-            ],
-            pills:["OF/CFA","Logistique","Annuaire"]
-          }
-        },
-        { id:"b4", title:"SPE & accompagnement", subtitle:"Insertion (focus Sud)", icon:"🤝",
-          content:{
-            intro:"Parcours d’insertion (focus Sud) : France Travail, Missions Locales, Cap Emploi & dispositifs d’insertion sociale.",
-            sections:[
-              { heading:"France Travail", bullets:[
-                "Antenne Sud : Saint-Pierre, 40 rue François de Mahy",
-                "Contact : 39 49",
-                "Rôles cités : AIF, AFC, Formanoo"
-              ]},
-              { heading:"Missions Locales Sud (16–25 ans)", bullets:[
-                "Siège (St-Pierre) : 02 62 25 77 20",
-                "Saint-Louis : 02 62 26 28 29 (4 rue du Vieux Moulin)",
-                "Le Tampon : 02 62 27 04 63",
-                "Saint-Joseph : 02 62 56 57 42"
-              ]},
-              { heading:"Cap Emploi & insertion", bullets:[
-                "Cap Emploi : accompagnement handicap — 02 62 41 90 40",
-                "SIAO / SIAF : insertion sociale et hébergement (mentionnés)"
-              ]}
-            ],
-            pills:["France Travail","Missions Locales","Cap Emploi"]
-          }
-        },
-        { id:"b5", title:"Agenda 2026", subtitle:"Salons & semaines thématiques", icon:"📅",
-          content:{
-            intro:"Le document indique qu’à mi-janvier 2026, toutes les dates officielles ne sont pas encore publiées, mais donne des repères + des semaines nationales.",
-            sections:[
-              { heading:"Semaines nationales France Travail 2026 (citées)", bullets:[
-                "Semaine métiers du tourisme : 2–8 février 2026",
-                "Semaine métiers du nucléaire : 9–13 mars 2026",
-                "Semaine métiers du soin & accompagnement : 30 mars–3 avril 2026",
-                "SEEPH : novembre 2026",
-                "Re’start : décembre 2026"
-              ]},
-              { heading:"Semaine nationale Missions Locales (cité)", bullets:[
-                "Du mercredi 7 au vendredi 16 octobre 2026 (France)",
-                "Forums jeunes / emploi-formation, portes ouvertes, ateliers (repères)"
-              ]}
-            ],
-            links:[
-              {label:"mesevenementsemploi.francetravail.fr", url:"https://mesevenementsemploi.francetravail.fr"},
-              {label:"salonemploi.re (relais cité)", url:"https://salonemploi.re"}
-            ],
-            pills:["Événements","Semaines","NORDEV"]
-          }
-        },
-        { id:"b6", title:"Partenaires logistique", subtitle:"Syndicats & fédérations", icon:"🚚",
-          content:{
-            intro:"Acteurs officiels de la filière logistique (local + national) : syndicats patronaux/salariés, associations, négociations CCN, événements sectoriels.",
-            sections:[
-              { heading:"Acteurs à La Réunion (cités)", bullets:[
-                "TLF Réunion : president@tlfreunion.fr | 0692 85 77 84 (Le Port)",
-                "FNTR Réunion : antenne locale — transport routier/logistique",
-                "Syndicats salariés : UR 974, CGT, CGT-FO, CFDT (mentionnés)"
-              ]},
-              { heading:"Acteurs nationaux (cités)", bullets:[
-                "Union TLF : e-tlf.com",
-                "FNTR : fntr.fr",
-                "SNTL : sntl.fr"
-              ]}
-            ],
-            links:[
-              {label:"Union TLF (site cité)", url:"https://www.e-tlf.com"},
-              {label:"FNTR (site cité)", url:"https://www.fntr.fr"},
-              {label:"SNTL (site cité)", url:"https://www.sntl.fr"}
-            ],
-            pills:["TLF","FNTR","Filière"]
-          }
-        },
-        { id:"b7", title:"Réseautage pro", subtitle:"Réseaux sociaux & plateformes", icon:"🌐",
-          content:{
-            intro:"Réseautage : organismes d’État formation pro + associations/confédérations logistique + comptes sociaux cités (LinkedIn, X, Instagram, TikTok).",
-            sections:[
-              { heading:"Organismes (cités)", bullets:[
-                "France compétences — LinkedIn + X : @Fcompetences_fr",
-                "DGEFP — LinkedIn : page dédiée (mention)",
-                "Mon Compte Formation — moncompteformation.gouv.fr"
-              ]},
-              { heading:"Logistique (cités)", bullets:[
-                "France Logistique — LinkedIn",
-                "France Supply Chain — LinkedIn + francesupplychain.org",
-                "Afilog — afilog.org"
-              ]},
-              { heading:"Réseaux (cités)", bullets:[
-                "Instagram : @travail_gouv, @francetravail, @Prefet974",
-                "TikTok : @onestlapourvous (France Travail, mention)"
-              ]}
-            ],
-            links:[
-              {label:"Mon Compte Formation", url:"https://www.moncompteformation.gouv.fr"},
-              {label:"France Supply Chain (site cité)", url:"https://www.francesupplychain.org"},
-              {label:"Afilog (site cité)", url:"https://afilog.org"}
-            ],
-            pills:["LinkedIn","Institutionnel","Communautés"]
-          }
-        }
+        { id:"b1", cat:"PILOTAGE", title:"Pilotage & contrôle", subtitle:"Institutionnel / contrôle OF", icon:"🏛️",
+          content:{ intro:"Instances de pilotage et contrôle : DEETS, Région…",
+            sections:[{heading:"DEETS (extrait)", bullets:["112 rue de la République, 97400 Saint-Denis","Pôle contrôle : 12 Lot. Lemerle, 97400 Saint-Denis"]}],
+            pills:["DEETS","Région","Contrôle"] } },
+        { id:"b2", cat:"FINANCEUR", title:"Financeurs (OPCO)", subtitle:"11 OPCO par branche", icon:"💶",
+          content:{ intro:"Financeurs par branches professionnelles. Ressource citée : trouver-mon-opco.fr",
+            sections:[{heading:"Exemples", bullets:["OPCO Mobilités (logistique)","OPCO EP","AKTO","OPCO Atlas"]}],
+            pills:["OPCO","Financement"] } },
+        { id:"b3", cat:"OF", title:"Organismes de formation", subtitle:"Logistique + CFA/OF", icon:"🏫",
+          content:{ intro:"OF/CFA logistique : liste annoncée (Formanoo 22/01/2026).",
+            sections:[{heading:"Extraits", bullets:["AFTRAL (Saint-Paul)","AREFIP (Saint-Pierre)","CCI Campus Pro (Saint-Pierre)","CEFORA (Le Port)"]}],
+            pills:["OF/CFA","Logistique"] } },
+        { id:"b4", cat:"SPE", title:"SPE & accompagnement", subtitle:"Insertion (focus Sud)", icon:"🤝",
+          content:{ intro:"France Travail, Missions Locales, Cap Emploi…",
+            sections:[{heading:"Extrait", bullets:["France Travail Sud : 40 rue François de Mahy, Saint-Pierre","Missions Locales : Saint-Louis (4 rue du Vieux Moulin)"]}],
+            pills:["Insertion","Accompagnement"] } },
+        { id:"b5", cat:"RESEAU", title:"Agenda 2026", subtitle:"Semaines / événements", icon:"📅",
+          content:{ intro:"Repères + semaines thématiques (document).",
+            sections:[{heading:"Semaines (extrait)", bullets:["Tourisme 2–8 fév. 2026","Nucléaire 9–13 mars 2026","Soin 30 mars–3 avril 2026"]}],
+            pills:["Événements"] } },
+        { id:"b6", cat:"RESEAU", title:"Partenaires logistique", subtitle:"Syndicats & fédérations", icon:"🚚",
+          content:{ intro:"TLF, FNTR… (local + national).",
+            sections:[{heading:"Extrait", bullets:["TLF Réunion (contact au Port)","FNTR (national)"]}],
+            pills:["Filière"] } },
+        { id:"b7", cat:"RESEAU", title:"Réseautage pro", subtitle:"Communautés & plateformes", icon:"🌐",
+          content:{ intro:"Réseaux sociaux / plateformes citées.",
+            sections:[{heading:"Extrait", bullets:["MonCompteFormation","France Supply Chain","Afilog"]}],
+            pills:["Réseaux"] } },
       ]
     };
 
-    /* ==========================================================
-      MIND MAP — rendu / interactions
-      ========================================================== */
+    /* MIND MAP — RENDER */
     const mmStage = document.getElementById("mmStage");
     const mmSvg = document.getElementById("mmSvg");
     const mmCenterTitle = document.getElementById("mmCenterTitle");
     const mmCard = document.getElementById("mmCard");
     const mmPanelTitle = document.getElementById("mmPanelTitle");
     const mmPanelBadge = document.getElementById("mmPanelBadge");
-
     const mmResetBtn = document.getElementById("mmResetBtn");
     const mmExpandBtn = document.getElementById("mmExpandBtn");
 
@@ -864,9 +602,7 @@
 
     const mmNodes = new Map();
     const mmLinks = new Map();
-
     const MM_START_ANGLE_DEG = -110;
-    const MM_COUNT = MM_DATA.branches.length;
 
     function mmCreateLink(id){
       const path = document.createElementNS("http://www.w3.org/2000/svg","path");
@@ -877,25 +613,19 @@
       return path;
     }
 
-    function mmCreateNode(branch, i){
+    function mmCreateNode(branch){
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "node";
       btn.dataset.id = branch.id;
       btn.setAttribute("aria-label", branch.title);
 
-      // couleur de la branche = rotation sur ta palette
-      const color = PALETTE[i % PALETTE.length];
+      const color = categoryColor(branch.cat);
 
       const tag = document.createElement("div");
       tag.className = "tag";
-      tag.style.background = `linear-gradient(90deg, ${color}, ${color})`;
-
-      // si la couleur est beige (#f1d7bc) ou noir, on ajuste contraste texte
-      const isLight = color.toLowerCase() === "#f1d7bc";
-      if(isLight){
-        tag.style.color = "#000";
-      }
+      tag.style.background = color;
+      if(String(color).toLowerCase() === "#f1d7bc") tag.style.color = "#000";
 
       const dot = document.createElement("span");
       dot.className = "dot";
@@ -912,26 +642,24 @@
       btn.appendChild(tag);
       btn.appendChild(label);
 
-      btn.addEventListener("click", () => mmActivate(branch.id));
+      btn.addEventListener("click", () => mmActivate(branch.id, true));
       btn.addEventListener("keydown", (e) => {
         if(e.key === "Enter" || e.key === " "){
           e.preventDefault();
-          mmActivate(branch.id);
+          mmActivate(branch.id, true);
         }
       });
 
       mmStage.appendChild(btn);
       mmNodes.set(branch.id, btn);
-
-      // stock couleur sur l'objet pour le panneau
-      branch.__color = color;
       return btn;
     }
 
     function mmLayout(){
       const cx = 50, cy = 50;
-      const ring = 33;
-      const step = 360 / MM_COUNT;
+      const ring = 42; // branches plus espacées
+      const count = MM_DATA.branches.length;
+      const step = 360 / count;
 
       MM_DATA.branches.forEach((b, i) => {
         const angle = degToRad(MM_START_ANGLE_DEG + i * step);
@@ -963,7 +691,6 @@
 
     function mmRender(branch){
       mmCard.classList.add("is-enter");
-
       window.setTimeout(() => {
         mmPanelTitle.textContent = branch.title;
         mmPanelBadge.textContent = "Branche active";
@@ -977,48 +704,51 @@
           </ul>
         `).join("");
 
-        const linksHTML = (branch.content.links || []).map(l => `
-          <li><a href="${l.url}" target="_blank" rel="noopener noreferrer">${escapeHTML(l.label)}</a></li>
-        `).join("");
-
-        const maybeLinksBlock = linksHTML ? `
-          <h4 style="margin:14px 0 8px; font-size:13px; letter-spacing:.2px; color:#000;">Liens cités</h4>
-          <ul>${linksHTML}</ul>
-        ` : "";
-
         const pillsHTML = (branch.content.pills || []).map(p => `<span class="pill">${escapeHTML(p)}</span>`).join("");
 
         mmCard.innerHTML = `
           <h3>${escapeHTML(branch.icon)} ${escapeHTML(branch.title)}</h3>
           <p>${escapeHTML(branch.content.intro || "")}</p>
           ${sectionsHTML}
-          ${maybeLinksBlock}
           <div class="pill-row" aria-hidden="true">${pillsHTML}</div>
         `;
-
         requestAnimationFrame(() => mmCard.classList.remove("is-enter"));
       }, 40);
     }
 
-    function mmActivate(id){
+    /* ✅ WOW: clic mind map -> carte filtrée catégorie */
+    function mmActivate(id, jumpToMap){
       const branch = MM_DATA.branches.find(b => b.id === id);
       if(!branch) return;
 
       mmDeactivateAll();
       mmNodes.get(id).classList.add("is-active");
       mmLinks.get(id).classList.add("is-active");
-
-      // petit effet : la ligne active devient orange
-      mmLinks.get(id).style.stroke = "#fc772c";
-
       mmRender(branch);
+
+      if(jumpToMap){
+        // bascule sur carte
+        setView("map");
+        // applique filtre catégorie
+        window.setTimeout(() => {
+          const catSel = document.getElementById("catSel");
+          if(catSel){
+            catSel.value = branch.cat;
+            // reset commune + recherche (optionnel)
+            document.getElementById("communeSel").value = "TOUTES";
+            document.getElementById("q").value = "";
+            // refresh
+            if(typeof renderMapAndTable === "function") renderMapAndTable();
+            if(window.__map) window.__map.invalidateSize();
+          }
+        }, 120);
+      }
     }
 
     function mmReset(){
       mmDeactivateAll();
       mmPanelTitle.textContent = "Introduction";
       mmPanelBadge.textContent = "7 branches";
-
       mmCard.classList.add("is-enter");
       window.setTimeout(() => {
         mmCard.innerHTML = `
@@ -1026,80 +756,71 @@
           <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
           <ul>
             <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
-            <li><b>Focus</b> : île complète avec priorité Sud (Saint-Louis, Saint-Pierre)</li>
-            <li><b>Orientation</b> : formation + accompagnement social pour insertion durable</li>
+            <li><b>Focus</b> : île complète avec priorité Sud</li>
+            <li><b>Orientation</b> : formation + accompagnement social</li>
           </ul>
           <div class="pill-row" aria-hidden="true">
-            <span class="pill">Réunion</span>
-            <span class="pill">Insertion</span>
-            <span class="pill">Annuaire</span>
+            <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
           </div>
         `;
         requestAnimationFrame(() => mmCard.classList.remove("is-enter"));
       }, 40);
     }
 
-    // init mind map
-    MM_DATA.branches.forEach((b, i) => { mmCreateLink(b.id); mmCreateNode(b, i); });
+    MM_DATA.branches.forEach(b => { mmCreateLink(b.id); mmCreateNode(b); });
     mmLayout();
     window.addEventListener("resize", mmLayout);
     mmResetBtn.addEventListener("click", mmReset);
-    mmExpandBtn.addEventListener("click", () => mmActivate(MM_DATA.branches[0].id));
+    mmExpandBtn.addEventListener("click", () => mmActivate(MM_DATA.branches[0].id, true));
 
-    /* ==========================================================
-      2) MAP + TABLE — adresses uniquement + géocodage Nominatim
-      ========================================================== */
+    /* =======================
+      2) CARTE — acteurs
+    ======================= */
     const ACTEURS = [
-      { id:"deets_dir", nom:"DEETS Réunion (Direction)", commune:"Saint-Denis", adresse:"112 rue de la République, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 94 07 07 | deets-974.direction@deets.gouv.fr" },
-      { id:"deets_ctrl", nom:"DEETS — Pôle Contrôle", commune:"Saint-Denis", adresse:"12 Lot. Lemerle, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 90 21 41" },
+      { id:"deets_dir", categorie:"PILOTAGE", nom:"DEETS Réunion (Direction)", commune:"Saint-Denis", adresse:"112 rue de la République, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 94 07 07 | deets-974.direction@deets.gouv.fr" },
+      { id:"deets_ctrl", categorie:"PILOTAGE", nom:"DEETS — Pôle Contrôle", commune:"Saint-Denis", adresse:"12 Lot. Lemerle, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 90 21 41" },
 
-      { id:"ft_sud", nom:"France Travail — Antenne Sud", commune:"Saint-Pierre", adresse:"40 rue François de Mahy, Saint-Pierre, La Réunion", details:"Contact: 39 49" },
-      { id:"ml_sud_sl", nom:"Missions Locales Sud — Antenne Saint-Louis", commune:"Saint-Louis", adresse:"4 rue du Vieux Moulin, Saint-Louis, La Réunion", details:"Tél: 02 62 26 28 29" },
+      { id:"ft_sud", categorie:"SPE", nom:"France Travail — Antenne Sud", commune:"Saint-Pierre", adresse:"40 rue François de Mahy, Saint-Pierre, La Réunion", details:"Contact: 39 49" },
+      { id:"ml_sud_sl", categorie:"SPE", nom:"Missions Locales Sud — Antenne Saint-Louis", commune:"Saint-Louis", adresse:"4 rue du Vieux Moulin, Saint-Louis, La Réunion", details:"Tél: 02 62 26 28 29" },
 
-      { id:"aftral_spaul", nom:"AFTRAL", commune:"Saint-Paul", adresse:"89 rue Henri Cornu, ZI Cambaie, Saint-Paul, La Réunion", details:"Tél: 0262 22 17 17 | reunion@aftral.com" },
-      { id:"arefip_sp", nom:"AREFIP", commune:"Saint-Pierre", adresse:"24 Cité Plaine, Saint-Pierre, La Réunion", details:"Tél: 0262 96 19 79 | contact@arefip.fr" },
+      { id:"aftral_spaul", categorie:"OF", nom:"AFTRAL", commune:"Saint-Paul", adresse:"89 rue Henri Cornu, ZI Cambaie, Saint-Paul, La Réunion", details:"Tél: 0262 22 17 17 | reunion@aftral.com" },
+      { id:"arefip_sp", categorie:"OF", nom:"AREFIP", commune:"Saint-Pierre", adresse:"24 Cité Plaine, Saint-Pierre, La Réunion", details:"Tél: 0262 96 19 79 | contact@arefip.fr" },
 
-      { id:"cci_campuspro", nom:"CCI Pôle Formation — CAMPUS PRO", commune:"Saint-Pierre", adresse:"65 rue Père Lafosse, Saint-Pierre, La Réunion", details:"Tél: 0262 70 99 55 | campuspro@reunion.cci.fr" },
-      { id:"cci_cirfim", nom:"CCI Pôle Formation — CIRFIM", commune:"Le Port", adresse:"31 Av Raymond Mondon, Le Port, La Réunion", details:"Tél: 0262 43 51 12 | cfacirfim@reunion.cci.fr" },
-      { id:"cci_nord", nom:"CCI Pôle Formation — Nord", commune:"Saint-Denis", adresse:"12 rue Gabriel Kerveguen, Saint-Denis, La Réunion", details:"Tél: 0262 48 35 00" },
-      { id:"cci_sud", nom:"CCI Pôle Formation — Sud", commune:"Saint-Pierre", adresse:"15 route Balance, Saint-Pierre, La Réunion", details:"Tél: 0262 96 96 96 | cfasud@reunion.cci.fr" },
+      { id:"cci_campuspro", categorie:"OF", nom:"CCI Pôle Formation — CAMPUS PRO", commune:"Saint-Pierre", adresse:"65 rue Père Lafosse, Saint-Pierre, La Réunion", details:"Tél: 0262 70 99 55 | campuspro@reunion.cci.fr" },
+      { id:"cci_cirfim", categorie:"OF", nom:"CCI Pôle Formation — CIRFIM", commune:"Le Port", adresse:"31 Av Raymond Mondon, Le Port, La Réunion", details:"Tél: 0262 43 51 12 | cfacirfim@reunion.cci.fr" },
+      { id:"cci_nord", categorie:"OF", nom:"CCI Pôle Formation — Nord", commune:"Saint-Denis", adresse:"12 rue Gabriel Kerveguen, Saint-Denis, La Réunion", details:"Tél: 0262 48 35 00" },
+      { id:"cci_sud", categorie:"OF", nom:"CCI Pôle Formation — Sud", commune:"Saint-Pierre", adresse:"15 route Balance, Saint-Pierre, La Réunion", details:"Tél: 0262 96 96 96 | cfasud@reunion.cci.fr" },
 
-      { id:"cefora_port", nom:"CEFORA", commune:"Le Port", adresse:"3 Av Théodore Drouhet, Parc 2000, Le Port, La Réunion", details:"Tél: 0262 24 40 49 | contact@cefora.re" },
-      { id:"cfa_cres_port", nom:"CFA Campus Réunion Enseignement Supérieur", commune:"Le Port", adresse:"1 rue Francis Sautron, Le Port, La Réunion", details:"Tél: 0262 29 26 26" },
-      { id:"cfa_irof_sp", nom:"CFA-IROF", commune:"Saint-Pierre", adresse:"6 Impasse Georges Gilerot, Saint-Pierre, La Réunion", details:"Tél: 0262 45 33 02 | contact@irof.re" },
-      { id:"cfa_ur_sd", nom:"CFA-UR", commune:"Saint-Denis", adresse:"2 Rue Joseph Wetzell, Saint-Denis, La Réunion", details:"Tél: 0262 52 89 24 | cfaur@univ-reunion.fr" },
+      { id:"cefora_port", categorie:"OF", nom:"CEFORA", commune:"Le Port", adresse:"3 Av Théodore Drouhet, Parc 2000, Le Port, La Réunion", details:"Tél: 0262 24 40 49 | contact@cefora.re" },
+      { id:"cfa_cres_port", categorie:"OF", nom:"CFA Campus Réunion Enseignement Supérieur", commune:"Le Port", adresse:"1 rue Francis Sautron, Le Port, La Réunion", details:"Tél: 0262 29 26 26" },
+      { id:"cfa_irof_sp", categorie:"OF", nom:"CFA-IROF", commune:"Saint-Pierre", adresse:"6 Impasse Georges Gilerot, Saint-Pierre, La Réunion", details:"Tél: 0262 45 33 02 | contact@irof.re" },
+      { id:"cfa_ur_sd", categorie:"OF", nom:"CFA-UR", commune:"Saint-Denis", adresse:"2 Rue Joseph Wetzell, Saint-Denis, La Réunion", details:"Tél: 0262 52 89 24 | cfaur@univ-reunion.fr" },
 
-      { id:"idis_port", nom:"IDIS", commune:"Le Port", adresse:"3 Rue Dupleix, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" },
-      { id:"ordia_port", nom:"ORDIA SARL", commune:"Le Port", adresse:"69 rue Jeanne d'Arc, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" }
+      { id:"idis_port", categorie:"OF", nom:"IDIS", commune:"Le Port", adresse:"3 Rue Dupleix, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" },
+      { id:"ordia_port", categorie:"OF", nom:"ORDIA SARL", commune:"Le Port", adresse:"69 rue Jeanne d'Arc, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" }
     ];
 
-    const CACHE_KEY = "geo_cache_v1_reunion_acteurs";
+    const CACHE_KEY = "geo_cache_v3_reunion_acteurs";
     const cache = (() => {
       try{
         const raw = localStorage.getItem(CACHE_KEY);
         return raw ? JSON.parse(raw) : {};
       }catch{ return {}; }
     })();
-    function saveCache(){
-      try{ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }catch{}
-    }
+    function saveCache(){ try{ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }catch{} }
 
     async function geocodeOne(address){
       const url = new URL("https://nominatim.openstreetmap.org/search");
       url.searchParams.set("q", address);
       url.searchParams.set("format", "json");
       url.searchParams.set("limit", "1");
-
       const res = await fetch(url.toString(), { headers: { "Accept":"application/json" }});
       if(!res.ok) return null;
       const data = await res.json();
       if(!Array.isArray(data) || data.length === 0) return null;
-
       const hit = data[0];
-      const lat = Number(hit.lat);
-      const lng = Number(hit.lon);
+      const lat = Number(hit.lat), lng = Number(hit.lon);
       if(!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-
       return { lat, lng, display_name: hit.display_name || "" };
     }
 
@@ -1107,7 +828,6 @@
       for(const a of ACTEURS){
         const addr = (a.adresse || "").trim();
         if(!addr) continue;
-
         if(!force && cache[a.id] && cache[a.id].lat != null) continue;
 
         try{
@@ -1119,12 +839,12 @@
           saveCache();
         }
 
-        await sleep(1000); // throttle 1 req/sec
+        await sleep(1000);
         renderMapAndTable();
       }
     }
 
-    // DOM
+    const elCat = document.getElementById("catSel");
     const elCommune = document.getElementById("communeSel");
     const elQ = document.getElementById("q");
     const elTbody = document.getElementById("tbody");
@@ -1133,9 +853,15 @@
 
     let activeId = null;
 
-    function buildCommunes(){
-      const communes = Array.from(new Set(ACTEURS.map(a => a.commune).filter(Boolean)))
-        .sort((a,b)=>a.localeCompare(b,'fr'));
+    function buildFilters(){
+      const cats = Array.from(new Set(ACTEURS.map(a => a.categorie).filter(Boolean))).sort();
+      for(const c of cats){
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = CAT_LABEL[c] || c;
+        elCat.appendChild(opt);
+      }
+      const communes = Array.from(new Set(ACTEURS.map(a => a.commune).filter(Boolean))).sort((a,b)=>a.localeCompare(b,'fr'));
       for(const c of communes){
         const opt = document.createElement("option");
         opt.value = c;
@@ -1146,15 +872,17 @@
 
     function matchesQuery(a, q){
       if(!q) return true;
-      const s = (a.nom + " " + a.commune + " " + a.adresse + " " + (a.details||"")).toLowerCase();
+      const s = (a.nom + " " + a.categorie + " " + a.commune + " " + a.adresse + " " + (a.details||"")).toLowerCase();
       return s.includes(q.toLowerCase());
     }
 
     function filteredActeurs(){
-      const c = elCommune.value;
+      const cat = elCat.value;
+      const com = elCommune.value;
       const q = elQ.value.trim();
       return ACTEURS
-        .filter(a => (c === "TOUTES" ? true : a.commune === c))
+        .filter(a => (cat === "TOUTES" ? true : a.categorie === cat))
+        .filter(a => (com === "TOUTES" ? true : a.commune === com))
         .filter(a => matchesQuery(a, q));
     }
 
@@ -1173,12 +901,13 @@
       window.__markersLayer = L.layerGroup().addTo(map);
       window.__markerById = new Map();
 
-      buildCommunes();
+      buildFilters();
       renderMapAndTable();
-      geocodeAll({force:false}); // lancement au premier affichage
+      geocodeAll({force:false});
 
       document.getElementById("fitBtn").addEventListener("click", fitToMarkers);
       document.getElementById("clearBtn").addEventListener("click", () => {
+        elCat.value = "TOUTES";
         elCommune.value = "TOUTES";
         elQ.value = "";
         activeId = null;
@@ -1189,6 +918,7 @@
         await geocodeAll({force:true});
       });
 
+      elCat.addEventListener("change", () => { activeId = null; renderMapAndTable(); });
       elCommune.addEventListener("change", () => { activeId = null; renderMapAndTable(); });
       elQ.addEventListener("input", () => { activeId = null; renderMapAndTable(); });
     }
@@ -1199,6 +929,27 @@
       window.__markerById.clear();
     }
 
+    function makeMarkerIcon(cat){
+      const color = categoryColor(cat);
+      const border = "#000000";
+      const halo = "rgba(0,0,0,.18)";
+      return L.divIcon({
+        className: "custom-marker",
+        html: `
+          <div style="
+            width:18px;height:18px;
+            background:${color};
+            border-radius:50%;
+            border:3px solid ${border};
+            box-shadow:0 0 0 5px ${halo}, 0 10px 20px rgba(0,0,0,.25);
+          "></div>
+        `,
+        iconSize: [18,18],
+        iconAnchor: [9,9],
+        popupAnchor: [0,-10]
+      });
+    }
+
     function addMarker(actor){
       const geo = cache[actor.id];
       if(!geo || geo.lat == null || geo.lng == null) return;
@@ -1206,14 +957,16 @@
       const popupHtml = `
         <div style="font-family: ui-sans-serif, system-ui; min-width:240px">
           <b>${escapeHTML(actor.nom)}</b><br/>
-          <span>${escapeHTML(actor.commune)}</span>
+          <span>${escapeHTML(CAT_LABEL[actor.categorie] || actor.categorie)} — ${escapeHTML(actor.commune)}</span>
           <div style="margin-top:6px; font-size:12px; color:#000;">
             <b>Adresse :</b> ${escapeHTML(actor.adresse)}<br/>
             ${actor.details ? `<b>Détails :</b> ${escapeHTML(actor.details)}` : ""}
           </div>
         </div>
       `;
-      const m = L.marker([geo.lat, geo.lng]).bindPopup(popupHtml);
+
+      const icon = makeMarkerIcon(actor.categorie);
+      const m = L.marker([geo.lat, geo.lng], { icon }).bindPopup(popupHtml);
       m.on("click", () => setActiveRow(actor.id, true));
       m.addTo(window.__markersLayer);
       window.__markerById.set(actor.id, m);
@@ -1231,7 +984,6 @@
       document.querySelectorAll("tr.row").forEach(tr => {
         tr.classList.toggle("active", tr.getAttribute("data-id") === id);
       });
-
       const m = window.__markerById.get(id);
       if(m){
         window.__map.setView(m.getLatLng(), Math.max(window.__map.getZoom(), 13), { animate:true });
@@ -1261,6 +1013,7 @@
         return `
           <tr class="row ${active}" data-id="${escapeHTML(a.id)}">
             <td><b>${escapeHTML(a.nom)}</b><br/><span style="color:rgba(255,255,255,.72); font-size:11px">${escapeHTML(a.details||"")}</span></td>
+            <td>${escapeHTML(CAT_LABEL[a.categorie] || a.categorie)}</td>
             <td>${escapeHTML(a.commune)}</td>
             <td>${escapeHTML(a.adresse)}</td>
             <td><span class="badge ${ok?"ok":"no"}">${ok ? "placé" : "non placé"}</span></td>
@@ -1278,9 +1031,7 @@
       if(window.__markerById.size > 0) fitToMarkers();
     }
 
-    /* ==========================================================
-      Default view = mind map
-      ========================================================== */
+    /* Default */
     setView("mind");
   </script>
 </body>
