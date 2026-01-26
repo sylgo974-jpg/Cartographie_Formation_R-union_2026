@@ -27,8 +27,8 @@
       --dur:260ms;
       --radius: 18px;
 
-      --hub: clamp(104px, 12.5vw, 150px);
-      --node: clamp(102px, 13.3vw, 156px);
+      --hub: clamp(104px, 10vw, 140px);
+      --node: clamp(102px, 12vw, 150px);
     }
 
     *{box-sizing:border-box}
@@ -99,9 +99,15 @@
     }
 
     /* =======================
-      VIEW 1 — MIND MAP
+      VIEW 1 — MIND MAP (PAYSAGE)
     ======================= */
-    .mm-grid{display:grid; grid-template-columns: 1.1fr .9fr; gap: 14px; align-items:stretch;}
+    .mm-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      gap: 14px;
+      align-items:stretch;
+    }
 
     .mindmap{
       position:relative;
@@ -110,7 +116,7 @@
       border: 1px solid rgba(255,255,255,.14);
       box-shadow: var(--shadow);
       overflow:hidden;
-      min-height: 600px;
+      min-height: 520px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -120,15 +126,15 @@
 
     .stage{
       position:relative;
-      width: min(680px, 100%); /* plus large = plus d’air */
-      aspect-ratio: 1 / 1;
+      width: min(1180px, 100%);
+      aspect-ratio: 16 / 9;
       display:grid;
       place-items:center;
     }
 
     .blob{
       position:absolute;
-      width: 210px; height: 150px;
+      width: 240px; height: 170px;
       background: rgba(241,215,188,.10);
       border: 1px solid rgba(241,215,188,.10);
       border-radius: 62% 38% 55% 45% / 45% 60% 40% 55%;
@@ -163,7 +169,7 @@
       z-index:3;
       color: #000;
     }
-    .hub .center-title{font-weight: 950; font-size: clamp(12px, 1.6vw, 15px); line-height:1.15; text-align:center;}
+    .hub .center-title{font-weight: 950; font-size: clamp(12px, 1.4vw, 15px); line-height:1.15; text-align:center;}
 
     .node{
       position:absolute;
@@ -202,6 +208,7 @@
     .node .label{font-weight: 950; font-size: 13px; line-height:1.15; padding-top: 10px;}
     .node .mini{display:block; margin-top:6px; font-size: 11px; font-weight: 900; color: rgba(92,100,107,.95);}
 
+    /* ✅ Panneau en dessous (paysage) */
     .panel{
       border-radius: var(--radius);
       background: rgba(255,255,255,.08);
@@ -211,7 +218,7 @@
       backdrop-filter: blur(10px);
       display:flex;
       flex-direction:column;
-      min-height: 600px;
+      min-height: 380px;
     }
     .panel-header{
       background: linear-gradient(90deg, rgba(252,119,44,.95), rgba(206,42,69,.90));
@@ -227,24 +234,60 @@
       border-radius: 999px;
       white-space:nowrap;
     }
-    .panel-body{padding: 16px; overflow:auto; flex:1;}
 
+    /* ✅ 2 colonnes (paysage) */
+    .panel-body{
+      padding: 16px;
+      overflow:auto;
+      flex:1;
+      max-height: 360px;
+    }
     .mm-card{
       background: linear-gradient(180deg, rgba(241,215,188,.98), rgba(241,215,188,.90));
       color: #000;
       border-radius: 22px;
-      padding: 14px 14px 12px;
+      padding: 14px;
       box-shadow: var(--shadowSoft);
       border: 1px solid rgba(0,0,0,.10);
       transform-origin: top;
       transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
     }
     .mm-card.is-enter{opacity:0; transform: translateY(8px) scale(.98);}
-    .mm-card h3{margin:0 0 8px; font-size: 15px; letter-spacing:.2px;}
-    .mm-card p{margin:0 0 10px; color: rgba(0,0,0,.82); font-size: 13px; line-height:1.45;}
-    .mm-card ul{margin: 0 0 10px; padding-left: 18px; color: rgba(0,0,0,.82); font-size: 13px; line-height:1.45;}
-    .mm-card li{margin: 6px 0}
-    .pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top: 10px;}
+
+    .mm-layout{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 14px;
+      align-items:start;
+    }
+    .mm-left h3{margin:0 0 8px; font-size: 15px; letter-spacing:.2px;}
+    .mm-left p{margin:0 0 10px; color: rgba(0,0,0,.82); font-size: 13px; line-height:1.45;}
+    .mm-left ul{margin: 0 0 10px; padding-left: 18px; color: rgba(0,0,0,.82); font-size: 13px; line-height:1.45;}
+    .mm-left li{margin: 6px 0}
+    .mm-left h4{margin:14px 0 8px; font-size:13px; letter-spacing:.2px; color:#000;}
+
+    .mm-right{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .sidebox{
+      background: rgba(0,0,0,.06);
+      border: 1px solid rgba(0,0,0,.10);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .sidebox .title{
+      font-weight: 950;
+      font-size: 12px;
+      letter-spacing:.2px;
+      margin:0 0 8px;
+      color: rgba(0,0,0,.90);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .pill-row{display:flex; flex-wrap:wrap; gap:8px;}
     .pill{
       background: linear-gradient(90deg, rgba(92,100,107,.95), rgba(0,0,0,.92));
       border: 1px solid rgba(0,0,0,.18);
@@ -253,7 +296,34 @@
       font-size: 11px;
       padding: 7px 10px;
       border-radius: 999px;
-      box-shadow: 0 14px 30px rgba(0,0,0,.28);
+      box-shadow: 0 14px 30px rgba(0,0,0,.18);
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .action{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.50);
+      box-shadow: 0 10px 20px rgba(0,0,0,.10);
+      font-weight: 900;
+      font-size: 12px;
+    }
+    .action small{font-weight: 800; color: rgba(0,0,0,.65)}
+    .action .k{
+      font-weight: 950;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(252,119,44,.20);
+      border: 1px solid rgba(252,119,44,.25);
     }
 
     .panel-footer{
@@ -278,7 +348,6 @@
       background: linear-gradient(90deg, rgba(252,119,44,.95), rgba(206,42,69,.90));
       border-color: rgba(255,255,255,.22);
     }
-    .mm-card a{color: #000; font-weight: 950; text-decoration: underline; text-underline-offset: 2px;}
 
     /* =======================
       VIEW 2 — CARTE + TABLE
@@ -351,12 +420,16 @@
     }
     .badge.ok{background: rgba(241,215,188,.12)}
     .badge.no{background: rgba(206,42,69,.18)}
-
     .custom-marker{background: transparent; border: none;}
 
     @media (max-width: 1050px){
-      .mm-grid, .map-grid{grid-template-columns: 1fr}
-      .mindmap, .panel, #map, .side{min-height: 520px}
+      .map-grid{grid-template-columns: 1fr}
+      #map, .side{min-height: 520px}
+      .mindmap{min-height: 520px}
+      .panel{min-height: 420px}
+      .stage{aspect-ratio: 4/3}
+      .mm-layout{grid-template-columns: 1fr;}
+      .panel-body{max-height: none;}
     }
   </style>
 </head>
@@ -375,7 +448,7 @@
     <div>
       <h1>Cartographie acteurs FP Réunion (2026)</h1>
       <p>
-        Deux modes : <b>Mind map</b> et <b>Carte</b>. Clique une branche : tu arrives direct sur la carte filtrée sur la catégorie.
+        Mind map en <b>format paysage</b> + panneau <b>2 colonnes</b> en bas. Carte + table pour les acteurs avec adresse postale.
       </p>
     </div>
     <div class="switch" role="tablist" aria-label="Changer de vue">
@@ -390,10 +463,10 @@
       <div class="mm-grid">
         <div class="mindmap card">
           <div class="stage" id="mmStage">
-            <div class="blob" style="top:8%; left:10%; transform:rotate(-10deg) scale(1.05)"></div>
-            <div class="blob" style="top:18%; left:70%; transform:rotate(12deg) scale(.95)"></div>
-            <div class="blob" style="top:68%; left:16%; transform:rotate(8deg) scale(.92)"></div>
-            <div class="blob" style="top:74%; left:66%; transform:rotate(-14deg) scale(1.02)"></div>
+            <div class="blob" style="top:10%; left:10%; transform:rotate(-10deg) scale(1.05)"></div>
+            <div class="blob" style="top:8%; left:72%; transform:rotate(12deg) scale(.95)"></div>
+            <div class="blob" style="top:68%; left:14%; transform:rotate(8deg) scale(.92)"></div>
+            <div class="blob" style="top:70%; left:72%; transform:rotate(-14deg) scale(1.02)"></div>
 
             <svg class="connectors" id="mmSvg" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg>
 
@@ -411,15 +484,32 @@
 
           <div class="panel-body">
             <div class="mm-card is-enter" id="mmCard">
-              <h3>📌 À propos du document</h3>
-              <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
-              <ul>
-                <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
-                <li><b>Focus</b> : île complète avec priorité Sud</li>
-                <li><b>Orientation</b> : formation + accompagnement social</li>
-              </ul>
-              <div class="pill-row" aria-hidden="true">
-                <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
+              <div class="mm-layout">
+                <div class="mm-left">
+                  <h3>📌 À propos du document</h3>
+                  <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
+                  <ul>
+                    <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
+                    <li><b>Focus</b> : île complète avec priorité Sud</li>
+                    <li><b>Orientation</b> : formation + accompagnement social</li>
+                  </ul>
+                </div>
+                <div class="mm-right">
+                  <div class="sidebox">
+                    <p class="title">🏷️ Tags</p>
+                    <div class="pill-row" aria-hidden="true">
+                      <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
+                    </div>
+                  </div>
+                  <div class="sidebox">
+                    <p class="title">⚡ Actions</p>
+                    <div class="actions">
+                      <div class="action"><span>Conseil : ajoute/édite les contenus</span><span class="k">MM_DATA</span></div>
+                      <div class="action"><span>Conseil : ajoute les acteurs carte</span><span class="k">ACTEURS</span></div>
+                      <div class="action"><span>Astuce : cache géocodage</span><small>localStorage</small></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -642,11 +732,11 @@
       btn.appendChild(tag);
       btn.appendChild(label);
 
-      btn.addEventListener("click", () => mmActivate(branch.id, true));
+      btn.addEventListener("click", () => mmActivate(branch.id));
       btn.addEventListener("keydown", (e) => {
         if(e.key === "Enter" || e.key === " "){
           e.preventDefault();
-          mmActivate(branch.id, true);
+          mmActivate(branch.id);
         }
       });
 
@@ -657,14 +747,18 @@
 
     function mmLayout(){
       const cx = 50, cy = 50;
-      const ring = 42; // branches plus espacées
+
+      /* ellipse (paysage) */
+      const ringX = 44;
+      const ringY = 34;
+
       const count = MM_DATA.branches.length;
       const step = 360 / count;
 
       MM_DATA.branches.forEach((b, i) => {
         const angle = degToRad(MM_START_ANGLE_DEG + i * step);
-        const x = cx + ring * Math.cos(angle);
-        const y = cy + ring * Math.sin(angle);
+        const x = cx + ringX * Math.cos(angle);
+        const y = cy + ringY * Math.sin(angle);
 
         const el = mmNodes.get(b.id);
         el.style.left = x + "%";
@@ -696,9 +790,7 @@
         mmPanelBadge.textContent = "Branche active";
 
         const sectionsHTML = (branch.content.sections || []).map(sec => `
-          <h4 style="margin:14px 0 8px; font-size:13px; letter-spacing:.2px; color:#000;">
-            ${escapeHTML(sec.heading)}
-          </h4>
+          <h4>${escapeHTML(sec.heading)}</h4>
           <ul>
             ${(sec.bullets || []).map(li => `<li>${escapeHTML(li)}</li>`).join("")}
           </ul>
@@ -707,17 +799,33 @@
         const pillsHTML = (branch.content.pills || []).map(p => `<span class="pill">${escapeHTML(p)}</span>`).join("");
 
         mmCard.innerHTML = `
-          <h3>${escapeHTML(branch.icon)} ${escapeHTML(branch.title)}</h3>
-          <p>${escapeHTML(branch.content.intro || "")}</p>
-          ${sectionsHTML}
-          <div class="pill-row" aria-hidden="true">${pillsHTML}</div>
+          <div class="mm-layout">
+            <div class="mm-left">
+              <h3>${escapeHTML(branch.icon)} ${escapeHTML(branch.title)}</h3>
+              <p>${escapeHTML(branch.content.intro || "")}</p>
+              ${sectionsHTML}
+            </div>
+            <div class="mm-right">
+              <div class="sidebox">
+                <p class="title">🏷️ Tags</p>
+                <div class="pill-row" aria-hidden="true">${pillsHTML}</div>
+              </div>
+              <div class="sidebox">
+                <p class="title">⚡ Actions</p>
+                <div class="actions">
+                  <div class="action"><span>Aller à la carte (onglet)</span><span class="k">🗺️</span></div>
+                  <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
+                  <div class="action"><span>Ajouter des acteurs</span><span class="k">ACTEURS</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
         `;
         requestAnimationFrame(() => mmCard.classList.remove("is-enter"));
       }, 40);
     }
 
-    /* ✅ WOW: clic mind map -> carte filtrée catégorie */
-    function mmActivate(id, jumpToMap){
+    function mmActivate(id){
       const branch = MM_DATA.branches.find(b => b.id === id);
       if(!branch) return;
 
@@ -725,24 +833,6 @@
       mmNodes.get(id).classList.add("is-active");
       mmLinks.get(id).classList.add("is-active");
       mmRender(branch);
-
-      if(jumpToMap){
-        // bascule sur carte
-        setView("map");
-        // applique filtre catégorie
-        window.setTimeout(() => {
-          const catSel = document.getElementById("catSel");
-          if(catSel){
-            catSel.value = branch.cat;
-            // reset commune + recherche (optionnel)
-            document.getElementById("communeSel").value = "TOUTES";
-            document.getElementById("q").value = "";
-            // refresh
-            if(typeof renderMapAndTable === "function") renderMapAndTable();
-            if(window.__map) window.__map.invalidateSize();
-          }
-        }, 120);
-      }
     }
 
     function mmReset(){
@@ -752,15 +842,32 @@
       mmCard.classList.add("is-enter");
       window.setTimeout(() => {
         mmCard.innerHTML = `
-          <h3>📌 À propos du document</h3>
-          <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
-          <ul>
-            <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
-            <li><b>Focus</b> : île complète avec priorité Sud</li>
-            <li><b>Orientation</b> : formation + accompagnement social</li>
-          </ul>
-          <div class="pill-row" aria-hidden="true">
-            <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
+          <div class="mm-layout">
+            <div class="mm-left">
+              <h3>📌 À propos du document</h3>
+              <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
+              <ul>
+                <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
+                <li><b>Focus</b> : île complète avec priorité Sud</li>
+                <li><b>Orientation</b> : formation + accompagnement social</li>
+              </ul>
+            </div>
+            <div class="mm-right">
+              <div class="sidebox">
+                <p class="title">🏷️ Tags</p>
+                <div class="pill-row" aria-hidden="true">
+                  <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
+                </div>
+              </div>
+              <div class="sidebox">
+                <p class="title">⚡ Actions</p>
+                <div class="actions">
+                  <div class="action"><span>Conseil : ajoute/édite les contenus</span><span class="k">MM_DATA</span></div>
+                  <div class="action"><span>Conseil : ajoute les acteurs carte</span><span class="k">ACTEURS</span></div>
+                  <div class="action"><span>Astuce : cache géocodage</span><small>localStorage</small></div>
+                </div>
+              </div>
+            </div>
           </div>
         `;
         requestAnimationFrame(() => mmCard.classList.remove("is-enter"));
@@ -771,7 +878,7 @@
     mmLayout();
     window.addEventListener("resize", mmLayout);
     mmResetBtn.addEventListener("click", mmReset);
-    mmExpandBtn.addEventListener("click", () => mmActivate(MM_DATA.branches[0].id, true));
+    mmExpandBtn.addEventListener("click", () => mmActivate(MM_DATA.branches[0].id));
 
     /* =======================
       2) CARTE — acteurs
@@ -800,7 +907,7 @@
       { id:"ordia_port", categorie:"OF", nom:"ORDIA SARL", commune:"Le Port", adresse:"69 rue Jeanne d'Arc, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" }
     ];
 
-    const CACHE_KEY = "geo_cache_v3_reunion_acteurs";
+    const CACHE_KEY = "geo_cache_v5_reunion_acteurs";
     const cache = (() => {
       try{
         const raw = localStorage.getItem(CACHE_KEY);
