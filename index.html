@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cartographie acteurs de la Formation Professionnelle Réunion 2026 — Mind map + Carte</title>
+  <title>Cartographie FP Réunion 2026 — Mind map + Carte</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -171,15 +171,14 @@
     }
     .hub .center-title{font-weight: 950; font-size: clamp(12px, 1.4vw, 15px); line-height:1.15; text-align:center;}
 
+    /* ✅ Bulles = couleur catégorie (set en JS via style) */
     .node{
       position:absolute;
       width: var(--node);
       height: var(--node);
       border-radius: 60% 40% 54% 46% / 42% 58% 42% 58%;
-      background: linear-gradient(180deg, rgba(241,215,188,.98), rgba(241,215,188,.90));
       border: 1px solid rgba(0,0,0,.10);
       box-shadow: var(--shadowSoft);
-      color: #000;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -192,7 +191,7 @@
       transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), filter var(--dur) var(--ease);
       outline:none;
     }
-    .node:hover{transform: translate(-50%,-50%) scale(1.04); filter: brightness(1.02); box-shadow: 0 18px 45px rgba(0,0,0,.45);}
+    .node:hover{transform: translate(-50%,-50%) scale(1.04); filter: brightness(1.03); box-shadow: 0 18px 45px rgba(0,0,0,.45);}
     .node.is-active{transform: translate(-50%,-50%) scale(1.08); box-shadow: 0 22px 55px rgba(0,0,0,.55); outline: 2px solid rgba(252,119,44,.70);}
     .node:focus-visible{box-shadow: 0 0 0 4px rgba(252,119,44,.35), 0 22px 55px rgba(0,0,0,.55);}
 
@@ -204,9 +203,27 @@
       box-shadow: 0 12px 28px rgba(0,0,0,.35);
       letter-spacing:.2px; white-space:nowrap;
     }
-    .node .tag .dot{width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.92); box-shadow: inset 0 0 0 2px rgba(0,0,0,.12);}
-    .node .label{font-weight: 950; font-size: 13px; line-height:1.15; padding-top: 10px;}
-    .node .mini{display:block; margin-top:6px; font-size: 11px; font-weight: 900; color: rgba(92,100,107,.95);}
+    .node .tag .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: rgba(255,255,255,.92);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.12);
+    }
+    .node .label{
+      font-weight: 950;
+      font-size: 13px;
+      line-height:1.15;
+      padding-top: 10px;
+      color: inherit; /* set via JS */
+      text-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .node .mini{
+      display:block;
+      margin-top:6px;
+      font-size: 11px;
+      font-weight: 900;
+      opacity: .88;
+      color: inherit; /* set via JS */
+    }
 
     /* ✅ Panneau en dessous (paysage) */
     .panel{
@@ -266,11 +283,7 @@
     .mm-left li{margin: 6px 0}
     .mm-left h4{margin:14px 0 8px; font-size:13px; letter-spacing:.2px; color:#000;}
 
-    .mm-right{
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
+    .mm-right{display:flex; flex-direction:column; gap: 10px;}
     .sidebox{
       background: rgba(0,0,0,.06);
       border: 1px solid rgba(0,0,0,.10);
@@ -299,16 +312,9 @@
       box-shadow: 0 14px 30px rgba(0,0,0,.18);
     }
 
-    .actions{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
+    .actions{display:grid; grid-template-columns: 1fr; gap: 8px;}
     .action{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding: 10px 10px;
       border-radius: 14px;
       border: 1px solid rgba(0,0,0,.10);
@@ -328,7 +334,7 @@
 
     .panel-footer{
       padding: 12px 16px 14px;
-      display:flex; gap:10px;
+      display:flex; gap:10px; flex-wrap:wrap;
       border-top: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.10);
     }
@@ -431,6 +437,34 @@
       .mm-layout{grid-template-columns: 1fr;}
       .panel-body{max-height: none;}
     }
+
+    /* =======================
+       EXPORT PDF (print)
+    ======================= */
+    @media print {
+      @page { margin: 10mm; }
+
+      .bg-shapes, .switch, #viewMap, #btnMap, #btnMind, header p { display:none !important; }
+      #viewMind { display:block !important; }
+
+      .wrap { padding: 0 !important; }
+      header { padding: 0 0 8mm 0 !important; }
+
+      body { background: #ffffff !important; color:#000 !important; }
+
+      .card, .mindmap, .panel {
+        box-shadow: none !important;
+        background: #ffffff !important;
+        border: 1px solid #ddd !important;
+        backdrop-filter: none !important;
+      }
+
+      .panel, .mindmap, .mm-card { break-inside: avoid; page-break-inside: avoid; }
+
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+      .panel-footer { display:none !important; }
+    }
   </style>
 </head>
 
@@ -446,10 +480,8 @@
 
   <header>
     <div>
-      <h1>Cartographie acteurs de la Formation Professionnelle Réunion 2026)</h1>
-      <p>
-        Mind map en <b>format paysage</b> + panneau <b>2 colonnes</b> en bas. Carte + table pour les acteurs avec adresse postale.
-      </p>
+      <h1>Cartographie acteurs FP Réunion (2026)</h1>
+      <p>Mind map paysage + panneau 2 colonnes en bas. Carte + table pour les acteurs avec adresse postale.</p>
     </div>
     <div class="switch" role="tablist" aria-label="Changer de vue">
       <button class="chip active" id="btnMind" type="button" role="tab" aria-selected="true">🧠 Mind map</button>
@@ -504,9 +536,9 @@
                   <div class="sidebox">
                     <p class="title">⚡ Actions</p>
                     <div class="actions">
-                      <div class="action"><span>Conseil : ajoute/édite les contenus</span><span class="k">MM_DATA</span></div>
-                      <div class="action"><span>Conseil : ajoute les acteurs carte</span><span class="k">ACTEURS</span></div>
-                      <div class="action"><span>Astuce : cache géocodage</span><small>localStorage</small></div>
+                      <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
+                      <div class="action"><span>Ajouter des acteurs carte</span><span class="k">ACTEURS</span></div>
+                      <div class="action"><span>Export PDF</span><span class="k">Print</span></div>
                     </div>
                   </div>
                 </div>
@@ -517,6 +549,7 @@
           <div class="panel-footer">
             <button class="btn primary" id="mmResetBtn" type="button">Retour intro</button>
             <button class="btn" id="mmExpandBtn" type="button">Ouvrir branche 1</button>
+            <button class="btn" id="mmPdfBtn" type="button">📄 Exporter PDF</button>
           </div>
         </aside>
       </div>
@@ -641,6 +674,11 @@
       }
     }
 
+    function isLightColor(hex){
+      // #f1d7bc => light ; sinon dark
+      return String(hex).toLowerCase() === "#f1d7bc";
+    }
+
     /* =======================
       1) MIND MAP — DATA
     ======================= */
@@ -687,6 +725,7 @@
     const mmPanelBadge = document.getElementById("mmPanelBadge");
     const mmResetBtn = document.getElementById("mmResetBtn");
     const mmExpandBtn = document.getElementById("mmExpandBtn");
+    const mmPdfBtn = document.getElementById("mmPdfBtn");
 
     mmCenterTitle.innerHTML = MM_DATA.centerTitle.replace(" — ", "<br>");
 
@@ -711,11 +750,19 @@
       btn.setAttribute("aria-label", branch.title);
 
       const color = categoryColor(branch.cat);
+      const light = isLightColor(color);
+
+      // ✅ bulle = couleur catégorie (comme l’étiquette)
+      btn.style.background = light
+        ? `linear-gradient(180deg, rgba(241,215,188,.98), rgba(241,215,188,.90))`
+        : `linear-gradient(180deg, ${color}, ${color})`;
+      btn.style.color = light ? "#000" : "#fff";
+      btn.style.borderColor = light ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.18)";
 
       const tag = document.createElement("div");
       tag.className = "tag";
       tag.style.background = color;
-      if(String(color).toLowerCase() === "#f1d7bc") tag.style.color = "#000";
+      tag.style.color = light ? "#000" : "#fff";
 
       const dot = document.createElement("span");
       dot.className = "dot";
@@ -748,7 +795,7 @@
     function mmLayout(){
       const cx = 50, cy = 50;
 
-      /* ellipse (paysage) */
+      // ellipse (paysage) pour respirer
       const ringX = 44;
       const ringY = 34;
 
@@ -813,9 +860,9 @@
               <div class="sidebox">
                 <p class="title">⚡ Actions</p>
                 <div class="actions">
-                  <div class="action"><span>Aller à la carte (onglet)</span><span class="k">🗺️</span></div>
                   <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
                   <div class="action"><span>Ajouter des acteurs</span><span class="k">ACTEURS</span></div>
+                  <div class="action"><span>Exporter en PDF</span><span class="k">Print</span></div>
                 </div>
               </div>
             </div>
@@ -825,6 +872,7 @@
       }, 40);
     }
 
+    // ✅ IMPORTANT: pas de bascule vers la carte
     function mmActivate(id){
       const branch = MM_DATA.branches.find(b => b.id === id);
       if(!branch) return;
@@ -862,9 +910,9 @@
               <div class="sidebox">
                 <p class="title">⚡ Actions</p>
                 <div class="actions">
-                  <div class="action"><span>Conseil : ajoute/édite les contenus</span><span class="k">MM_DATA</span></div>
-                  <div class="action"><span>Conseil : ajoute les acteurs carte</span><span class="k">ACTEURS</span></div>
-                  <div class="action"><span>Astuce : cache géocodage</span><small>localStorage</small></div>
+                  <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
+                  <div class="action"><span>Ajouter des acteurs</span><span class="k">ACTEURS</span></div>
+                  <div class="action"><span>Exporter en PDF</span><span class="k">Print</span></div>
                 </div>
               </div>
             </div>
@@ -874,11 +922,17 @@
       }, 40);
     }
 
+    function exportMindMapPDF(){
+      setView("mind");
+      setTimeout(() => window.print(), 120);
+    }
+
     MM_DATA.branches.forEach(b => { mmCreateLink(b.id); mmCreateNode(b); });
     mmLayout();
     window.addEventListener("resize", mmLayout);
     mmResetBtn.addEventListener("click", mmReset);
     mmExpandBtn.addEventListener("click", () => mmActivate(MM_DATA.branches[0].id));
+    mmPdfBtn.addEventListener("click", exportMindMapPDF);
 
     /* =======================
       2) CARTE — acteurs
@@ -907,7 +961,7 @@
       { id:"ordia_port", categorie:"OF", nom:"ORDIA SARL", commune:"Le Port", adresse:"69 rue Jeanne d'Arc, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" }
     ];
 
-    const CACHE_KEY = "geo_cache_v5_reunion_acteurs";
+    const CACHE_KEY = "geo_cache_v6_reunion_acteurs";
     const cache = (() => {
       try{
         const raw = localStorage.getItem(CACHE_KEY);
