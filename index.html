@@ -3,192 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecosystème Formation Réunion 2026</title>
+    <title>Cartographie Formation Réunion - Version Intégrale</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        body { background-color: #f1f5f9; scroll-behavior: smooth; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap');
         
-        /* Style Nuage */
-        .cloud-node {
-            fill: white;
-            stroke: #e2e8f0;
-            stroke-width: 2;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
-        }
-        .branch-group:hover .cloud-node {
-            fill: #f8fafc;
-            stroke: #3b82f6;
-            transform: translateY(-5px);
-            filter: drop-shadow(0 10px 15px rgba(59, 130, 246, 0.2));
-        }
+        body { font-family: 'Outfit', sans-serif; background: #f0f4f8; color: #1e293b; scroll-behavior: smooth; }
 
-        /* Panneau Latéral */
+        /* Style Nuage Premium - Fixe */
+        .cloud-node {
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            fill: white;
+            stroke-width: 3;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+        }
+        .branch:hover .cloud-node {
+            transform: translateY(-8px);
+            filter: drop-shadow(0 15px 25px rgba(59, 130, 246, 0.2));
+        }
+        .branch:hover text { fill: #2563eb; }
+
+        /* Panneau Latéral Complet */
         #sidePanel {
-            position: fixed; top: 0; right: 0; height: 100%; width: 100%; max-width: 500px;
-            background: white; z-index: 10000; box-shadow: -10px 0 50px rgba(0,0,0,0.1);
-            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 2rem; overflow-y: auto;
+            position: fixed; top: 0; right: 0; height: 100%; width: 100%; max-width: 600px;
+            background: white; z-index: 10000; box-shadow: -20px 0 60px rgba(0,0,0,0.15);
+            transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto; padding: 40px;
         }
         #sidePanel.open { transform: translateX(0); }
 
-        /* Conteneur Carte */
-        #map-container {
-            height: 600px; width: 100%; border-radius: 2rem; overflow: hidden;
-            border: 8px solid white; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
+        /* Carte */
+        #map-section { height: 600px; border-radius: 2.5rem; border: 10px solid white; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); }
+        
+        /* Glassmorphism pour l'annuaire */
+        .of-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid white; transition: all 0.3s ease; }
+        .of-card:hover { transform: scale(1.02); border-color: #3b82f6; }
     </style>
 </head>
 <body>
 
-    <header class="p-8 text-center">
-        <h1 class="text-4xl font-black text-slate-800 uppercase tracking-tighter">Cartographie des Acteurs</h1>
-        <p class="text-blue-600 font-bold tracking-widest text-sm">RÉUNION - FILIÈRE ÉDUCATION & FORMATION</p>
+    <header class="pt-12 px-10 text-center lg:text-left">
+        <h1 class="text-5xl font-black text-slate-800 uppercase italic tracking-tighter">Cartographie <span class="text-blue-600">Pro</span></h1>
+        <p class="text-slate-500 font-bold mt-2 uppercase tracking-widest text-sm">Réunion 2026 • Filière Éducation & Formation</p>
     </header>
 
-    <section class="relative w-full flex justify-center items-center py-10 bg-white border-y border-slate-200">
-        <svg viewBox="0 0 1200 800" class="w-full max-w-6xl h-auto">
-            <g fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="8">
-                <path d="M600,400 L300,150" /> <path d="M600,400 L900,150" />
-                <path d="M600,400 L1000,400" /> <path d="M600,400 L900,650" />
-                <path d="M600,400 L600,720" /> <path d="M600,400 L300,650" />
-                <path d="M600,400 L200,400" />
-            </g>
+    <div class="w-full min-h-[90vh] flex items-center justify-center p-4">
+        <svg viewBox="0 0 1200 800" class="w-full h-full max-w-7xl">
+            <defs>
+                <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ffffff"/><stop offset="100%" style="stop-color:#f1f5f9"/></linearGradient>
+            </defs>
 
-            <g class="branch-group" onclick="openBranch('intro')">
-                <ellipse cx="600" cy="400" rx="100" ry="50" class="cloud-node" style="fill: #1e293b; stroke: none;"/>
-                <text x="600" y="405" text-anchor="middle" fill="white" font-weight="bold">FORMATION 2026</text>
-            </g>
-
-            <g class="branch-group" onclick="openBranch('pilotage')">
-                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(50,20)"/>
-                <text x="250" y="155" text-anchor="middle" font-weight="bold" class="text-xs uppercase">1. Pilotage & Contrôle</text>
-            </g>
-
-            <g class="branch-group" onclick="openBranch('financeurs')">
-                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(700,20)"/>
-                <text x="900" y="155" text-anchor="middle" font-weight="bold" class="text-xs uppercase">2. Financeurs (OPCO)</text>
-            </g>
-
-            <g class="branch-group" onclick="openBranch('organismes')">
-                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(800,300)"/>
-                <text x="1000" y="435" text-anchor="middle" font-weight="bold" class="text-xs uppercase">3. Organismes (OF)</text>
-            </g>
-
-            <g class="branch-group" onclick="openBranch('accompagnement')">
-                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(700,550)"/>
-                <text x="900" y="685" text-anchor="middle" font-weight="bold" class="text-xs uppercase">4. Accompagnement</text>
-            </g>
-
-            <g class="branch-group" onclick="openBranch('evenements')">
-                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(400,620)"/>
-                <text x="600" y="755" text-anchor="middle" font-weight="bold" class="text-xs uppercase">5. Événements</text>
-            </g>
-
-            <g class="branch-group" onclick="openBranch('logistique')">
-                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(100,550)"/>
-                <text x="300" y="685" text-anchor="middle" font-weight="bold" class="text-xs uppercase">6. Partenaires Log.</text>
-            </g>
-
-            <g class="branch-group" onclick="openBranch('reseautage')">
-                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(0,300)"/>
-                <text x="200" y="435" text-anchor="middle" font-weight="bold" class="text-xs uppercase">7. Réseautage</text>
-            </g>
-        </svg>
-    </section>
-
-    <main class="max-w-7xl mx-auto p-10 space-y-10">
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-black text-slate-800">CARTE INTERACTIVE DES SITES (SUD)</h2>
-            <div class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold">38 Organismes Référencés</div>
-        </div>
-        
-        <div id="map-container">
-            <div id="map" class="h-full w-full"></div>
-        </div>
-    </main>
-
-    <div id="sidePanel">
-        <button onclick="closeBranch()" class="mb-10 text-slate-400 hover:text-red-500 font-black text-xs uppercase tracking-widest">✕ Fermer</button>
-        <div id="sideContent"></div>
-    </div>
-
-    <script>
-        // DONNÉES WORD
-        const branchData = {
-            pilotage: {
-                title: "1. Pilotage & Contrôle",
-                content: "DEETS Réunion (Contrôle OF, Agréments), Conseil Régional (Stratégie CPRDFOP), France Compétences."
-            },
-            financeurs: {
-                title: "2. Financeurs (OPCO)",
-                content: "Les 11 OPCO (AKTO, ATLAS, Mobilités, etc.) financent l'apprentissage et le plan de développement des compétences."
-            },
-            organismes: {
-                title: "3. Organismes (38 OF)",
-                content: "Success Formation, AFTRAL, CCI Campus Pro, TETRANERGY... Liste complète disponible dans la section Carte."
-            },
-            accompagnement: {
-                title: "4. Accompagnement",
-                content: "France Travail, Missions Locales, CAP Emploi (Focus Sud : Saint-Pierre et Saint-Louis)."
-            },
-            evenements: {
-                title: "5. Manifestations",
-                content: "Salons de l'apprentissage, Forums des métiers territoriaux, Semaine de la formation pro."
-            },
-            logistique: {
-                title: "6. Partenaires Logistique",
-                content: "AFT, France Logistique, Union TLF, TLF Overseas (Acteurs clés de la filière transport)."
-            },
-            reseautage: {
-                title: "7. Réseautage",
-                content: "LinkedIn Pro, Formanoo, MonCompteFormation, Associations de formateurs."
-            }
-        };
-
-        // GESTION PANNEAU
-        function openBranch(key) {
-            const data = branchData[key];
-            if(!data) return;
-            document.getElementById('sideContent').innerHTML = `
-                <h2 class="text-3xl font-black text-blue-600 mb-6">${data.title}</h2>
-                <div class="p-6 bg-slate-50 rounded-2xl border-l-8 border-blue-500 text-slate-700 leading-relaxed font-medium">
-                    ${data.content}
-                </div>
-            `;
-            document.getElementById('sidePanel').classList.add('open');
-        }
-
-        function closeBranch() {
-            document.getElementById('sidePanel').classList.remove('open');
-        }
-
-        // INITIALISATION CARTE (Indépendante)
-        window.onload = function() {
-            const map = L.map('map').setView([-21.32, 55.47], 11);
-            L.tileLayer('https://{s}.tile.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                attribution: '©OpenStreetMap'
-            }).addTo(map);
-
-            // Marqueurs témoins
-            const sites = [
-                { name: "SUCCESS FORMATION", pos: [-21.34, 55.47] },
-                { name: "AFTRAL Cambaie", pos: [-20.94, 55.30] },
-                { name: "CCI Campus Pro", pos: [-21.33, 55.48] }
-            ];
-
-            sites.forEach(site => {
-                L.marker(site.pos).addTo(map).bindPopup(`<b>${site.name}</b>`);
-            });
-            
-            // Correction bug affichage Leaflet au chargement
-            setTimeout(() => { map.invalidateSize(); }, 500);
-        };
-    </script>
-</body>
-</html>
+            <g fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="10,10">
+                <path d="M600,400 L300,180" /><path d="M600,400 L900,180" />
+                <path d="M600,400 L1050,400" /><path d="M600,400 L900,620" />
+                <path d="M600,400 L600,740" /><path d="M600,400 L300,620" />
+                <path d="M6
