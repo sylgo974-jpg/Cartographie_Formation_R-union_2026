@@ -3,113 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartographie Formation Réunion 2026</title>
+    <title>Cartographie Formation Réunion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        .cloud { transition: all 0.4s ease; cursor: pointer; }
-        .cloud:hover { transform: scale(1.08); filter: brightness(1.1); }
-        #detailsPanel { transition: transform 0.5s ease; transform: translateX(100%); }
-        #detailsPanel.open { transform: translateX(0); }
-        .path-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 2s forwards; }
-        @keyframes draw { to { stroke-dashoffset: 0; } }
-        #map { height: 500px; border-radius: 1.5rem; }
+        body { background: radial-gradient(circle, #f8fafc 0%, #e2e8f0 100%); overflow-x: hidden; }
+        
+        /* Design Nuage Premium */
+        .cloud-shape {
+            fill: white;
+            stroke: #cbd5e1;
+            stroke-width: 2;
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.05));
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .branch:hover .cloud-shape {
+            fill: #f1f5f9;
+            stroke: #3b82f6;
+            transform: translateY(-5px);
+        }
+        .branch:hover text { fill: #2563eb; }
+
+        /* Panneau Latéral */
+        #sidePanel {
+            position: fixed; top: 0; right: 0; height: 100%; width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        #sidePanel.open { transform: translateX(0); }
+
+        #map { height: 500px; width: 100%; border-radius: 2rem; border: 8px solid white; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
     </style>
 </head>
-<body class="bg-slate-50 font-sans">
+<body class="p-0 m-0">
 
-    <header class="bg-white border-b p-6 sticky top-0 z-[50]">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black text-slate-800 italic uppercase">Réunion Formation <span class="text-orange-600">2026</span></h1>
-            <p class="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full uppercase tracking-widest text-slate-500">Document Source : Word v2026</p>
-        </div>
-    </header>
+    <div class="absolute top-10 left-10 z-10">
+        <h1 class="text-4xl font-black text-slate-800 leading-none">CARTOGRAPHIE<br><span class="text-blue-600">FORMATION</span></h1>
+        <p class="text-slate-500 mt-2 font-medium italic">Réunion - Horizon 2026</p>
+    </div>
 
-    <section class="w-full h-[80vh] bg-white relative overflow-hidden flex items-center justify-center border-b">
-        <svg viewBox="0 0 1200 800" class="w-full h-full p-4">
-            <defs>
-                <linearGradient id="g-blue" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
-                <linearGradient id="g-green" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#059669"/></linearGradient>
-                <linearGradient id="g-orange" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
-                <linearGradient id="g-purple" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
-                <linearGradient id="g-red" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#dc2626"/></linearGradient>
-                <linearGradient id="g-indigo" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#4f46e5"/></linearGradient>
-                <linearGradient id="g-slate" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#64748b"/><stop offset="100%" stop-color="#475569"/></linearGradient>
-            </defs>
-
-            <g fill="none" stroke-width="3" class="path-line">
-                <path d="M600,400 L300,150" stroke="#3b82f6" />
-                <path d="M600,400 L900,150" stroke="#10b981" />
-                <path d="M600,400 L1000,400" stroke="#f59e0b" />
-                <path d="M600,400 L900,650" stroke="#8b5cf6" />
-                <path d="M600,400 L600,720" stroke="#ef4444" />
-                <path d="M600,400 L300,650" stroke="#6366f1" />
-                <path d="M600,400 L200,400" stroke="#64748b" />
+    <div class="w-full h-screen flex items-center justify-center">
+        <svg viewBox="0 0 1200 800" class="w-full h-full">
+            <g stroke="#cbd5e1" stroke-width="2" fill="none" stroke-dasharray="5,5">
+                <path d="M600,400 C600,200 300,250 250,150" />
+                <path d="M600,400 C600,200 900,250 950,150" />
+                <path d="M600,400 L1000,400" />
+                <path d="M600,400 C600,600 900,550 950,650" />
+                <path d="M600,400 L600,700" />
+                <path d="M600,400 C600,600 300,550 250,650" />
+                <path d="M600,400 L200,400" />
             </g>
 
-            <g class="cloud">
-                <rect x="500" y="365" width="200" height="70" rx="35" fill="#1e293b" />
-                <text x="600" y="408" text-anchor="middle" fill="white" font-weight="bold">ACTEURS RÉUNION</text>
+            <g class="branch" onclick="openDetails('root')">
+                <path class="cloud-shape" d="M600,350 c-20,0-35,15-35,35 c0,2,0.2,4,0.5,6 c-15,3-25,15-25,30 c0,18,15,32,32,32 h55 c18,0,32-15,32-32 c0-15-10-27-25-30 c0.3-2,0.5-4,0.5-6 C635,365,620,350,600,350 z" transform="scale(1.5) translate(-200,-130)" />
+                <text x="600" y="410" text-anchor="middle" class="font-bold text-xl fill-slate-800">ACTEURS</text>
             </g>
 
-            <g class="cloud" onclick="showBranch('pilotage')">
-                <rect x="180" y="115" width="240" height="70" rx="35" fill="url(#g-blue)" />
-                <text x="300" y="157" text-anchor="middle" fill="white" font-weight="bold">1. PILOTAGE & CONTRÔLE</text>
+            <g class="branch" onclick="openDetails('pilotage')">
+                <rect class="cloud-shape" x="130" y="100" width="240" height="80" rx="40" />
+                <text x="250" y="148" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">1. Pilotage & Contrôle</text>
             </g>
-            <g class="cloud" onclick="showBranch('financeurs')">
-                <rect x="780" y="115" width="240" height="70" rx="35" fill="url(#g-green)" />
-                <text x="900" y="157" text-anchor="middle" fill="white" font-weight="bold">2. FINANCEURS (OPCO)</text>
-            </g>
-            <g class="cloud" onclick="showBranch('of')">
-                <rect x="890" y="365" width="240" height="70" rx="35" fill="url(#g-orange)" />
-                <text x="1010" y="407" text-anchor="middle" fill="white" font-weight="bold">3. ORGANISMES (OF)</text>
-            </g>
-            <g class="cloud" onclick="showBranch('accompagnement')">
-                <rect x="780" y="615" width="240" height="70" rx="35" fill="url(#g-purple)" />
-                <text x="900" y="657" text-anchor="middle" fill="white" font-weight="bold">4. ACCOMPAGNEMENT</text>
-            </g>
-            <g class="cloud" onclick="showBranch('evenements')">
-                <rect x="480" y="685" width="240" height="70" rx="35" fill="url(#g-red)" />
-                <text x="600" y="727" text-anchor="middle" fill="white" font-weight="bold">5. ÉVÉNEMENTS 2026</text>
-            </g>
-            <g class="cloud" onclick="showBranch('logistique')">
-                <rect x="180" y="615" width="240" height="70" rx="35" fill="url(#g-indigo)" />
-                <text x="300" y="657" text-anchor="middle" fill="white" font-weight="bold">6. PARTENAIRES LOG.</text>
-            </g>
-            <g class="cloud" onclick="showBranch('reseautage')">
-                <rect x="70" y="365" width="240" height="70" rx="35" fill="url(#g-slate)" />
-                <text x="190" y="407" text-anchor="middle" fill="white" font-weight="bold">7. RÉSEAUTAGE PRO</text>
-            </g>
-        </svg>
-    </section>
 
-    <main class="max-w-7xl mx-auto p-6 space-y-12">
-        <section>
-            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                <span class="bg-green-600 w-3 h-8 rounded-full"></span>
-                Localisation Prioritaire (Sud)
-            </h2>
-            <div id="map" class="shadow-xl"></div>
-        </section>
+            <g class="branch" onclick="openDetails('financeurs')">
+                <rect class="cloud-shape" x="830" y="100" width="240" height="80" rx="40" />
+                <text x="950" y="148" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">2. Financeurs (OPCO)</text>
+            </g>
 
-        <section>
-            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Annuaire des 38 Organismes</h2>
-                    <p class="text-slate-500">Source : Formanoo (Mise à jour 22/01/2026)</p>
-                </div>
-                <select id="cityFilter" class="bg-white border-2 border-orange-500 p-4 rounded-2xl font-bold text-slate-700 shadow-lg">
-                    <option value="all">📍 Toutes les villes (38)</option>
-                    <option value="ST PIERRE">Saint-Pierre (13)</option>
-                    <option value="LE PORT">Le Port (7)</option>
-                    <option value="ST DENIS">Saint-Denis (7)</option>
-                    <option value="ST PAUL">Saint-Paul (4)</option>
-                    <option value="AUTRES">Autres Communes</option>
-                </select>
-            </div>
-            <div id="ofGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
-    </main>
+            <g class="branch" onclick="openDetails('of')">
+                <rect class="cloud-shape" x="900" y="360" width="240" height="80" rx="40" />
+                <text x="1020" y="408" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">3. Organismes (OF)</text>
+            </g>
 
-    <div id="detailsPanel" class="fixed top-0 right
+            <g class="branch" onclick="openDetails('accompagnement')">
+                <rect class="cloud-shape" x="830" y="610" width="240" height="80" rx="40" />
+                <text x="950" y="658" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">4. Accompagnement</text>
+            </g>
+
+            <g class="branch" onclick="openDetails('evenements')">
+                <rect class="cloud-shape" x="480" y="680" width="240" height="80" rx="40" />
+                <text x="600" y="728" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter
