@@ -3,90 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartographie Formation Réunion</title>
+    <title>Ecosystème Formation Réunion 2026</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
-        body { background: radial-gradient(circle, #f8fafc 0%, #e2e8f0 100%); overflow-x: hidden; }
+        body { background-color: #f1f5f9; scroll-behavior: smooth; }
         
-        /* Design Nuage Premium */
-        .cloud-shape {
+        /* Style Nuage */
+        .cloud-node {
             fill: white;
-            stroke: #cbd5e1;
+            stroke: #e2e8f0;
             stroke-width: 2;
-            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.05));
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
         }
-        .branch:hover .cloud-shape {
-            fill: #f1f5f9;
+        .branch-group:hover .cloud-node {
+            fill: #f8fafc;
             stroke: #3b82f6;
             transform: translateY(-5px);
+            filter: drop-shadow(0 10px 15px rgba(59, 130, 246, 0.2));
         }
-        .branch:hover text { fill: #2563eb; }
 
         /* Panneau Latéral */
         #sidePanel {
-            position: fixed; top: 0; right: 0; height: 100%; width: 450px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-            transform: translateX(100%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 9999;
-            padding: 40px;
-            overflow-y: auto;
+            position: fixed; top: 0; right: 0; height: 100%; width: 100%; max-width: 500px;
+            background: white; z-index: 10000; box-shadow: -10px 0 50px rgba(0,0,0,0.1);
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem; overflow-y: auto;
         }
         #sidePanel.open { transform: translateX(0); }
 
-        #map { height: 500px; width: 100%; border-radius: 2rem; border: 8px solid white; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        /* Conteneur Carte */
+        #map-container {
+            height: 600px; width: 100%; border-radius: 2rem; overflow: hidden;
+            border: 8px solid white; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
-<body class="p-0 m-0">
+<body>
 
-    <div class="absolute top-10 left-10 z-10">
-        <h1 class="text-4xl font-black text-slate-800 leading-none">CARTOGRAPHIE<br><span class="text-blue-600">FORMATION</span></h1>
-        <p class="text-slate-500 mt-2 font-medium italic">Réunion - Horizon 2026</p>
-    </div>
+    <header class="p-8 text-center">
+        <h1 class="text-4xl font-black text-slate-800 uppercase tracking-tighter">Cartographie des Acteurs</h1>
+        <p class="text-blue-600 font-bold tracking-widest text-sm">RÉUNION - FILIÈRE ÉDUCATION & FORMATION</p>
+    </header>
 
-    <div class="w-full h-screen flex items-center justify-center">
-        <svg viewBox="0 0 1200 800" class="w-full h-full">
-            <g stroke="#cbd5e1" stroke-width="2" fill="none" stroke-dasharray="5,5">
-                <path d="M600,400 C600,200 300,250 250,150" />
-                <path d="M600,400 C600,200 900,250 950,150" />
-                <path d="M600,400 L1000,400" />
-                <path d="M600,400 C600,600 900,550 950,650" />
-                <path d="M600,400 L600,700" />
-                <path d="M600,400 C600,600 300,550 250,650" />
+    <section class="relative w-full flex justify-center items-center py-10 bg-white border-y border-slate-200">
+        <svg viewBox="0 0 1200 800" class="w-full max-w-6xl h-auto">
+            <g fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="8">
+                <path d="M600,400 L300,150" /> <path d="M600,400 L900,150" />
+                <path d="M600,400 L1000,400" /> <path d="M600,400 L900,650" />
+                <path d="M600,400 L600,720" /> <path d="M600,400 L300,650" />
                 <path d="M600,400 L200,400" />
             </g>
 
-            <g class="branch" onclick="openDetails('root')">
-                <path class="cloud-shape" d="M600,350 c-20,0-35,15-35,35 c0,2,0.2,4,0.5,6 c-15,3-25,15-25,30 c0,18,15,32,32,32 h55 c18,0,32-15,32-32 c0-15-10-27-25-30 c0.3-2,0.5-4,0.5-6 C635,365,620,350,600,350 z" transform="scale(1.5) translate(-200,-130)" />
-                <text x="600" y="410" text-anchor="middle" class="font-bold text-xl fill-slate-800">ACTEURS</text>
+            <g class="branch-group" onclick="openBranch('intro')">
+                <ellipse cx="600" cy="400" rx="100" ry="50" class="cloud-node" style="fill: #1e293b; stroke: none;"/>
+                <text x="600" y="405" text-anchor="middle" fill="white" font-weight="bold">FORMATION 2026</text>
             </g>
 
-            <g class="branch" onclick="openDetails('pilotage')">
-                <rect class="cloud-shape" x="130" y="100" width="240" height="80" rx="40" />
-                <text x="250" y="148" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">1. Pilotage & Contrôle</text>
+            <g class="branch-group" onclick="openBranch('pilotage')">
+                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(50,20)"/>
+                <text x="250" y="155" text-anchor="middle" font-weight="bold" class="text-xs uppercase">1. Pilotage & Contrôle</text>
             </g>
 
-            <g class="branch" onclick="openDetails('financeurs')">
-                <rect class="cloud-shape" x="830" y="100" width="240" height="80" rx="40" />
-                <text x="950" y="148" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">2. Financeurs (OPCO)</text>
+            <g class="branch-group" onclick="openBranch('financeurs')">
+                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(700,20)"/>
+                <text x="900" y="155" text-anchor="middle" font-weight="bold" class="text-xs uppercase">2. Financeurs (OPCO)</text>
             </g>
 
-            <g class="branch" onclick="openDetails('of')">
-                <rect class="cloud-shape" x="900" y="360" width="240" height="80" rx="40" />
-                <text x="1020" y="408" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">3. Organismes (OF)</text>
+            <g class="branch-group" onclick="openBranch('organismes')">
+                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(800,300)"/>
+                <text x="1000" y="435" text-anchor="middle" font-weight="bold" class="text-xs uppercase">3. Organismes (OF)</text>
             </g>
 
-            <g class="branch" onclick="openDetails('accompagnement')">
-                <rect class="cloud-shape" x="830" y="610" width="240" height="80" rx="40" />
-                <text x="950" y="658" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter">4. Accompagnement</text>
+            <g class="branch-group" onclick="openBranch('accompagnement')">
+                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(700,550)"/>
+                <text x="900" y="685" text-anchor="middle" font-weight="bold" class="text-xs uppercase">4. Accompagnement</text>
             </g>
 
-            <g class="branch" onclick="openDetails('evenements')">
-                <rect class="cloud-shape" x="480" y="680" width="240" height="80" rx="40" />
-                <text x="600" y="728" text-anchor="middle" class="font-bold fill-slate-700 uppercase tracking-tighter
+            <g class="branch-group" onclick="openBranch('evenements')">
+                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(400,620)"/>
+                <text x="600" y="755" text-anchor="middle" font-weight="bold" class="text-xs uppercase">5. Événements</text>
+            </g>
+
+            <g class="branch-group" onclick="openBranch('logistique')">
+                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(100,550)"/>
+                <text x="300" y="685" text-anchor="middle" font-weight="bold" class="text-xs uppercase">6. Partenaires Log.</text>
+            </g>
+
+            <g class="branch-group" onclick="openBranch('reseautage')">
+                <path d="M200,100 q20,-20 40,0 t40,0 t40,0 t40,0 v40 q0,20 -20,20 h-120 q-20,0 -20,-20 z" class="cloud-node" transform="translate(0,300)"/>
+                <text x="200" y="435" text-anchor="middle" font-weight="bold" class="text-xs uppercase">7. Réseautage</text>
+            </g>
+        </svg>
+    </section>
+
+    <main class="max-w-7xl mx-auto p-10 space-y-10">
+        <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-black text-slate-800">CARTE INTERACTIVE DES SITES (SUD)</h2>
+            <div class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold">38 Organismes Référencés</div>
+        </div>
+        
+        <div id="map-container">
+            <div id="map" class="h-full w-full"></div>
+        </div>
+    </main>
+
+    <div id="sidePanel">
+        <button onclick="closeBranch()" class="mb-10 text-slate-400 hover:text-red-500 font-black text-xs uppercase tracking-widest">✕ Fermer</button>
+        <div id="sideContent"></div>
+    </div>
+
+    <script>
+        // DONNÉES WORD
+        const branchData = {
+            pilotage: {
+                title: "1. Pilotage & Contrôle",
+                content: "DEETS Réunion (Contrôle OF, Agréments), Conseil Régional (Stratégie CPRDFOP), France Compétences."
+            },
+            financeurs: {
+                title: "2. Financeurs (OPCO)",
+                content: "Les 11 OPCO (AKTO, ATLAS, Mobilités, etc.) financent l'apprentissage et le plan de développement des compétences."
+            },
+            organismes: {
+                title: "3. Organismes (38 OF)",
+                content: "Success Formation, AFTRAL, CCI Campus Pro, TETRANERGY... Liste complète disponible dans la section Carte."
+            },
+            accompagnement: {
+                title: "4. Accompagnement",
+                content: "France Travail, Missions Locales, CAP Emploi (Focus Sud : Saint-Pierre et Saint-Louis)."
+            },
+            evenements: {
+                title: "5. Manifestations",
+                content: "Salons de l'apprentissage, Forums des métiers territoriaux, Semaine de la formation pro."
+            },
+            logistique: {
+                title: "6. Partenaires Logistique",
+                content: "AFT, France Logistique, Union TLF, TLF Overseas (Acteurs clés de la filière transport)."
+            },
+            reseautage: {
+                title: "7. Réseautage",
+                content: "LinkedIn Pro, Formanoo, MonCompteFormation, Associations de formateurs."
+            }
+        };
+
+        // GESTION PANNEAU
+        function openBranch(key) {
+            const data = branchData[key];
+            if(!data) return;
+            document.getElementById('sideContent').innerHTML = `
+                <h2 class="text-3xl font-black text-blue-600 mb-6">${data.title}</h2>
+                <div class="p-6 bg-slate-50 rounded-2xl border-l-8 border-blue-500 text-slate-700 leading-relaxed font-medium">
+                    ${data.content}
+                </div>
+            `;
+            document.getElementById('sidePanel').classList.add('open');
+        }
+
+        function closeBranch() {
+            document.getElementById('sidePanel').classList.remove('open');
+        }
+
+        // INITIALISATION CARTE (Indépendante)
+        window.onload = function() {
+            const map = L.map('map').setView([-21.32, 55.47], 11);
+            L.tileLayer('https://{s}.tile.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '©OpenStreetMap'
+            }).addTo(map);
+
+            // Marqueurs témoins
+            const sites = [
+                { name: "SUCCESS FORMATION", pos: [-21.34, 55.47] },
+                { name: "AFTRAL Cambaie", pos: [-20.94, 55.30] },
+                { name: "CCI Campus Pro", pos: [-21.33, 55.48] }
+            ];
+
+            sites.forEach(site => {
+                L.marker(site.pos).addTo(map).bindPopup(`<b>${site.name}</b>`);
+            });
+            
+            // Correction bug affichage Leaflet au chargement
+            setTimeout(() => { map.invalidateSize(); }, 500);
+        };
+    </script>
+</body>
+</html>
