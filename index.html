@@ -1,65 +1,536 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartographie Formation Réunion - Version Intégrale</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Carte — Acteurs formation pro Réunion (2026) — par commune</title>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap');
-        
-        body { font-family: 'Outfit', sans-serif; background: #f0f4f8; color: #1e293b; scroll-behavior: smooth; }
+  <!-- Leaflet (carte) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
-        /* Style Nuage Premium - Fixe */
-        .cloud-node {
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-            fill: white;
-            stroke-width: 3;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
-        }
-        .branch:hover .cloud-node {
-            transform: translateY(-8px);
-            filter: drop-shadow(0 15px 25px rgba(59, 130, 246, 0.2));
-        }
-        .branch:hover text { fill: #2563eb; }
+  <style>
+    :root{
+      --bg1:#1a0f3f; --bg2:#3a1f7a; --bg3:#0b1232;
+      --magenta:#ff2ea6; --magenta2:#ff4cc0;
+      --stroke: rgba(255,255,255,.18);
+      --panel: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --shadow: 0 24px 80px rgba(0,0,0,.42);
+      --radius: 18px;
+      --ease:cubic-bezier(.2,.85,.25,1);
+      --dur:220ms;
+    }
 
-        /* Panneau Latéral Complet */
-        #sidePanel {
-            position: fixed; top: 0; right: 0; height: 100%; width: 100%; max-width: 600px;
-            background: white; z-index: 10000; box-shadow: -20px 0 60px rgba(0,0,0,0.15);
-            transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow-y: auto; padding: 40px;
-        }
-        #sidePanel.open { transform: translateX(0); }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 18% 22%, rgba(255,46,166,.18), transparent 60%),
+        radial-gradient(900px 700px at 78% 20%, rgba(150,90,255,.22), transparent 55%),
+        radial-gradient(1100px 900px at 50% 92%, rgba(80,255,210,.10), transparent 60%),
+        linear-gradient(135deg, var(--bg2), var(--bg1) 55%, var(--bg3));
+      min-height:100vh;
+    }
 
-        /* Carte */
-        #map-section { height: 600px; border-radius: 2.5rem; border: 10px solid white; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); }
-        
-        /* Glassmorphism pour l'annuaire */
-        .of-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid white; transition: all 0.3s ease; }
-        .of-card:hover { transform: scale(1.02); border-color: #3b82f6; }
-    </style>
+    header{
+      padding: 18px 18px 10px;
+      max-width: 1400px;
+      margin: 0 auto;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:14px;
+    }
+    header h1{margin:0; font-size: clamp(18px, 2.1vw, 28px)}
+    header p{margin:6px 0 0; color: var(--muted); font-size: 14px; line-height:1.45; max-width: 90ch}
+    .pill{
+      background: linear-gradient(90deg, rgba(255,46,166,.92), rgba(255,76,192,.85));
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-weight: 900;
+      font-size: 12px;
+      white-space:nowrap;
+      box-shadow: 0 14px 30px rgba(0,0,0,.25);
+    }
+
+    .app{
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 10px 18px 18px;
+      display:grid;
+      grid-template-columns: 1.35fr .85fr;
+      gap: 14px;
+      align-items:stretch;
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    /* MAP */
+    .map-head{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.10);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .map-head b{font-size: 13px}
+    .map-head span{display:block; font-size: 12px; color: var(--muted); margin-top:3px}
+    .map-actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      padding: 9px 11px;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 12px;
+      cursor:pointer;
+      transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.14)}
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(255,46,166,.92), rgba(255,76,192,.85));
+      border-color: rgba(255,255,255,.22);
+    }
+    #map{width:100%; min-height: 650px;}
+
+    /* SIDE */
+    .side{display:flex; flex-direction:column; min-height: 650px;}
+    .side-head{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.10);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .filters{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .filters input, .filters select{
+      width:100%;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.14);
+      color:#fff;
+      outline:none;
+    }
+    .filters input::placeholder{color: rgba(255,255,255,.55)}
+    .meta{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .note{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.22);
+      background: rgba(0,0,0,.12);
+      color: rgba(255,255,255,.80);
+      font-size: 12px;
+      line-height:1.4;
+    }
+
+    .table-wrap{padding: 10px 14px 14px; overflow:auto; flex:1;}
+    table{width:100%; border-collapse: collapse; font-size: 12.5px;}
+    th, td{padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,.10); vertical-align:top; text-align:left;}
+    th{
+      position:sticky; top:0;
+      background: rgba(0,0,0,.20);
+      backdrop-filter: blur(10px);
+      z-index:2;
+      font-size: 12px;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.86);
+    }
+    tr.row{cursor:pointer; transition: background var(--dur) var(--ease);}
+    tr.row:hover{background: rgba(255,255,255,.06)}
+    tr.row.active{background: rgba(255,46,166,.16); outline: 1px solid rgba(255,46,166,.22);}
+    .badge{
+      display:inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-weight: 950;
+      font-size: 11px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      white-space:nowrap;
+    }
+    .badge.ok{background: rgba(125,255,180,.12)}
+    .badge.no{background: rgba(255,138,106,.12)}
+
+    @media (max-width: 1050px){
+      .app{grid-template-columns: 1fr}
+      #map{min-height: 520px}
+      .side{min-height: 520px}
+    }
+  </style>
 </head>
+
 <body>
+  <header>
+    <div>
+      <h1>Carte interactive — Acteurs formation pro Réunion (2026) — par commune</h1>
+      <p>
+        Règle : <b>on place uniquement les acteurs avec une adresse postale</b>. Les coordonnées sont obtenues via géocodage (Nominatim/OSM) avec cache navigateur.
+      </p>
+    </div>
+    <div class="pill">Carte + Table (communes)</div>
+  </header>
 
-    <header class="pt-12 px-10 text-center lg:text-left">
-        <h1 class="text-5xl font-black text-slate-800 uppercase italic tracking-tighter">Cartographie <span class="text-blue-600">Pro</span></h1>
-        <p class="text-slate-500 font-bold mt-2 uppercase tracking-widest text-sm">Réunion 2026 • Filière Éducation & Formation</p>
-    </header>
+  <div class="app">
+    <section class="card">
+      <div class="map-head">
+        <div>
+          <b>Carte</b>
+          <span>Marqueur ↔ ligne synchronisés • Filtre par commune</span>
+        </div>
+        <div class="map-actions">
+          <button class="btn" id="fitBtn" type="button">Ajuster la vue</button>
+          <button class="btn" id="regeoBtn" type="button">Re-géocoder (force)</button>
+          <button class="btn primary" id="clearBtn" type="button">Tout afficher</button>
+        </div>
+      </div>
+      <div id="map"></div>
+    </section>
 
-    <div class="w-full min-h-[90vh] flex items-center justify-center p-4">
-        <svg viewBox="0 0 1200 800" class="w-full h-full max-w-7xl">
-            <defs>
-                <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ffffff"/><stop offset="100%" style="stop-color:#f1f5f9"/></linearGradient>
-            </defs>
+    <aside class="card side">
+      <div class="side-head">
+        <div class="filters">
+          <select id="communeSel">
+            <option value="TOUTES">Toutes communes</option>
+          </select>
+          <input id="q" type="search" placeholder="Recherche : nom, adresse, téléphone…" />
+        </div>
 
-            <g fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="10,10">
-                <path d="M600,400 L300,180" /><path d="M600,400 L900,180" />
-                <path d="M600,400 L1050,400" /><path d="M600,400 L900,620" />
-                <path d="M600,400 L600,740" /><path d="M600,400 L300,620" />
-                <path d="M6
+        <div class="meta">
+          <span id="count">0 acteur</span>
+          <span id="placed">0 placés</span>
+        </div>
+
+        <div class="note">
+          ⚠️ Le géocodage dépend d’OSM/Nominatim (internet requis).  
+          Pour éviter le spam : 1 requête/sec + cache <code>localStorage</code>.
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Acteur</th>
+              <th>Commune</th>
+              <th>Adresse</th>
+              <th>Carte</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </aside>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script>
+    /* ============================================================
+      DONNÉES
+      - UNIQUEMENT les acteurs qui ont une adresse postale dans ton texte.
+      - Si l'adresse est trop vague (ex: "ST PIERRE" sans rue), je la laisse quand même
+        mais le géocodage peut échouer → donc non placé sur la carte.
+    ============================================================ */
+    const ACTEURS = [
+      // PILOTAGE / CONTROLE
+      { id:"deets_dir", nom:"DEETS Réunion (Direction)", commune:"Saint-Denis", adresse:"112 rue de la République, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 94 07 07 | deets-974.direction@deets.gouv.fr" },
+      { id:"deets_ctrl", nom:"DEETS — Pôle Contrôle", commune:"Saint-Denis", adresse:"12 Lot. Lemerle, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 90 21 41" },
+
+      // SPE / ACCOMPAGNEMENT
+      { id:"ft_sud", nom:"France Travail — Antenne Sud", commune:"Saint-Pierre", adresse:"40 rue François de Mahy, Saint-Pierre, La Réunion", details:"Contact: 39 49" },
+      { id:"ml_sud_sl", nom:"Missions Locales Sud — Antenne Saint-Louis", commune:"Saint-Louis", adresse:"4 rue du Vieux Moulin, Saint-Louis, La Réunion", details:"Tél: 02 62 26 28 29" },
+
+      // OF / CFA (extraits du doc)
+      { id:"aftral_spaul", nom:"AFTRAL", commune:"Saint-Paul", adresse:"89 rue Henri Cornu, ZI Cambaie, Saint-Paul, La Réunion", details:"Tél: 0262 22 17 17 | reunion@aftral.com" },
+      { id:"arefip_sp", nom:"AREFIP", commune:"Saint-Pierre", adresse:"24 Cité Plaine, Saint-Pierre, La Réunion", details:"Tél: 0262 96 19 79 | contact@arefip.fr" },
+
+      { id:"cci_campuspro", nom:"CCI Pôle Formation — CAMPUS PRO", commune:"Saint-Pierre", adresse:"65 rue Père Lafosse, Saint-Pierre, La Réunion", details:"Tél: 0262 70 99 55 | campuspro@reunion.cci.fr" },
+      { id:"cci_cirfim", nom:"CCI Pôle Formation — CIRFIM", commune:"Le Port", adresse:"31 Av Raymond Mondon, Le Port, La Réunion", details:"Tél: 0262 43 51 12 | cfacirfim@reunion.cci.fr" },
+      { id:"cci_nord", nom:"CCI Pôle Formation — Nord", commune:"Saint-Denis", adresse:"12 rue Gabriel Kerveguen, Saint-Denis, La Réunion", details:"Tél: 0262 48 35 00" },
+      { id:"cci_sud", nom:"CCI Pôle Formation — Sud", commune:"Saint-Pierre", adresse:"15 route Balance, Saint-Pierre, La Réunion", details:"Tél: 0262 96 96 96 | cfasud@reunion.cci.fr" },
+
+      { id:"cefora_port", nom:"CEFORA", commune:"Le Port", adresse:"3 Av Théodore Drouhet, Parc 2000, Le Port, La Réunion", details:"Tél: 0262 24 40 49 | contact@cefora.re" },
+      { id:"cfa_cres_port", nom:"CFA Campus Réunion Enseignement Supérieur", commune:"Le Port", adresse:"1 rue Francis Sautron, Le Port, La Réunion", details:"Tél: 0262 29 26 26" },
+      { id:"cfa_irof_sp", nom:"CFA-IROF", commune:"Saint-Pierre", adresse:"6 Impasse Georges Gilerot, Saint-Pierre, La Réunion", details:"Tél: 0262 45 33 02 | contact@irof.re" },
+      { id:"cfa_ur_sd", nom:"CFA-UR", commune:"Saint-Denis", adresse:"2 Rue Joseph Wetzell, Saint-Denis, La Réunion", details:"Tél: 0262 52 89 24 | cfaur@univ-reunion.fr" },
+
+      // Autres adresses présentes dans la liste
+      { id:"idis_port", nom:"IDIS", commune:"Le Port", adresse:"3 Rue Dupleix, Le Port, La Réunion", details:"(détails non fournis dans ton extrait)" },
+      { id:"ordia_port", nom:"ORDIA SARL", commune:"Le Port", adresse:"69 rue Jeanne d'Arc, Le Port, La Réunion", details:"(détails non fournis dans ton extrait)" },
+
+      // ⚠️ Exemple volontaire : “adresse incomplète” → peut échouer au géocodage
+      // { id:"success_sp", nom:"SUCCESS FORMATION", commune:"Saint-Pierre", adresse:"Saint-Pierre, La Réunion", details:"(adresse de rue non fournie dans ton extrait)" },
+    ];
+
+    /* ============================================================
+      UTIL / CACHE / GEO
+    ============================================================ */
+    const CACHE_KEY = "geo_cache_v1_reunion_acteurs";
+    const cache = loadCache();
+
+    function loadCache(){
+      try{
+        const raw = localStorage.getItem(CACHE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      }catch{ return {}; }
+    }
+    function saveCache(){
+      try{ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }catch{}
+    }
+
+    function escapeHTML(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // Nominatim (OSM) : 1 req/sec, User-Agent côté navigateur = navigateur (ok),
+    // mais on ajoute un param "format=json" + "limit=1".
+    async function geocodeOne(address){
+      const url = new URL("https://nominatim.openstreetmap.org/search");
+      url.searchParams.set("q", address);
+      url.searchParams.set("format", "json");
+      url.searchParams.set("limit", "1");
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          "Accept": "application/json"
+          // (On ne force pas User-Agent côté navigateur)
+        }
+      });
+      if(!res.ok) return null;
+
+      const data = await res.json();
+      if(!Array.isArray(data) || data.length === 0) return null;
+
+      const hit = data[0];
+      const lat = Number(hit.lat);
+      const lng = Number(hit.lon);
+      if(!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+      return { lat, lng, display_name: hit.display_name || "" };
+    }
+
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    async function geocodeAll({force=false} = {}){
+      // 1 req/sec + cache
+      for(const a of ACTEURS){
+        const addr = (a.adresse || "").trim();
+        if(!addr) continue;
+
+        if(!force && cache[a.id] && cache[a.id].lat != null){
+          continue;
+        }
+
+        try{
+          const hit = await geocodeOne(addr);
+          cache[a.id] = hit ? { ...hit, ts: Date.now(), addr } : { lat:null, lng:null, ts: Date.now(), addr, fail:true };
+          saveCache();
+        }catch{
+          cache[a.id] = { lat:null, lng:null, ts: Date.now(), addr, fail:true };
+          saveCache();
+        }
+
+        // throttle
+        await sleep(1000);
+        render(); // feedback progressif
+      }
+    }
+
+    /* ============================================================
+      MAP
+    ============================================================ */
+    const map = L.map("map").setView([-21.115, 55.536], 10);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+    const markerById = new Map();
+
+    function clearMarkers(){
+      markersLayer.clearLayers();
+      markerById.clear();
+    }
+
+    function addMarker(actor){
+      const geo = cache[actor.id];
+      if(!geo || geo.lat == null || geo.lng == null) return;
+
+      const popupHtml = `
+        <div style="font-family: ui-sans-serif, system-ui; min-width:240px">
+          <b>${escapeHTML(actor.nom)}</b><br/>
+          <span>${escapeHTML(actor.commune)}</span>
+          <div style="margin-top:6px; font-size:12px; color:#2a2f55;">
+            <b>Adresse :</b> ${escapeHTML(actor.adresse)}<br/>
+            ${actor.details ? `<b>Détails :</b> ${escapeHTML(actor.details)}` : ""}
+          </div>
+        </div>
+      `;
+      const m = L.marker([geo.lat, geo.lng]).bindPopup(popupHtml);
+      m.on("click", () => setActive(actor.id, true));
+      m.addTo(markersLayer);
+      markerById.set(actor.id, m);
+    }
+
+    function fitToMarkers(){
+      const coords = [];
+      markerById.forEach(m => coords.push(m.getLatLng()));
+      if(coords.length === 0) return;
+      map.fitBounds(L.latLngBounds(coords).pad(0.20));
+    }
+
+    /* ============================================================
+      TABLE + FILTER COMMUNE
+    ============================================================ */
+    const elCommune = document.getElementById("communeSel");
+    const elQ = document.getElementById("q");
+    const elTbody = document.getElementById("tbody");
+    const elCount = document.getElementById("count");
+    const elPlaced = document.getElementById("placed");
+
+    let activeId = null;
+
+    function buildCommunes(){
+      const communes = Array.from(new Set(ACTEURS.map(a => a.commune).filter(Boolean))).sort((a,b)=>a.localeCompare(b,'fr'));
+      for(const c of communes){
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c;
+        elCommune.appendChild(opt);
+      }
+    }
+
+    function matchesQuery(a, q){
+      if(!q) return true;
+      const s = (a.nom + " " + a.commune + " " + a.adresse + " " + (a.details||"")).toLowerCase();
+      return s.includes(q.toLowerCase());
+    }
+
+    function filtered(){
+      const c = elCommune.value;
+      const q = elQ.value.trim();
+
+      return ACTEURS
+        .filter(a => (c === "TOUTES" ? true : a.commune === c))
+        .filter(a => matchesQuery(a, q));
+    }
+
+    function render(){
+      const rows = filtered();
+
+      elCount.textContent = `${rows.length} acteur${rows.length>1?"s":""}`;
+
+      const placed = rows.filter(a => {
+        const g = cache[a.id];
+        return g && g.lat != null && g.lng != null;
+      }).length;
+      elPlaced.textContent = `${placed} placés`;
+
+      // markers
+      clearMarkers();
+      rows.forEach(addMarker);
+
+      // table
+      elTbody.innerHTML = rows.map(a => {
+        const g = cache[a.id];
+        const ok = g && g.lat != null && g.lng != null;
+        const active = (a.id === activeId) ? "active" : "";
+        return `
+          <tr class="row ${active}" data-id="${escapeHTML(a.id)}">
+            <td><b>${escapeHTML(a.nom)}</b><br/><span style="color:rgba(255,255,255,.72); font-size:11px">${escapeHTML(a.details||"")}</span></td>
+            <td>${escapeHTML(a.commune)}</td>
+            <td>${escapeHTML(a.adresse)}</td>
+            <td><span class="badge ${ok?"ok":"no"}">${ok ? "placé" : "non placé"}</span></td>
+          </tr>
+        `;
+      }).join("");
+
+      document.querySelectorAll("tr.row").forEach(tr => {
+        tr.addEventListener("click", () => {
+          const id = tr.getAttribute("data-id");
+          setActive(id, false);
+        });
+      });
+
+      if(markerById.size > 0) fitToMarkers();
+    }
+
+    function setActive(id, fromMarker){
+      activeId = id;
+      document.querySelectorAll("tr.row").forEach(tr => {
+        tr.classList.toggle("active", tr.getAttribute("data-id") === id);
+      });
+
+      const m = markerById.get(id);
+      if(m){
+        map.setView(m.getLatLng(), Math.max(map.getZoom(), 13), { animate:true });
+        if(!fromMarker) m.openPopup();
+      }
+    }
+
+    /* ============================================================
+      UI actions
+    ============================================================ */
+    document.getElementById("fitBtn").addEventListener("click", fitToMarkers);
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      elCommune.value = "TOUTES";
+      elQ.value = "";
+      activeId = null;
+      render();
+      fitToMarkers();
+    });
+
+    document.getElementById("regeoBtn").addEventListener("click", async () => {
+      // force = true : re-géocode même si cache existe
+      await geocodeAll({force:true});
+    });
+
+    elCommune.addEventListener("change", () => { activeId = null; render(); });
+    elQ.addEventListener("input", () => { activeId = null; render(); });
+
+    /* ============================================================
+      INIT
+    ============================================================ */
+    buildCommunes();
+    render();
+
+    // Géocodage au chargement (sans forcer)
+    // Important : ça dépend d’internet. Sur GitHub Pages : OK.
+    geocodeAll({force:false});
+  </script>
+</body>
+</html>
