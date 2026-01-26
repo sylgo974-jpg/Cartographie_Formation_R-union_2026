@@ -3,66 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartographie Formation Réunion - Version Stable</title>
-    
+    <title>Cartographie Formation Réunion 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <style>
-        #map { height: 450px; width: 100%; border-radius: 1rem; border: 2px solid #e2e8f0; }
-        .mermaid { background: white; padding: 20px; border-radius: 1rem; display: flex; justify-content: center; }
-        details summary::-webkit-details-marker { display: none; }
-        .card-of { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .card-of:hover { transform: translateY(-4px); }
+        .cloud { transition: all 0.4s ease; cursor: pointer; }
+        .cloud:hover { transform: scale(1.08); filter: brightness(1.1); }
+        #detailsPanel { transition: transform 0.5s ease; transform: translateX(100%); }
+        #detailsPanel.open { transform: translateX(0); }
+        .path-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 2s forwards; }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+        #map { height: 500px; border-radius: 1.5rem; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-slate-50 font-sans">
 
-    <header class="bg-white shadow-sm border-b p-6 sticky top-0 z-[1000]">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 class="text-2xl font-black text-blue-900 uppercase italic">Réunion Formation 2026</h1>
-            <nav class="flex gap-4 text-sm font-bold">
-                <a href="#mindmap" class="text-blue-600 hover:underline">Mind-Map</a>
-                <a href="#annuaire" class="text-orange-600 hover:underline">Annuaire (38 OF)</a>
-                <a href="#carte" class="text-green-600 hover:underline">Carte Sud</a>
-            </nav>
+    <header class="bg-white border-b p-6 sticky top-0 z-[50]">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-black text-slate-800 italic uppercase">Réunion Formation <span class="text-orange-600">2026</span></h1>
+            <p class="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full uppercase tracking-widest text-slate-500">Document Source : Word v2026</p>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-12">
+    <section class="w-full h-[80vh] bg-white relative overflow-hidden flex items-center justify-center border-b">
+        <svg viewBox="0 0 1200 800" class="w-full h-full p-4">
+            <defs>
+                <linearGradient id="g-blue" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+                <linearGradient id="g-green" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+                <linearGradient id="g-orange" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+                <linearGradient id="g-purple" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+                <linearGradient id="g-red" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#dc2626"/></linearGradient>
+                <linearGradient id="g-indigo" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#4f46e5"/></linearGradient>
+                <linearGradient id="g-slate" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="#64748b"/><stop offset="100%" stop-color="#475569"/></linearGradient>
+            </defs>
 
-        <section id="mindmap" class="space-y-4">
-            <h2 class="text-xl font-bold border-l-4 border-blue-600 pl-3">1. Structure des Acteurs [cite: 33]</h2>
-            <div class="mermaid">
-                mindmap
-                    root((ACTEURS FORMATION))
-                        Pilotage_Contrôle
-                        Financeurs_OPCO
-                        Organismes_Logistique
-                        Accompagnement_Social
-                        Manifestations_2026
-                        Partenaires_Métiers
-                        Réseautage_Digital
-            </div>
-        </section>
+            <g fill="none" stroke-width="3" class="path-line">
+                <path d="M600,400 L300,150" stroke="#3b82f6" />
+                <path d="M600,400 L900,150" stroke="#10b981" />
+                <path d="M600,400 L1000,400" stroke="#f59e0b" />
+                <path d="M600,400 L900,650" stroke="#8b5cf6" />
+                <path d="M600,400 L600,720" stroke="#ef4444" />
+                <path d="M600,400 L300,650" stroke="#6366f1" />
+                <path d="M600,400 L200,400" stroke="#64748b" />
+            </g>
 
-        <section id="carte" class="bg-white p-6 rounded-3xl shadow-lg border border-gray-200">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-green-700">
-                📍 Focus Priorité Sud [cite: 38]
+            <g class="cloud">
+                <rect x="500" y="365" width="200" height="70" rx="35" fill="#1e293b" />
+                <text x="600" y="408" text-anchor="middle" fill="white" font-weight="bold">ACTEURS RÉUNION</text>
+            </g>
+
+            <g class="cloud" onclick="showBranch('pilotage')">
+                <rect x="180" y="115" width="240" height="70" rx="35" fill="url(#g-blue)" />
+                <text x="300" y="157" text-anchor="middle" fill="white" font-weight="bold">1. PILOTAGE & CONTRÔLE</text>
+            </g>
+            <g class="cloud" onclick="showBranch('financeurs')">
+                <rect x="780" y="115" width="240" height="70" rx="35" fill="url(#g-green)" />
+                <text x="900" y="157" text-anchor="middle" fill="white" font-weight="bold">2. FINANCEURS (OPCO)</text>
+            </g>
+            <g class="cloud" onclick="showBranch('of')">
+                <rect x="890" y="365" width="240" height="70" rx="35" fill="url(#g-orange)" />
+                <text x="1010" y="407" text-anchor="middle" fill="white" font-weight="bold">3. ORGANISMES (OF)</text>
+            </g>
+            <g class="cloud" onclick="showBranch('accompagnement')">
+                <rect x="780" y="615" width="240" height="70" rx="35" fill="url(#g-purple)" />
+                <text x="900" y="657" text-anchor="middle" fill="white" font-weight="bold">4. ACCOMPAGNEMENT</text>
+            </g>
+            <g class="cloud" onclick="showBranch('evenements')">
+                <rect x="480" y="685" width="240" height="70" rx="35" fill="url(#g-red)" />
+                <text x="600" y="727" text-anchor="middle" fill="white" font-weight="bold">5. ÉVÉNEMENTS 2026</text>
+            </g>
+            <g class="cloud" onclick="showBranch('logistique')">
+                <rect x="180" y="615" width="240" height="70" rx="35" fill="url(#g-indigo)" />
+                <text x="300" y="657" text-anchor="middle" fill="white" font-weight="bold">6. PARTENAIRES LOG.</text>
+            </g>
+            <g class="cloud" onclick="showBranch('reseautage')">
+                <rect x="70" y="365" width="240" height="70" rx="35" fill="url(#g-slate)" />
+                <text x="190" y="407" text-anchor="middle" fill="white" font-weight="bold">7. RÉSEAUTAGE PRO</text>
+            </g>
+        </svg>
+    </section>
+
+    <main class="max-w-7xl mx-auto p-6 space-y-12">
+        <section>
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span class="bg-green-600 w-3 h-8 rounded-full"></span>
+                Localisation Prioritaire (Sud)
             </h2>
-            <div id="map"></div>
+            <div id="map" class="shadow-xl"></div>
         </section>
 
-        <section id="annuaire" class="space-y-6">
-            <div class="bg-orange-600 p-6 rounded-2xl text-white flex flex-col md:flex-row justify-between items-center gap-6">
+        <section>
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold">Annuaire des 38 Organismes </h2>
-                    <p class="text-orange-100 opacity-80">Sources : DEETS & Formanoo 2026 [cite: 36, 56]</p>
+                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Annuaire des 38 Organismes</h2>
+                    <p class="text-slate-500">Source : Formanoo (Mise à jour 22/01/2026)</p>
                 </div>
-                <select id="cityFilter" class="bg-white text-gray-900 p-3 rounded-xl font-bold w-full md:w-64 outline-none ring-4 ring-orange-400">
-                    <option value="all">🌍 Toute l'île (38)</option>
+                <select id="cityFilter" class="bg-white border-2 border-orange-500 p-4 rounded-2xl font-bold text-slate-700 shadow-lg">
+                    <option value="all">📍 Toutes les villes (38)</option>
                     <option value="ST PIERRE">Saint-Pierre (13)</option>
                     <option value="LE PORT">Le Port (7)</option>
                     <option value="ST DENIS">Saint-Denis (7)</option>
@@ -70,62 +108,8 @@
                     <option value="AUTRES">Autres Communes</option>
                 </select>
             </div>
-
-            <div id="ofGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
+            <div id="ofGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
-
     </main>
 
-    <script>
-        // Initialisation Mermaid
-        mermaid.initialize({ startOnLoad: true });
-
-        // Données complètes issues de tes ressources
-        const organismes = [
-            { name: "AFTRAL", city: "ST PAUL", tel: "0262 22 17 17", mail: "reunion@aftral.com", pos: [-20.945, 55.298] },
-            { name: "AREFIP", city: "ST PIERRE", tel: "0262 96 19 79", mail: "contact@arefip.fr", pos: [-21.325, 55.485] },
-            { name: "CCI CAMPUS PRO", city: "ST PIERRE", tel: "0262 70 99 55", mail: "campuspro@reunion.cci.fr", pos: [-21.340, 55.475] },
-            { name: "SUCCESS FORMATION", city: "ST PIERRE", tel: "Contact Prioritaire", mail: "-", pos: [-21.338, 55.472] },
-            { name: "CEFORA", city: "LE PORT", tel: "0262 24 40 49", mail: "contact@cefora.re", pos: [-20.950, 55.305] },
-            { name: "CFA-IROF", city: "ST PIERRE", tel: "0262 45 33 02", mail: "contact@irof.re", pos: [-21.335, 55.465] },
-            { name: "CENTRE FPEA", city: "ST LOUIS", tel: "Non spécifié", mail: "-", pos: [-21.285, 55.409] },
-            { name: "TETRANERGY SUD", city: "ST PIERRE", tel: "0262 29 26 26", mail: "-", pos: [-21.330, 55.460] },
-            { name: "IDIS", city: "LE PORT", tel: "Standard", mail: "-", pos: [-20.935, 55.290] }
-        ];
-
-        // Rendu de la Carte
-        const map = L.map('map').setView([-21.31, 55.47], 11);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
-
-        organismes.forEach(of => {
-            L.marker(of.pos).addTo(map).bindPopup(`<b>${of.name}</b><br>${of.city}`);
-        });
-
-        // Fonction de filtrage de l'annuaire
-        const grid = document.getElementById('ofGrid');
-        const filter = document.getElementById('cityFilter');
-
-        function render(val) {
-            grid.innerHTML = '';
-            const filtered = organismes.filter(o => val === 'all' || o.city === val || (val === 'AUTRES' && !['ST PIERRE','LE PORT','ST DENIS','ST PAUL'].includes(o.city)));
-            
-            filtered.forEach(o => {
-                grid.innerHTML += `
-                    <div class="card-of bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-300">
-                        <span class="text-[10px] font-black bg-orange-100 text-orange-700 px-2 py-1 rounded-md">${o.city}</span>
-                        <h3 class="text-lg font-bold mt-3 text-slate-800">${o.name}</h3>
-                        <div class="mt-4 space-y-2 text-sm text-gray-600">
-                            <p>📞 ${o.tel}</p>
-                            <p class="truncate">✉️ ${o.mail}</p>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        filter.addEventListener('change', (e) => render(e.target.value));
-        render('all');
-    </script>
-</body>
-</html>
+    <div id="detailsPanel" class="fixed top-0 right
