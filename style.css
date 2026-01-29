@@ -1,0 +1,93 @@
+:root {
+    --primary-color: #2c3e50; /* Bleu nuit */
+    --accent-color: #e67e22;  /* Orange dynamique */
+    --bg-color: #ecf0f1;
+    --card-bg: #ffffff;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.tree-container {
+    max-width: 900px;
+    width: 100%;
+}
+
+/* Style de la Bulle Principale */
+.main-bubble {
+    background: var(--primary-color);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    border-left: 10px solid var(--accent-color);
+    position: relative;
+    z-index: 2;
+}
+
+.main-bubble:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+}
+
+.main-bubble h2 { margin: 0 0 10px 0; font-size: 1.5rem; }
+.main-bubble p { margin: 0; font-size: 1.1rem; opacity: 0.9; }
+
+/* Animation du contenu caché */
+.hidden-content {
+    display: none; /* Caché par défaut */
+    margin-top: 20px;
+    border-left: 4px dashed #bdc3c7; /* Ligne de connexion */
+    margin-left: 30px;
+    padding-left: 30px;
+    animation: slideDown 0.5s ease;
+}
+
+.hidden-content.active {
+    display: block;
+}
+
+/* Cartes d'information */
+.info-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Tableaux */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th, .data-table td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+.data-table th { background-color: #f8f9fa; color: #555; }
+.highlight { font-weight: bold; color: var(--primary-color); }
+
+/* Liste de contacts */
+.contact-block { margin-bottom: 20px; }
+.contact-block h4 { color: var(--accent-color); margin-bottom: 10px; }
+.contact-block ul { list-style: none; padding: 0; }
+.contact-block li { margin-bottom: 8px; line-height: 1.5; }
+.contact-block a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
