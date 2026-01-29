@@ -6,7 +6,7 @@
     <title>Cartographie FPA - La Réunion 2026</title>
     <style>
         /* =========================================
-           1. LE DESIGN (CSS)
+           1. LE DESIGN (CSS INTÉGRÉ)
            ========================================= */
         :root {
             --primary-color: #2c3e50; /* Bleu Nuit */
@@ -21,10 +21,10 @@
             color: var(--text-color);
             margin: 0;
             padding: 20px;
-            /* C'est ICI que je corrige l'alignement pour mobile */
+            /* CORRECTION CRITIQUE POUR L'ALIGNEMENT MOBILE */
             display: flex;
-            flex-direction: column; 
-            align-items: center; /* Centre tout verticalement */
+            flex-direction: column;
+            align-items: center; 
             min-height: 100vh;
         }
 
@@ -35,16 +35,16 @@
             width: 100%;
         }
 
-        h1 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.8rem; }
-        header p { margin: 0; color: #7f8c8d; }
+        h1 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.6rem; }
+        header p { margin: 0; color: #7f8c8d; font-size: 0.9rem; }
 
-        /* Le conteneur des branches */
+        /* Conteneur principal */
         .tree-container {
             width: 100%;
-            max-width: 600px; /* Largeur idéale pour mobile et desktop */
+            max-width: 600px;
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Espace entre les bulles */
+            gap: 15px; /* Espace entre les bulles */
         }
 
         /* Les Bulles (Boutons) */
@@ -57,21 +57,13 @@
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             border-left: 6px solid var(--accent-color);
-            position: relative;
             transition: transform 0.2s;
+            position: relative;
         }
         .main-bubble:hover { transform: scale(1.02); }
         .main-bubble h2 { margin: 0; font-size: 1.1rem; }
         .main-bubble p { margin: 5px 0 0; font-size: 0.85rem; opacity: 0.9; }
         .main-bubble .icon { display: block; margin-top: 8px; font-size: 0.8rem; }
-
-        /* Connecteur visuel (la ligne grise) */
-        .connector-line {
-            width: 2px;
-            height: 15px;
-            background: #bdc3c7;
-            margin: 0 auto;
-        }
 
         /* Contenu Caché */
         .hidden-content {
@@ -83,9 +75,10 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             animation: fadeIn 0.3s;
         }
+        /* Classe ajoutée par le JS pour afficher */
         .hidden-content.active { display: block; }
 
-        /* Éléments internes (Cartes, Listes) */
+        /* Éléments internes */
         .card-header { 
             font-weight: bold; color: var(--primary-color); border-bottom: 1px solid #eee; 
             padding-bottom: 5px; margin-bottom: 10px; margin-top: 15px;
@@ -94,92 +87,199 @@
         .contact-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
         .contact-list li::before { content: "📍"; position: absolute; left: 0; }
         
+        /* Grille OPCO */
         .opco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        @media (max-width: 400px) { .opco-grid { grid-template-columns: 1fr; } }
-
         .opco-card { border: 1px solid #eee; padding: 10px; border-radius: 5px; font-size: 0.85rem; text-align: center; }
         .opco-name { font-weight: bold; color: var(--primary-color); display: block;}
         .opco-tel { background: #fff3e0; color: #d35400; padding: 2px 5px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; }
 
-        .timeline-item { border-left: 2px solid var(--accent-color); padding-left: 15px; margin-bottom: 15px; position: relative; }
-        .timeline-item::before { content: ''; width: 8px; height: 8px; background: var(--accent-color); border-radius: 50%; position: absolute; left: -5px; top: 5px; }
-        
         /* Badges Urgences */
         .emergency-badges { display: flex; flex-wrap: wrap; gap: 5px; }
         .badge { background: #ffebee; color: #c0392b; padding: 4px 8px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; border: 1px solid #ffcdd2; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Connecteur visuel */
+        .branch-connector { width: 2px; height: 10px; background: #ccc; margin: 0 auto; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🗺️ Cartographie Formation professionnelle Réunion</h1>
-        <p>Formation Professionnelle d'Adultes • La Réunion 2026</p>
+        <h1>🗺️ Cartographie FPA</h1>
+        <p>Formation Professionnelle des Adultes • La Réunion 2026</p>
     </header>
 
     <main class="tree-container">
 
-        <div class="branch">
-            <div class="main-bubble" onclick="toggleDetails('node1')">
+        <div class="node-container">
+            <div class="main-bubble" onclick="toggleNode('node-1')">
                 <h2>1. PILOTAGE & CONTRÔLE</h2>
                 <p>DEETS, Région & Coordination</p>
                 <span class="icon">▼</span>
             </div>
-            <div id="node1" class="hidden-content">
+            <div id="node-1" class="hidden-content">
                 <div class="card-header">🏛️ DEETS Réunion</div>
                 <ul class="contact-list">
                     <li><strong>Siège :</strong> 112 rue de la République, St-Denis</li>
                     <li><strong>Tél :</strong> 02 62 94 07 07</li>
                     <li><strong>Contrôle FP :</strong> 02 62 90 21 41 (St-Denis)</li>
-                    <li><a href="https://reunion.deets.gouv.fr/IMG/pdf/guide_of_2020.pdf" target="_blank">Télécharger Guide OF (PDF)</a></li>
                 </ul>
                 <div class="card-header">🇷🇪 Région Réunion</div>
                 <ul class="contact-list">
-                    <li><strong>Rôle :</strong> Autorité Compétente, Apprentissage</li>
+                    <li><strong>Rôle :</strong> Autorité Compétente, Financeur</li>
                     <li><strong>Site :</strong> <a href="https://www.regionreunion.com" target="_blank">regionreunion.com</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="connector-line"></div>
+        <div class="branch-connector"></div>
 
-        <div class="branch">
-            <div class="main-bubble" onclick="toggleDetails('node2')">
+        <div class="node-container">
+            <div class="main-bubble" onclick="toggleNode('node-2')">
                 <h2>2. FINANCEURS (OPCO)</h2>
-                <p>Les 11 OPCO par secteurs</p>
+                <p>Les 11 OPCO par branches</p>
                 <span class="icon">▼</span>
             </div>
-            <div id="node2" class="hidden-content">
-                <p style="font-size:0.9rem; margin-bottom:10px;">Financement Apprentissage & Contrats Pro.</p>
+            <div id="node-2" class="hidden-content">
                 <div class="opco-grid">
                     <div class="opco-card"><span class="opco-name">Mobilités</span>Transport<br><span class="opco-tel">01 49 71 55 00</span></div>
                     <div class="opco-card"><span class="opco-name">OPCO EP</span>Artisanat<br><span class="opco-tel">01 45 63 36 36</span></div>
-                    <div class="opco-card"><span class="opco-name">AKTO</span>Services/OF<br><span class="opco-tel">01 44 87 30 00</span></div>
-                    <div class="opco-card"><span class="opco-name">Atlas</span>Banque/Num.<br><span class="opco-tel">01 53 20 58 00</span></div>
-                    <div class="opco-card"><span class="opco-name">Santé</span>Médico-social<br><span class="opco-tel">Standard</span></div>
+                    <div class="opco-card"><span class="opco-name">AKTO</span>Services<br><span class="opco-tel">01 44 87 30 00</span></div>
+                    <div class="opco-card"><span class="opco-name">Atlas</span>Banque<br><span class="opco-tel">01 53 20 58 00</span></div>
+                    <div class="opco-card"><span class="opco-name">Santé</span>Médical<br><span class="opco-tel">Standard</span></div>
                     <div class="opco-card"><span class="opco-name">Constructys</span>BTP<br><span class="opco-tel">Standard</span></div>
                 </div>
                 <div style="text-align:center; margin-top:10px;">
-                    <a href="https://www.trouver-mon-opco.fr" target="_blank" style="color:var(--accent-color); font-weight:bold;">🔎 Annuaire OPCO</a>
+                    <a href="https://trouver-mon-opco.fr" target="_blank">🔎 Annuaire OPCO</a>
                 </div>
             </div>
         </div>
 
-        <div class="connector-line"></div>
+        <div class="branch-connector"></div>
 
-        <div class="branch">
-            <div class="main-bubble" onclick="toggleDetails('node3')">
-                <h2>3. ORGANISMES DE FORMATION</h2>
-                <p>AFPA, GRETA & Spécialistes FPA</p>
+        <div class="node-container">
+            <div class="main-bubble" onclick="toggleNode('node-3')">
+                <h2>3. ORGANISMES</h2>
+                <p>AFPA, GRETA & Spécial FPA</p>
                 <span class="icon">▼</span>
             </div>
-            <div id="node3" class="hidden-content">
+            <div id="node-3" class="hidden-content">
                 <div class="card-header">🏢 Grands Généralistes</div>
                 <ul class="contact-list">
-                    <li><strong>AFPA :</strong> 02 62 94 72 60 (St-Denis/St-Pierre)</li>
-                    <li><strong>GRETA :</strong> 02 62 41 81 13 (Éduc. Nationale)</li>
-                    <li><strong>Université (SUFP) :</strong> 02 62 93 82 00</li>
+                    <li><strong>AFPA :</strong> 02 62 94 72 60</li>
+                    <li><strong>GRETA :</strong> 02 62 41 81 13</li>
+                    <li><strong>Université :</strong> 02 62 93 82 00</li>
                 </ul>
                 <div class="card-header">👨‍🏫 Spécial Formateurs (TP FPA)</div>
-                <ul class="contact-
+                <ul class="contact-list">
+                    <li><strong>Cours St-Paul :</strong> TP FPA / Alternance</li>
+                    <li><strong>PAM OI :</strong> TP FPA</li>
+                    <li><strong>SPL AFPAR St-Pierre :</strong> TP FPA Session</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="main-bubble" onclick="toggleNode('node-4')">
+                <h2>4. SERVICE PUBLIC & SOCIAL</h2>
+                <p>Emploi, Handicap & Urgences</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-4" class="hidden-content">
+                <div class="card-header">🚀 Emploi & Insertion</div>
+                <ul class="contact-list">
+                    <li><strong>France Travail Sud :</strong> 39 49</li>
+                    <li><strong>Mission Locale Sud :</strong> 02 62 25 77 20</li>
+                    <li><strong>Cap Emploi :</strong> 02 62 41 90 40</li>
+                </ul>
+                
+                <div class="card-header" style="color:#c0392b;">🆘 Urgences 24/7</div>
+                <div class="emergency-badges">
+                    <span class="badge">112 Europe</span>
+                    <span class="badge">15 SAMU</span>
+                    <span class="badge">18 Pompiers</span>
+                    <span class="badge">115 Social</span>
+                    <span class="badge">3114 Suicide</span>
+                </div>
+                <p style="margin-top:10px;"><strong>CCAS St-Louis :</strong> 02 62 44 44 92</p>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="main-bubble" onclick="toggleNode('node-5')">
+                <h2>5. AGENDA 2026</h2>
+                <p>Les temps forts</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-5" class="hidden-content">
+                <ul class="contact-list" style="list-style: disc;">
+                    <li><strong>FÉVRIER :</strong> Rentrée Apprentissage (CFA)</li>
+                    <li><strong>JUIN :</strong> Mise à jour Cartographie</li>
+                    <li><strong>OCTOBRE :</strong> Semaine de l'Emploi</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="main-bubble" onclick="toggleNode('node-6')">
+                <h2>6. PARTENAIRES LOGISTIQUE</h2>
+                <p>Transport & CACES</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-6" class="hidden-content">
+                <ul class="contact-list">
+                    <li><strong>OPCO Mobilités :</strong> Financeur (01 49 71 55 00)</li>
+                    <li><strong>CFPA St-Pierre :</strong> Agro-logistique</li>
+                    <li><strong>AFPA :</strong> Magasinier / Cariste</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="main-bubble" onclick="toggleNode('node-7')">
+                <h2>7. RÉSEAUTAGE PRO</h2>
+                <p>Outils & Communautés</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-7" class="hidden-content">
+                <div class="opco-grid">
+                    <a href="https://syop.re" target="_blank" class="opco-card">
+                        <span class="opco-name">SyOP.re</span>Coordination
+                    </a>
+                    <a href="https://www.formanoo.org" target="_blank" class="opco-card">
+                        <span class="opco-name">Formanoo</span>Catalogue
+                    </a>
+                    <a href="https://reunion.deets.gouv.fr" target="_blank" class="opco-card">
+                        <span class="opco-name">DEETS</span>Veille Juridique
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleNode(id) {
+            var element = document.getElementById(id);
+            if (element) {
+                if (element.classList.contains('active')) {
+                    element.classList.remove('active');
+                } else {
+                    element.classList.add('active');
+                }
+            } else {
+                console.error("Élément introuvable : " + id);
+            }
+        }
+    </script>
+</body>
+</html>
