@@ -23,9 +23,64 @@
             flex-direction: column;
             align-items: center;
         }
-        header { text-align: center; margin-bottom: 30px; max-width: 800px; width: 100%; }
-        h1 { color: var(--primary); margin-bottom: 5px; font-size: 1.8rem; }
-        .subtitle { color: #7f8c8d; font-size: 0.9rem; }
+        /* =========================================
+           HEADER DESIGN (PHOTO RÉUNION)
+           ========================================= */
+        header {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+            border-radius: 15px; /* Coins arrondis */
+            overflow: hidden; /* Pour que l'image ne dépasse pas */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Ombre portée */
+            border: 4px solid white; /* Cadre blanc élégant */
+            
+            /* IMAGE DE FOND (Volcan/Nature) */
+            background-image: url('https://images.unsplash.com/photo-1619642931448-18e32328d223?q=80&w=1000&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 60px 20px; /* Espace intérieur */
+        }
+
+        /* FILTRE SOMBRE (Pour le contraste) */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Noir à 50% de transparence */
+            z-index: 1;
+        }
+
+        /* CONTENU DU HEADER (Au-dessus du filtre) */
+        .header-content {
+            position: relative;
+            z-index: 2; /* Pour passer au-dessus de l'image sombre */
+        }
+        
+        h1 { 
+            color: #ffffff; 
+            margin: 0 0 10px 0; 
+            font-size: 1.8rem; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Ombre sur le texte */
+            line-height: 1.3;
+        }
+        
+        .subtitle { 
+            color: #f1f1f1; 
+            font-size: 1.1rem; 
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(230, 126, 34, 0.9); /* Fond Orange (accent) */
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
 
         /* ARBRE & BRANCHES */
         .tree-wrapper { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 0; }
@@ -111,7 +166,7 @@
 <body>
 
     <header>
-        <h1>🗺️ Cartographie des acteurs le la Formation professionnelle Réunion</h1>
+        <h1>🗺️🌋 Cartographie des acteurs le la Formation professionnelle Réunion</h1>
         <div class="subtitle">Annuaire Acteurs & Ressources 2026</div>
     </header>
 
