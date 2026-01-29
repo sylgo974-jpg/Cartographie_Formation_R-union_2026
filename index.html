@@ -786,7 +786,8 @@
       tag.appendChild(dot);
 
       const tagText = document.createElement("span");
-      tagText.textContent = branch.icon + " " + branch.title;
+     tagText.textContent = branch.icon + " " + branch.title + " DREETS et Région Réunion";
+
       tag.appendChild(tagText);
 
       const label = document.createElement("div");
@@ -862,18 +863,77 @@
 
         const pillsHTML = (branch.content.pills || []).map(p => `<span class="pill">${escapeHTML(p)}</span>`).join("");
 
-        mmCard.innerHTML = `
-          <div class="mm-layout">
-            <div class="mm-left">
-              <h3>${escapeHTML(branch.icon)} ${escapeHTML(branch.title)}</h3>
-              <p>${escapeHTML(branch.content.intro || "")}</p>
-              ${sectionsHTML}
-            </div>
-            <div class="mm-right">
-              <div class="sidebox">
-                <p class="title">🏷️ Tags</p>
-                <div class="pill-row" aria-hidden="true">${pillsHTML}</div>
+       mmCard.innerHTML = `
+  <div class="mm-layout">
+    <div class="mm-left">
+      <h3>${escapeHTML(branch.icon)} ${escapeHTML(branch.title)}</h3>
+      <p>${escapeHTML(branch.content.intro || "")}</p>
+      ${sectionsHTML}
+    </div>
+
+    <div class="mm-right">
+      <div class="sidebox">
+        <p class="title">🏷️ Tags</p>
+        <div class="pill-row" aria-hidden="true">${pillsHTML}</div>
+      </div>
+
+      ${
+        branch.id === "b1"
+        ? `
+          <div class="sidebox">
+            <p class="title">📍 Coordonnées</p>
+            <div class="actions">
+              <div class="action">
+                <span><b>DEETS</b> — Siège</span>
+                <small>112 rue de la République, 97400 Saint-Denis</small>
               </div>
+              <div class="action">
+                <span><b>DEETS</b> — Téléphone</span>
+                <span class="k">02 62 94 07 07</span>
+              </div>
+              <div class="action">
+                <span><b>DEETS</b> — Email</span>
+                <small>deets-974.direction@deets.gouv.fr</small>
+              </div>
+              <div class="action">
+                <span><b>DEETS</b> — Rôles clés</span>
+                <small>Contrôle OF / Agréments / VAE / Apprentissage / Certifications</small>
+              </div>
+              <div class="action">
+                <span><b>Pôle Contrôle (C)</b></span>
+                <small>12 Lot. Lemerle, 97400 Saint-Denis • 02 62 90 21 41</small>
+              </div>
+
+              <div class="action">
+                <span><b>Région Réunion</b> — Siège</span>
+                <small>Région Réunion, Saint-Denis</small>
+              </div>
+              <div class="action">
+                <span><b>Région Réunion</b> — Site</span>
+                <small>regionreunion.com</small>
+              </div>
+              <div class="action">
+                <span><b>Région</b> — Rôles clés</span>
+                <small>Programmation FP / Apprentissage / FSE / CPRDFOP</small>
+              </div>
+            </div>
+          </div>
+        `
+        : `
+          <div class="sidebox">
+            <p class="title">⚡ Actions</p>
+            <div class="actions">
+              <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
+              <div class="action"><span>Ajouter des acteurs</span><span class="k">ACTEURS</span></div>
+              <div class="action"><span>Exporter en PDF</span><span class="k">Print</span></div>
+            </div>
+          </div>
+        `
+      }
+    </div>
+  </div>
+`;
+
               <div class="sidebox">
                 <p class="title">⚡ Actions</p>
                 <div class="actions">
