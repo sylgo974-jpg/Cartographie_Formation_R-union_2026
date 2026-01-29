@@ -18,6 +18,27 @@
             justify-content: center;
             max-width: 1000px;
         }
+        /* BOUTON RETOUR */
+        .btn-back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: #2c3e50;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000; /* Pour être au-dessus de la carte */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.2s;
+        }
+        .btn-back:hover {
+            background: #f0f0f0;
+        }
 
         .filter-btn {
             border: none;
@@ -63,6 +84,37 @@
     </style>
 </head>
 <body>
+    <a href="index.html" class="btn-back">⬅️ Retour liste</a>
+
+    <h1>🗺️ Carte des Acteurs de la Formation - Réunion</h1>
+    ```
+
+---
+
+### Étape 3 : Mise en ligne sur GitHub
+
+C'est l'étape finale pour que tout fonctionne ensemble.
+
+1.  **Préparez vos fichiers :**
+    * Assurez-vous que votre fichier principal (l'arbre) s'appelle exactement **`index.html`**.
+    * Assurez-vous que votre fichier carte s'appelle exactement **`carte.html`**.
+    * Assurez-vous que les deux fichiers sont dans le **même dossier** sur votre ordinateur.
+
+2.  **Sur GitHub :**
+    * Allez dans votre "Repository" (Dépôt).
+    * Cliquez sur **Add file** > **Upload files**.
+    * Faites glisser **les deux fichiers** (`index.html` et `carte.html`) ensemble.
+    * Ajoutez un message de commit (ex: "Ajout mode carte interactive").
+    * Cliquez sur **Commit changes**.
+
+3.  **Vérification :**
+    * Attendez quelques secondes/minutes.
+    * Allez sur l'adresse de votre site (ex: `https://votre-pseudo.github.io/votre-projet/`).
+    * Vous verrez le nouveau bouton orange dans le header.
+    * Cliquez dessus : il doit ouvrir la carte.
+    * Sur la carte, cliquez sur "Retour liste" : il doit revenir à l'accueil.
+
+C'est tout ! Vous avez maintenant une navigation fluide entre le mode "Liste détaillée" et le mode "Carte géographique". 🚀
 
     <h1>🗺️ Carte des Acteurs de la Formation - Réunion</h1>
 
