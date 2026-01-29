@@ -9,25 +9,33 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; }
         h1 { color: #2c3e50; text-align: center; margin-bottom: 30px; }
 
-        /* --- BOUTON RETOUR --- */
-        .btn-back {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: white;
-            color: #2c3e50;
-            padding: 10px 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background 0.2s;
+        /* --- NOUVEAU STYLE BOUTON RETOUR (SOUS LA CARTE) --- */
+        .btn-back-container {
+            width: 100%;
+            text-align: center; /* Pour centrer le bouton */
+            margin-top: 25px;   /* Espace entre la carte et le bouton */
+            margin-bottom: 40px; /* Espace en bas de page */
         }
-        .btn-back:hover { background: #f0f0f0; }
+
+        .btn-back {
+            display: inline-block;
+            background-color: #2c3e50; /* Bleu foncé */
+            color: white;
+            padding: 15px 40px;        /* Bouton large */
+            border-radius: 50px;       /* Bords arrondis */
+            text-decoration: none;
+            font-size: 1.1rem;         /* Texte plus gros */
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background 0.2s;
+            border: 2px solid white;
+        }
+
+        .btn-back:hover { 
+            background-color: #34495e; 
+            transform: translateY(-3px); 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
 
         /* --- FILTRES --- */
         .filter-container {
@@ -129,8 +137,6 @@
 </head>
 <body>
 
-    <a href="index.html" class="btn-back">⬅️ Retour liste</a>
-
     <h1>🗺️ Carte des Acteurs de la Formation - Réunion</h1>
 
     <div class="filter-container">
@@ -144,6 +150,10 @@
 
     <div id="map"></div>
     <div id="loading" class="loading-msg">📍 Chargement et placement des 63 points en cours...</div>
+
+    <div class="btn-back-container">
+        <a href="index.html" class="btn-back">⬅️ RETOUR À LA LISTE DES ACTEURS</a>
+    </div>
 
     <script>
         // --- DONNÉES EXTRAITES DU CSV ---
@@ -163,7 +173,6 @@
             {"category": "2. FINANCEURS (OPCO)", "title": "AFDAS", "address": "Cité des Arts, 23 rue Léopold Rambaud, 97490 Sainte-Clotilde, La Réunion", "color": "#e67e22"}, 
             {"category": "2. FINANCEURS (OPCO)", "title": "OPCO 2i", "address": "ADIR, 30 rue Léon de Lépervanche, 97420 Le Port, La Réunion", "color": "#e67e22"}, 
             
-            /* --- MODIFICATION ICI : AJOUT DU LOGO POUR SUCCESS FORMATION --- */
             {"category": "3. CFA / OF (Logistique)", "title": "SUCCESS FORMATION", "address": "22 allée de la piscine, Bâtiment 2C, Centre Casabona, 97410 Saint-Pierre, La Réunion", "color": "#27ae60", "logo": "logo_success.png"}, 
             
             {"category": "3. CFA / OF (Logistique)", "title": "AFTRAL", "address": "89 rue Henri Cornu ZI Cambaie, 97460 Saint-Paul, La Réunion", "color": "#27ae60"}, 
