@@ -73,12 +73,80 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             border: 5px solid white;
         }
+/* --- INFO WINDOW (Bulle personnalisée) --- */
+        .info-window { 
+            padding: 15px; 
+            min-width: 300px; /* Plus large */
+            max-width: 350px; 
+            border: 5px solid #ccc; /* Cadre épais par défaut */
+            border-radius: 12px;
+            background-color: white;
+        }
+        
+        .info-title { 
+            font-weight: bold; 
+            color: #2c3e50; 
+            margin-bottom: 10px; 
+            font-size: 1.3em; /* Titre plus gros */
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        .info-category { 
+            font-size: 0.85em; 
+            color: #7f8c8d; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+            letter-spacing: 1px; 
+        }
 
-        /* --- INFO WINDOW (Bulle) --- */
-        .info-window { padding: 5px; max-width: 260px; }
-        .info-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; font-size: 1.1em; }
-        .info-category { font-size: 0.75em; color: #7f8c8d; text-transform: uppercase; margin-bottom: 8px; font-weight: bold; letter-spacing: 1px; }
-        .info-address { font-size: 0.9em; color: #333; line-height: 1.4; }
+        /* --- INFO WINDOW (Bulle personnalisée) --- */
+        .info-window { 
+            padding: 15px; 
+            min-width: 300px; /* Plus large */
+            max-width: 350px; 
+            border: 5px solid #ccc; /* Cadre épais par défaut */
+            border-radius: 12px;
+            background-color: white;
+        }
+        
+        .info-title { 
+            font-weight: bold; 
+            color: #2c3e50; 
+            margin-bottom: 10px; 
+            font-size: 1.3em; /* Titre plus gros */
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        .info-category { 
+            font-size: 0.85em; 
+            color: #7f8c8d; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+            letter-spacing: 1px; 
+        }
+        
+        .info-address { 
+            font-size: 1.1em; /* Adresse bien lisible */
+            color: #333; 
+            line-height: 1.5; 
+            background-color: #f8f9fa; /* Fond léger pour l'adresse */
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+        .info-address { 
+            font-size: 1.1em; /* Adresse bien lisible */
+            color: #333; 
+            line-height: 1.5; 
+            background-color: #f8f9fa; /* Fond léger pour l'adresse */
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
         
         .loading-msg { text-align: center; color: #e67e22; margin-top: 15px; font-style: italic; font-weight: bold; }
     </style>
@@ -89,9 +157,7 @@
     <h1>🗺️ Carte des Acteurs de la Formation - Réunion</h1>
     ```
 
----
-
-### Cliquez sur la carte pour trouver les adresses des acteurs 
+Cliquez sur la carte pour trouver les adresses des acteurs 
 
 Filtrez par familles d'acteurs en cliquant sur les catégories.
 
