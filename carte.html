@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Interactive - Acteurs FPA Réunion</title>
+    <style>
+        /* --- STYLE GLOBAL --- */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 30px; }
+
+        /* --- FILTRES --- */
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-width: 1000px;
+        }
+
+        .filter-btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: transform 0.2s, opacity 0.2s;
+            opacity: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover { transform: scale(1.05); }
+        .filter-btn.inactive { opacity: 0.3; transform: scale(0.95); }
+
+        /* Couleurs des boutons (Code couleur Master) */
+        .btn-pilotage { background-color: #2c3e50; } /* Bleu Nuit */
+        .btn-financeurs { background-color: #e67e22; } /* Orange */
+        .btn-of { background-color: #27ae60; } /* Vert */
+        .btn-public { background-color: #c0392b; } /* Rouge */
+        .btn-logistique { background-color: #8e44ad; } /* Violet */
+        .btn-all { background-color: #555; } /* Gris */
+
+        /* --- CARTE --- */
+        #map {
+            height: 650px;
+            width: 100%;
+            max-width: 1100px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 5px solid white;
+        }
+
+        /* --- INFO WINDOW (Bulle) --- */
+        .info-window { padding: 5px; max-width: 260px; }
+        .info-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; font-size: 1.1em; }
+        .info-category { font-size: 0.75em; color: #7f8c8d; text-transform: uppercase; margin-bottom: 8px; font-weight: bold; letter-spacing: 1px; }
+        .info-address { font-size: 0.9em; color: #333; line-height: 1.4; }
+        
+        .loading-msg { text-align: center; color: #e67e22; margin-top: 15px; font-style: italic; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>🗺️ Carte des Acteurs de la Formation - Réunion</h1>
+
+    <div class="filter-container">
+        <button class="filter-btn btn-pilotage" onclick="filterMarkers('1. PILOTAGE', this)">1. PILOTAGE</button>
+        <button class="filter-btn btn-financeurs" onclick="filterMarkers('2. FINANCEURS (OPCO)', this)">2. FINANCEURS</button>
+        <button class="filter-btn btn-of" onclick="filterMarkers('3. CFA / OF (Logistique)', this)">3. OF / CFA</button>
+        <button class="filter-btn btn-public" onclick="filterMarkers('4. SERVICE PUBLIC', this)">4. SERVICE PUBLIC</button>
+        <button class="filter-btn btn-logistique" onclick="filterMarkers('5. LOGISTIQUE', this)">5. LOGISTIQUE</button>
+        <button class="filter-btn btn-all" onclick="showAll(this)">VOIR TOUT</button>
+    </div>
+
+    <div id="map"></div>
+    <div id="loading" class="loading-msg">📍 Chargement et placement des 63 points en cours...</div>
+
+    <script>
+        // --- DONNÉES EXTRAITES DU CSV ---
+        const actors = [
+            {"category": "1. PILOTAGE", "title": "DEETS Réunion", "address": "112 rue de la République, 97400 St-Denis, La Réunion", "color": "#2c3e50"}, 
+            {"category": "1. PILOTAGE", "title": "Pôle Contrôle DEETS", "address": "12 Lot. Lemerle, 97400 St-Denis, La Réunion", "color": "#2c3e50"}, 
+            {"category": "1. PILOTAGE", "title": "Région Réunion", "address": "Hôtel de Région Pierre Lagourgue, Avenue René Cassin Moufia, 97801 St-Denis, La Réunion", "color": "#2c3e50"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "OPCO Mobilités", "address": "Centre d'Affaires Triton, 7 Boulevard du Chaudron, 97490 Sainte-Clotilde, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "OPCO EP", "address": "2 rue Galabé, Zac Portail, 97424 Piton Saint-Leu, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "AKTO", "address": "Centre d'Affaires de la Mare, 5 rue André Lardy, Bâtiment C, 97438 Sainte-Marie, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "OPCO Atlas", "address": "Délégué à AKTO - Centre d'Affaires de la Mare, 5 rue André Lardy, 97438 Sainte-Marie, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "OPCO Santé", "address": "Immeuble Le Quartz, 2ème étage, 216 Boulevard Jean Jaurès, 97490 Sainte-Clotilde, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "OCAPIAT", "address": "Chambre d'Agriculture, 24 rue de la Source, 97400 Saint-Denis, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "Opcommerce", "address": "MEDEF Réunion, 14 rue de l'Est, 97400 Saint-Denis, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "Constructys", "address": "FRBTP, 13 rue de la Boulangerie, ZI N°1, 97420 Le Port, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "UNIFORMATION", "address": "42 rue Alexis de Villeneuve, 97400 Saint-Denis, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "AFDAS", "address": "Cité des Arts, 23 rue Léopold Rambaud, 97490 Sainte-Clotilde, La Réunion", "color": "#e67e22"}, 
+            {"category": "2. FINANCEURS (OPCO)", "title": "OPCO 2i", "address": "ADIR, 30 rue Léon de Lépervanche, 97420 Le Port, La Réunion", "color": "#e67e22"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "SUCCESS FORMATION", "address": "22 allée de la piscine, Bâtiment 2C, Centre Casabona, 97410 Saint-Pierre, La Réunion", "color": "#27ae60"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "AFTRAL", "address": "89 rue Henri Cornu ZI Cambaie, 97460 Saint-Paul, La Réunion", "color": "#27ae60"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "CCI Pôle Formation CAMPUS PRO", "address": "65 rue Père Lafosse, 97410 Saint-Pierre, La Réunion", "color": "#27ae60"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "CCI Pôle Formation CIRFIM", "address": "31 Av Raymond Mondon, 97420 Le Port, La Réunion", "color": "#27ae60"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "CEFORA", "address": "3 Av Théodore Drouhet Parc 2000, 97420 Le Port, La Réunion", "color": "#27ae60"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "CFA CAMPUS RÉUNION", "address": "1 rue Francis Sautron, 97420 Le Port, La Réunion", "color": "#27ae60"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "CFA-IROF", "address": "6 Impasse Georges Gilerot, 97410 Saint-Pierre, La Réunion", "color": "#27ae60"}, 
+            {"category": "3. CFA / OF (Logistique)", "title": "Autres OF Logistique (30+)", "address": "Saint-Pierre, La Réunion", "color": "#27ae60"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "France Travail (Siège)", "address": "62 Boulevard du Chaudron, 97490 Sainte-Clotilde, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "France Travail St-Pierre", "address": "40 rue François de Mahy, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Siège", "address": "6 chemin Maxime Rivière, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Le Tampon", "address": "14 rue du Tampon, 97430 Le Tampon, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Joseph", "address": "296 rue Raphaël Babet, 97480 Saint-Joseph, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Louis", "address": "10 rue du Docteur Schweitzer, 97450 Saint-Louis, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Cilaos", "address": "4 rue des Ecoles, 97413 Cilaos, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne L'Etang-Salé", "address": "68 avenue Raymond Barre, 97427 L'Étang-Salé, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Les Avirons", "address": "4 bis avenue du Général de Gaulle, 97425 Les Avirons, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Petite-Ile", "address": "194 rue Mahé de Labourdonnais, 97429 Petite-Île, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Entre-Deux", "address": "2 rue Fortuné Hoarau, 97414 Entre-Deux, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Philippe", "address": "42 rue Leconte de Lisle, 97442 Saint-Philippe, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Siège Nord", "address": "34 rue de la Source, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Sainte-Marie", "address": "3 rue de la République, 97438 Sainte-Marie, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Sainte-Suzanne", "address": "3 rue du Père Laval, 97441 Sainte-Suzanne, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Siège Est", "address": "60 rue du Pont, 97440 Saint-André, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Benoît", "address": "34 rue Georges Pompidou, 97470 Saint-Benoît, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Bras-Panon", "address": "RN2, 97412 Bras-Panon, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Plaine des Palmistes", "address": "245 rue de la République, 97431 La Plaine-des-Palmistes, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Salazie", "address": "1 rue George Pompidou, 97433 Salazie, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Paul", "address": "65 rue du Kovil, 97460 Saint-Paul, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Le Port", "address": "99 Avenue du 20 Décembre 1848, 97420 Le Port, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Leu", "address": "5 rue de l'Usine (1er étage - Picard), 97436 Piton Saint-Leu, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme Plateau-Caillou", "address": "23 avenue Julius Bénard, 97460 Plateau-Caillou, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme Le Guillaume", "address": "3 chemin des Palmiers, 97432 Le Guillaume, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme La Saline", "address": "266 bis rue Jean Albany, 97422 La Saline-les-Hauts, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme Rivière-des-Galets", "address": "6 rue Karl Marx, Rivière-des-Galets, 97420 Le Port, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Permanence La Possession", "address": "3 rue Barakani, 97419 La Possession, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Permanence Trois-Bassins", "address": "2 rue du Général de Gaulle, 97426 Les Trois-Bassins, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "Cap Emploi (Handicap)", "address": "40 rue François de Mahy, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "CCAS St-Louis", "address": "156 Avenue Principale, 97450 Saint-Louis, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "CCAS St-Pierre", "address": "Rue des Bons Enfants, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MDPH (Siège)", "address": "13 rue Fénelon, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MDPH (Sud)", "address": "13 rue Archambaud, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "CRIJ Réunion", "address": "28 rue Jean Chatel, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "SIAF", "address": "36 rue de la Source, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "CH St-Pierre (SAMU)", "address": "Avenue du Président Mitterrand, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
+            {"category": "5. LOGISTIQUE", "title": "TLF Réunion", "address": "Zone Portuaire, 97420 Le Port, La Réunion", "color": "#8e44ad"}, 
+            {"category": "5. LOGISTIQUE", "title": "FNTR Réunion", "address": "Zone Industrielle N°1, 97420 Le Port, La Réunion", "color": "#8e44ad"}
+        ];
+
+        let map;
+        let markers = [];
+        let geocoder;
+
+        function initMap() {
+            // Initialisation de la carte centrée sur La Réunion
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: { lat: -21.1151, lng: 55.5364 }, // Centre de l'île
+                mapTypeControl: false,
+                streetViewControl: false
+            });
+
+            geocoder = new google.maps.Geocoder();
+            
+            // Lancer le géocodage progressif (avec délai pour éviter les erreurs)
+            document.getElementById('loading').style.display = 'block';
+            geocodeAndPlaceMarkers(0);
+        }
+
+        // Fonction récursive avec délai pour ne pas saturer l'API Google
+        function geocodeAndPlaceMarkers(index) {
+            if (index >= actors.length) {
+                document.getElementById('loading').style.display = 'none';
+                console.log("Géolocalisation terminée.");
+                return;
+            }
+
+            const actor = actors[index];
+            
+            geocoder.geocode({ address: actor.address }, (results, status) => {
+                if (status === "OK") {
+                    // Création du marqueur (Cercle de couleur)
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        title: actor.title,
+                        category: actor.category, // Pour le filtre
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 7,
+                            fillColor: actor.color,
+                            fillOpacity: 1,
+                            strokeWeight: 2,
+                            strokeColor: "#ffffff",
+                        }
+                    });
+
+                    // Info Window (Bulle au clic)
+                    const infoContent = `
+                        <div class="info-window">
+                            <div class="info-category" style="color:${actor.color}">${actor.category}</div>
+                            <div class="info-title">${actor.title}</div>
+                            <div class="info-address">${actor.address}</div>
+                        </div>
+                    `;
+                    const infoWindow = new google.maps.InfoWindow({ content: infoContent });
+
+                    marker.addListener("click", () => {
+                        infoWindow.open(map, marker);
+                    });
+
+                    markers.push(marker);
+                } else {
+                    console.warn("Erreur géocodage pour " + actor.title + " ("+status+")");
+                }
+
+                // Passer au suivant avec un délai de 300ms
+                setTimeout(() => {
+                    geocodeAndPlaceMarkers(index + 1);
+                }, 300);
+            });
+        }
+
+        // --- GESTION DES FILTRES ---
+        function filterMarkers(category, btn) {
+            // Activer/Désactiver le bouton
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(b => b.classList.add('inactive')); 
+            btn.classList.remove('inactive'); 
+
+            // Filtrer les marqueurs sur la carte
+            markers.forEach(marker => {
+                if (marker.category === category) {
+                    marker.setVisible(true);
+                    marker.setAnimation(google.maps.Animation.DROP); // Animation
+                } else {
+                    marker.setVisible(false);
+                }
+            });
+        }
+
+        function showAll(btn) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(b => b.classList.remove('inactive')); 
+
+            markers.forEach(marker => {
+                marker.setVisible(true);
+            });
+        }
+
+    </script>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=VOTRE_API_KEY&callback=initMap">
+    </script>
+
+</body>
+</html>
