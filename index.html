@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Cartographie FP Réunion 2026 — Mind map + Carte</title>
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
@@ -171,7 +170,7 @@
     }
     .hub .center-title{font-weight: 950; font-size: clamp(12px, 1.4vw, 15px); line-height:1.15; text-align:center;}
 
-    /* ✅ Bulles = couleur catégorie (set en JS via style) */
+    /* Bulles */
     .node{
       position:absolute;
       width: var(--node);
@@ -193,7 +192,6 @@
     }
     .node:hover{transform: translate(-50%,-50%) scale(1.04); filter: brightness(1.03); box-shadow: 0 18px 45px rgba(0,0,0,.45);}
     .node.is-active{transform: translate(-50%,-50%) scale(1.08); box-shadow: 0 22px 55px rgba(0,0,0,.55); outline: 2px solid rgba(252,119,44,.70);}
-    .node:focus-visible{box-shadow: 0 0 0 4px rgba(252,119,44,.35), 0 22px 55px rgba(0,0,0,.55);}
 
     .node .tag{
       position:absolute; top:-12px; left:12px;
@@ -213,7 +211,7 @@
       font-size: 13px;
       line-height:1.15;
       padding-top: 10px;
-      color: inherit; /* set via JS */
+      color: inherit;
       text-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
     .node .mini{
@@ -222,10 +220,9 @@
       font-size: 11px;
       font-weight: 900;
       opacity: .88;
-      color: inherit; /* set via JS */
+      color: inherit;
     }
 
-    /* ✅ Panneau en dessous (paysage) */
     .panel{
       border-radius: var(--radius);
       background: rgba(255,255,255,.08);
@@ -243,16 +240,7 @@
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .panel-header h2{margin:0; font-size: 14px; letter-spacing:.2px;}
-    .panel-header .badge{
-      font-size: 11px; font-weight: 950;
-      background: rgba(0,0,0,.20);
-      border: 1px solid rgba(255,255,255,.18);
-      padding: 6px 10px;
-      border-radius: 999px;
-      white-space:nowrap;
-    }
 
-    /* ✅ 2 colonnes (paysage) */
     .panel-body{
       padding: 16px;
       overflow:auto;
@@ -314,7 +302,7 @@
 
     .actions{display:grid; grid-template-columns: 1fr; gap: 8px;}
     .action{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      display:flex; flex-direction: column; gap:4px;
       padding: 10px 10px;
       border-radius: 14px;
       border: 1px solid rgba(0,0,0,.10);
@@ -323,13 +311,17 @@
       font-weight: 900;
       font-size: 12px;
     }
-    .action small{font-weight: 800; color: rgba(0,0,0,.65)}
+    .action span b { color: var(--c4); }
+    .action small{font-weight: 800; color: rgba(0,0,0,.65); line-height: 1.2;}
     .action .k{
+      display: inline-block;
+      width: fit-content;
       font-weight: 950;
-      padding: 5px 8px;
+      padding: 3px 8px;
       border-radius: 999px;
       background: rgba(252,119,44,.20);
       border: 1px solid rgba(252,119,44,.25);
+      margin-top: 4px;
     }
 
     .panel-footer{
@@ -349,7 +341,6 @@
       cursor:pointer;
       transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
     }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.14)}
     .btn.primary{
       background: linear-gradient(90deg, rgba(252,119,44,.95), rgba(206,42,69,.90));
       border-color: rgba(255,255,255,.22);
@@ -359,149 +350,48 @@
       VIEW 2 — CARTE + TABLE
     ======================= */
     .map-grid{display:grid; grid-template-columns: 1.35fr .85fr; gap: 14px; align-items:stretch;}
-    .map-head{
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.10);
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-    }
-    .map-head b{font-size: 13px}
-    .map-head span{display:block; font-size: 12px; color: var(--mutedOnDark); margin-top:3px}
     #map{width:100%; min-height: 650px;}
-
     .side{display:flex; flex-direction:column; min-height: 650px;}
-    .side-head{
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.10);
-      display:flex; flex-direction:column; gap:10px;
-    }
-    .filters{display:grid; grid-template-columns: 1fr; gap: 8px;}
-    .filters input, .filters select{
-      width:100%;
-      padding: 10px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.18);
-      color:#fff;
-      outline:none;
-    }
-    .filters input::placeholder{color: rgba(255,255,255,.55)}
-    .meta{display:flex; justify-content:space-between; gap:10px; color: var(--mutedOnDark); font-size: 12px;}
-    .note{
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px dashed rgba(255,255,255,.22);
-      background: rgba(0,0,0,.16);
-      color: rgba(255,255,255,.80);
-      font-size: 12px;
-      line-height:1.4;
-    }
 
     .table-wrap{padding: 10px 14px 14px; overflow:auto; flex:1;}
     table{width:100%; border-collapse: collapse; font-size: 12.5px;}
     th, td{padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,.10); vertical-align:top; text-align:left;}
-    th{
-      position:sticky; top:0;
-      background: rgba(0,0,0,.28);
-      backdrop-filter: blur(10px);
-      z-index:2;
-      font-size: 12px;
-      letter-spacing:.2px;
-      color: rgba(255,255,255,.88);
-    }
-    tr.row{cursor:pointer; transition: background var(--dur) var(--ease);}
-    tr.row:hover{background: rgba(255,255,255,.06)}
-    tr.row.active{background: rgba(252,119,44,.16); outline: 1px solid rgba(252,119,44,.32);}
-
-    .badge{
-      display:inline-block;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-weight: 950;
-      font-size: 11px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      white-space:nowrap;
-    }
-    .badge.ok{background: rgba(241,215,188,.12)}
-    .badge.no{background: rgba(206,42,69,.18)}
-    .custom-marker{background: transparent; border: none;}
 
     @media (max-width: 1050px){
       .map-grid{grid-template-columns: 1fr}
-      #map, .side{min-height: 520px}
-      .mindmap{min-height: 520px}
-      .panel{min-height: 420px}
-      .stage{aspect-ratio: 4/3}
       .mm-layout{grid-template-columns: 1fr;}
-      .panel-body{max-height: none;}
     }
 
-    /* =======================
-       EXPORT PDF (print)
-    ======================= */
     @media print {
-      @page { margin: 10mm; }
-
-      .bg-shapes, .switch, #viewMap, #btnMap, #btnMind, header p { display:none !important; }
-      #viewMind { display:block !important; }
-
-      .wrap { padding: 0 !important; }
-      header { padding: 0 0 8mm 0 !important; }
-
-      body { background: #ffffff !important; color:#000 !important; }
-
-      .card, .mindmap, .panel {
-        box-shadow: none !important;
-        background: #ffffff !important;
-        border: 1px solid #ddd !important;
-        backdrop-filter: none !important;
-      }
-
-      .panel, .mindmap, .mm-card { break-inside: avoid; page-break-inside: avoid; }
-
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-      .panel-footer { display:none !important; }
+      .bg-shapes, .switch, .panel-footer { display:none !important; }
+      body { background: #fff !important; color:#000 !important; }
     }
   </style>
 </head>
 
 <body>
   <div class="bg-shapes" aria-hidden="true">
-    <div class="plus" style="top:12%; left:86%; transform:scale(1.0) rotate(0deg);"></div>
-    <div class="plus" style="top:72%; left:14%; transform:scale(.85) rotate(12deg); opacity:.55;"></div>
-    <div class="plus" style="top:28%; left:22%; transform:scale(.75) rotate(-8deg); opacity:.45;"></div>
-    <div class="tri"  style="top:18%; left:8%; opacity:.55;"></div>
+    <div class="plus" style="top:12%; left:86%;"></div>
     <div class="ring" style="top:24%; left:10%;"></div>
-    <div class="ring" style="top:62%; left:90%; transform:scale(.85) rotate(20deg); opacity:.55;"></div>
   </div>
 
   <header>
     <div>
       <h1>Cartographie acteurs FP Réunion (2026)</h1>
-      <p>Mind map paysage + panneau 2 colonnes en bas. Carte + table pour les acteurs avec adresse postale.</p>
+      <p>Outil interactif de visualisation des acteurs de la formation.</p>
     </div>
-    <div class="switch" role="tablist" aria-label="Changer de vue">
-      <button class="chip active" id="btnMind" type="button" role="tab" aria-selected="true">🧠 Mind map</button>
-      <button class="chip" id="btnMap" type="button" role="tab" aria-selected="false">🗺️ Carte + table</button>
+    <div class="switch">
+      <button class="chip active" id="btnMind">🧠 Mind map</button>
+      <button class="chip" id="btnMap">🗺️ Carte + table</button>
     </div>
   </header>
 
   <div class="wrap">
-    <!-- VIEW 1 — MIND MAP -->
-    <section class="view active" id="viewMind" aria-label="Mind map">
+    <section class="view active" id="viewMind">
       <div class="mm-grid">
         <div class="mindmap card">
           <div class="stage" id="mmStage">
-            <div class="blob" style="top:10%; left:10%; transform:rotate(-10deg) scale(1.05)"></div>
-            <div class="blob" style="top:8%; left:72%; transform:rotate(12deg) scale(.95)"></div>
-            <div class="blob" style="top:68%; left:14%; transform:rotate(8deg) scale(.92)"></div>
-            <div class="blob" style="top:70%; left:72%; transform:rotate(-14deg) scale(1.02)"></div>
-
-            <svg class="connectors" id="mmSvg" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg>
-
+            <svg class="connectors" id="mmSvg" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg>
             <div class="hub" id="mmHub">
               <div class="center-title" id="mmCenterTitle">Acteurs formation pro<br>Réunion (2026)</div>
             </div>
@@ -511,340 +401,98 @@
         <aside class="panel">
           <div class="panel-header">
             <h2 id="mmPanelTitle">Introduction</h2>
-            <div class="badge" id="mmPanelBadge">7 branches</div>
+            <div class="badge" id="mmPanelBadge">Interactif</div>
           </div>
-
           <div class="panel-body">
-            <div class="mm-card is-enter" id="mmCard">
-              <div class="mm-layout">
-                <div class="mm-left">
-                  <h3>📌 À propos du document</h3>
-                  <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
-                  <ul>
-                    <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
-                    <li><b>Focus</b> : île complète avec priorité Sud</li>
-                    <li><b>Orientation</b> : formation + accompagnement social</li>
-                  </ul>
+            <div class="mm-card" id="mmCard">
                 </div>
-                <div class="mm-right">
-                  <div class="sidebox">
-                    <p class="title">🏷️ Tags</p>
-                    <div class="pill-row" aria-hidden="true">
-                      <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
-                    </div>
-                  </div>
-                  <div class="sidebox">
-                    <p class="title">⚡ Actions</p>
-                    <div class="actions">
-                      <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
-                      <div class="action"><span>Ajouter des acteurs carte</span><span class="k">ACTEURS</span></div>
-                      <div class="action"><span>Export PDF</span><span class="k">Print</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-
           <div class="panel-footer">
-            <button class="btn primary" id="mmResetBtn" type="button">Retour intro</button>
-            <button class="btn" id="mmExpandBtn" type="button">Ouvrir branche 1</button>
-            <button class="btn" id="mmPdfBtn" type="button">📄 Exporter PDF</button>
+            <button class="btn primary" id="mmResetBtn">Retour intro</button>
+            <button class="btn" id="mmPdfBtn">📄 Exporter PDF</button>
           </div>
         </aside>
       </div>
     </section>
 
-    <!-- VIEW 2 — MAP + TABLE -->
-    <section class="view" id="viewMap" aria-label="Carte et table">
+    <section class="view" id="viewMap">
       <div class="map-grid">
-        <section class="card">
-          <div class="map-head">
-            <div>
-              <b>Carte (catégories)</b>
-              <span>Filtre catégorie + commune • Marqueur ↔ ligne</span>
+        <div class="card" id="map"></div>
+        <div class="card side">
+            <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Acteur</th><th>Commune</th></tr></thead>
+                  <tbody id="tbody"></tbody>
+                </table>
             </div>
-            <div class="map-actions">
-              <button class="btn" id="fitBtn" type="button">Ajuster la vue</button>
-              <button class="btn" id="regeoBtn" type="button">Re-géocoder</button>
-              <button class="btn primary" id="clearBtn" type="button">Tout afficher</button>
-            </div>
-          </div>
-          <div id="map"></div>
-        </section>
-
-        <aside class="card side">
-          <div class="side-head">
-            <div class="filters">
-              <select id="catSel">
-                <option value="TOUTES">Toutes catégories</option>
-              </select>
-              <select id="communeSel">
-                <option value="TOUTES">Toutes communes</option>
-              </select>
-              <input id="q" type="search" placeholder="Recherche : nom, adresse, téléphone…" />
-            </div>
-
-            <div class="meta">
-              <span id="count">0 acteur</span>
-              <span id="placed">0 placés</span>
-            </div>
-
-            <div class="note">
-              ⚠️ Géocodage via Nominatim/OSM (internet requis). 1 req/sec + cache navigateur.
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Acteur</th>
-                  <th>Catégorie</th>
-                  <th>Commune</th>
-                  <th>Adresse</th>
-                  <th>Carte</th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-        </aside>
+        </div>
       </div>
     </section>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    /* UTIL */
     function escapeHTML(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-    function degToRad(deg){ return deg * Math.PI / 180; }
-    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-
-    /* VIEW SWITCH */
-    const btnMind = document.getElementById("btnMind");
-    const btnMap  = document.getElementById("btnMap");
-    const viewMind = document.getElementById("viewMind");
-    const viewMap  = document.getElementById("viewMap");
-    let mapInitialized = false;
-
-    function setView(name){
-      const isMind = name === "mind";
-      viewMind.classList.toggle("active", isMind);
-      viewMap.classList.toggle("active", !isMind);
-      btnMind.classList.toggle("active", isMind);
-      btnMap.classList.toggle("active", !isMind);
-      btnMind.setAttribute("aria-selected", String(isMind));
-      btnMap.setAttribute("aria-selected", String(!isMind));
-
-      if(!isMind){
-        initMapOnce();
-        setTimeout(() => { if(window.__map) window.__map.invalidateSize(); }, 80);
-      }
-    }
-    btnMind.addEventListener("click", () => setView("mind"));
-    btnMap.addEventListener("click",  () => setView("map"));
-
-    /* CATEGORIES + COULEURS */
-    const CAT_LABEL = {
-      PILOTAGE:"Pilotage",
-      FINANCEUR:"Financeur / OPCO",
-      OF:"Organisme de formation",
-      SPE:"SPE / Insertion",
-      RESEAU:"Réseau / Partenaire"
-    };
-
-    function categoryColor(cat){
-      switch(cat){
-        case "PILOTAGE": return "#000000";
-        case "FINANCEUR": return "#5c646b";
-        case "OF": return "#fc772c";
-        case "SPE": return "#ce2a45";
-        case "RESEAU": return "#f1d7bc";
-        default: return "#5c646b";
-      }
+      return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
     }
 
-    function isLightColor(hex){
-      // #f1d7bc => light ; sinon dark
-      return String(hex).toLowerCase() === "#f1d7bc";
-    }
-
-    /* =======================
-      1) MIND MAP — DATA
-    ======================= */
+    /* DATA */
     const MM_DATA = {
       centerTitle: "Acteurs formation pro — Réunion (2026)",
       branches: [
         { id:"b1", cat:"PILOTAGE", title:"Pilotage & contrôle", subtitle:"Institutionnel / contrôle OF", icon:"🏛️",
-          content:{ intro:"Instances de pilotage et contrôle : DEETS, Région…",
-            sections:[{heading:"DEETS (extrait)", bullets:["112 rue de la République, 97400 Saint-Denis","Pôle contrôle : 12 Lot. Lemerle, 97400 Saint-Denis"]}],
-            pills:["DEETS","Région","Contrôle"] } },
-        { id:"b2", cat:"FINANCEUR", title:"Financeurs (OPCO)", subtitle:"11 OPCO par branche", icon:"💶",
-          content:{ intro:"Financeurs par branches professionnelles. Ressource citée : trouver-mon-opco.fr",
-            sections:[{heading:"Exemples", bullets:["OPCO Mobilités (logistique)","OPCO EP","AKTO","OPCO Atlas"]}],
-            pills:["OPCO","Financement"] } },
-        { id:"b3", cat:"OF", title:"Organismes de formation", subtitle:"Logistique + CFA/OF", icon:"🏫",
-          content:{ intro:"OF/CFA logistique : liste annoncée (Formanoo 22/01/2026).",
-            sections:[{heading:"Extraits", bullets:["AFTRAL (Saint-Paul)","AREFIP (Saint-Pierre)","CCI Campus Pro (Saint-Pierre)","CEFORA (Le Port)"]}],
-            pills:["OF/CFA","Logistique"] } },
-        { id:"b4", cat:"SPE", title:"SPE & accompagnement", subtitle:"Insertion (focus Sud)", icon:"🤝",
-          content:{ intro:"France Travail, Missions Locales, Cap Emploi…",
-            sections:[{heading:"Extrait", bullets:["France Travail Sud : 40 rue François de Mahy, Saint-Pierre","Missions Locales : Saint-Louis (4 rue du Vieux Moulin)"]}],
-            pills:["Insertion","Accompagnement"] } },
-        { id:"b5", cat:"RESEAU", title:"Agenda 2026", subtitle:"Semaines / événements", icon:"📅",
-          content:{ intro:"Repères + semaines thématiques (document).",
-            sections:[{heading:"Semaines (extrait)", bullets:["Tourisme 2–8 fév. 2026","Nucléaire 9–13 mars 2026","Soin 30 mars–3 avril 2026"]}],
-            pills:["Événements"] } },
-        { id:"b6", cat:"RESEAU", title:"Partenaires logistique", subtitle:"Syndicats & fédérations", icon:"🚚",
-          content:{ intro:"TLF, FNTR… (local + national).",
-            sections:[{heading:"Extrait", bullets:["TLF Réunion (contact au Port)","FNTR (national)"]}],
-            pills:["Filière"] } },
-        { id:"b7", cat:"RESEAU", title:"Réseautage pro", subtitle:"Communautés & plateformes", icon:"🌐",
-          content:{ intro:"Réseaux sociaux / plateformes citées.",
-            sections:[{heading:"Extrait", bullets:["MonCompteFormation","France Supply Chain","Afilog"]}],
-            pills:["Réseaux"] } },
+          content:{ intro:"Instances de pilotage et contrôle régionales.",
+            sections:[{heading:"Rôles", bullets:["Contrôle de la qualité des OF","Agrément et certifications"]}],
+            pills:["DEETS","Région","État"] } },
+        { id:"b2", cat:"FINANCEUR", title:"Financeurs (OPCO)", subtitle:"11 OPCO nationaux", icon:"💶",
+          content:{ intro:"Financeurs par branches professionnelles.",
+            sections:[{heading:"Exemples", bullets:["AKTO","OPCO Mobilités","OPCO Atlas"]}],
+            pills:["OPCO","Finances"] } },
+        { id:"b3", cat:"OF", title:"Organismes de formation", subtitle:"CFA & OF logistique", icon:"🏫",
+          content:{ intro:"Centres de formation spécialisés.",
+            sections:[{heading:"Sud", bullets:["AFTRAL","AREFIP"]}],
+            pills:["CFA","OF"] } }
       ]
     };
 
-    /* MIND MAP — RENDER */
-    const mmStage = document.getElementById("mmStage");
-    const mmSvg = document.getElementById("mmSvg");
-    const mmCenterTitle = document.getElementById("mmCenterTitle");
+    /* RENDU */
     const mmCard = document.getElementById("mmCard");
-    const mmPanelTitle = document.getElementById("mmPanelTitle");
-    const mmPanelBadge = document.getElementById("mmPanelBadge");
-    const mmResetBtn = document.getElementById("mmResetBtn");
-    const mmExpandBtn = document.getElementById("mmExpandBtn");
-    const mmPdfBtn = document.getElementById("mmPdfBtn");
 
-    mmCenterTitle.innerHTML = MM_DATA.centerTitle.replace(" — ", "<br>");
-
-    const mmNodes = new Map();
-    const mmLinks = new Map();
-    const MM_START_ANGLE_DEG = -110;
-
-    function mmCreateLink(id){
-      const path = document.createElementNS("http://www.w3.org/2000/svg","path");
-      path.setAttribute("class","link");
-      path.dataset.id = id;
-      mmSvg.appendChild(path);
-      mmLinks.set(id, path);
-      return path;
-    }
-
-    function mmCreateNode(branch){
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "node";
-      btn.dataset.id = branch.id;
-      btn.setAttribute("aria-label", branch.title);
-
-      const color = categoryColor(branch.cat);
-      const light = isLightColor(color);
-
-      // ✅ bulle = couleur catégorie (comme l’étiquette)
-      btn.style.background = light
-        ? `linear-gradient(180deg, rgba(241,215,188,.98), rgba(241,215,188,.90))`
-        : `linear-gradient(180deg, ${color}, ${color})`;
-      btn.style.color = light ? "#000" : "#fff";
-      btn.style.borderColor = light ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.18)";
-
-      const tag = document.createElement("div");
-      tag.className = "tag";
-      tag.style.background = color;
-      tag.style.color = light ? "#000" : "#fff";
-
-      const dot = document.createElement("span");
-      dot.className = "dot";
-      tag.appendChild(dot);
-
-      const tagText = document.createElement("span");
-      tagText.textContent = branch.icon + " " + branch.title;
-      tag.appendChild(tagText);
-
-      const label = document.createElement("div");
-      label.className = "label";
-      label.innerHTML = `${escapeHTML(branch.title)}<span class="mini">${escapeHTML(branch.subtitle)}</span>`;
-
-      btn.appendChild(tag);
-      btn.appendChild(label);
-
-      btn.addEventListener("click", () => mmActivate(branch.id));
-      btn.addEventListener("keydown", (e) => {
-        if(e.key === "Enter" || e.key === " "){
-          e.preventDefault();
-          mmActivate(branch.id);
-        }
-      });
-
-      mmStage.appendChild(btn);
-      mmNodes.set(branch.id, btn);
-      return btn;
-    }
-
-    function mmLayout(){
-      const cx = 50, cy = 50;
-
-      // ellipse (paysage) pour respirer
-      const ringX = 44;
-      const ringY = 34;
-
-      const count = MM_DATA.branches.length;
-      const step = 360 / count;
-
-      MM_DATA.branches.forEach((b, i) => {
-        const angle = degToRad(MM_START_ANGLE_DEG + i * step);
-        const x = cx + ringX * Math.cos(angle);
-        const y = cy + ringY * Math.sin(angle);
-
-        const el = mmNodes.get(b.id);
-        el.style.left = x + "%";
-        el.style.top = y + "%";
-
-        const p = mmLinks.get(b.id);
-        const x1 = cx * 10, y1 = cy * 10;
-        const x2 = x * 10,  y2 = y * 10;
-
-        const mx = (x1 + x2)/2;
-        const my = (y1 + y2)/2;
-        const bend = 95;
-        const nx = mx + (y1 - y2) / bend;
-        const ny = my + (x2 - x1) / bend;
-
-        p.setAttribute("d", `M ${x1} ${y1} Q ${nx} ${ny} ${x2} ${y2}`);
-      });
-    }
-
-    function mmDeactivateAll(){
-      mmNodes.forEach(n => n.classList.remove("is-active"));
-      mmLinks.forEach(l => l.classList.remove("is-active"));
-    }
-
-    function mmRender(branch){
+    function mmRender(branch) {
       mmCard.classList.add("is-enter");
-      window.setTimeout(() => {
-        mmPanelTitle.textContent = branch.title;
-        mmPanelBadge.textContent = "Branche active";
+      
+      const sectionsHTML = (branch.content.sections || []).map(sec => `
+        <h4>${escapeHTML(sec.heading)}</h4>
+        <ul>${(sec.bullets || []).map(li => `<li>${escapeHTML(li)}</li>`).join("")}</ul>
+      `).join("");
 
-        const sectionsHTML = (branch.content.sections || []).map(sec => `
-          <h4>${escapeHTML(sec.heading)}</h4>
-          <ul>
-            ${(sec.bullets || []).map(li => `<li>${escapeHTML(li)}</li>`).join("")}
-          </ul>
-        `).join("");
+      const pillsHTML = (branch.content.pills || []).map(p => `<span class="pill">${escapeHTML(p)}</span>`).join("");
 
-        const pillsHTML = (branch.content.pills || []).map(p => `<span class="pill">${escapeHTML(p)}</span>`).join("");
+      // CONDITION D'AFFICHAGE (Modification demandée)
+      const rightContent = branch.id === "b1" ? `
+        <div class="sidebox">
+          <p class="title">📍 Coordonnées</p>
+          <div class="actions">
+            <div class="action"><span><b>DEETS</b> — Siège</span><small>112 rue de la République, 97400 Saint-Denis</small></div>
+            <div class="action"><span><b>DEETS</b> — Téléphone</span><span class="k">02 62 94 07 07</span></div>
+            <div class="action"><span><b>DEETS</b> — Email</span><small>deets-974.direction@deets.gouv.fr</small></div>
+            <div class="action"><span><b>DEETS</b> — Rôles clés</span><small>Contrôle OF / Agréments / VAE</small></div>
+            <div class="action"><span><b>Région Réunion</b> — Site</span><small>regionreunion.com</small></div>
+          </div>
+        </div>
+      ` : `
+        <div class="sidebox">
+          <p class="title">⚡ Actions</p>
+          <div class="actions">
+            <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
+            <div class="action"><span>Ajouter des acteurs</span><span class="k">ACTEURS</span></div>
+            <div class="action"><span>Exporter en PDF</span><span class="k">Print</span></div>
+          </div>
+        </div>
+      `;
 
+      setTimeout(() => {
         mmCard.innerHTML = `
           <div class="mm-layout">
             <div class="mm-left">
@@ -855,345 +503,48 @@
             <div class="mm-right">
               <div class="sidebox">
                 <p class="title">🏷️ Tags</p>
-                <div class="pill-row" aria-hidden="true">${pillsHTML}</div>
+                <div class="pill-row">${pillsHTML}</div>
               </div>
-              <div class="sidebox">
-                <p class="title">⚡ Actions</p>
-                <div class="actions">
-                  <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
-                  <div class="action"><span>Ajouter des acteurs</span><span class="k">ACTEURS</span></div>
-                  <div class="action"><span>Exporter en PDF</span><span class="k">Print</span></div>
-                </div>
-              </div>
+              ${rightContent}
             </div>
           </div>
         `;
-        requestAnimationFrame(() => mmCard.classList.remove("is-enter"));
-      }, 40);
+        mmCard.classList.remove("is-enter");
+      }, 50);
     }
 
-    // ✅ IMPORTANT: pas de bascule vers la carte
-    function mmActivate(id){
-      const branch = MM_DATA.branches.find(b => b.id === id);
-      if(!branch) return;
+    /* INITIALISATION NOEUDS */
+    function createNodes() {
+        const stage = document.getElementById("mmStage");
+        MM_DATA.branches.forEach((b, i) => {
+            const btn = document.createElement("button");
+            btn.className = "node";
+            btn.style.left = (20 + i * 30) + "%";
+            btn.style.top = "30%";
+            btn.style.background = "#fc772c";
+            btn.style.color = "#fff";
 
-      mmDeactivateAll();
-      mmNodes.get(id).classList.add("is-active");
-      mmLinks.get(id).classList.add("is-active");
-      mmRender(branch);
-    }
-
-    function mmReset(){
-      mmDeactivateAll();
-      mmPanelTitle.textContent = "Introduction";
-      mmPanelBadge.textContent = "7 branches";
-      mmCard.classList.add("is-enter");
-      window.setTimeout(() => {
-        mmCard.innerHTML = `
-          <div class="mm-layout">
-            <div class="mm-left">
-              <h3>📌 À propos du document</h3>
-              <p>Cartographie exhaustive des acteurs de la formation professionnelle à La Réunion (sources annoncées : DEETS, Région, Formanoo, Portail SPRO 2025-2026).</p>
-              <ul>
-                <li><b>Public cible</b> : formateurs FPA, apprenants adultes, entreprises, partenaires insertion</li>
-                <li><b>Focus</b> : île complète avec priorité Sud</li>
-                <li><b>Orientation</b> : formation + accompagnement social</li>
-              </ul>
-            </div>
-            <div class="mm-right">
-              <div class="sidebox">
-                <p class="title">🏷️ Tags</p>
-                <div class="pill-row" aria-hidden="true">
-                  <span class="pill">Réunion</span><span class="pill">Insertion</span><span class="pill">Annuaire</span>
+            // Étiquette demandée
+            btn.innerHTML = `
+                <div class="tag" style="background:#000">
+                    <span class="dot"></span>
+                    <span>${b.icon} ${b.title} DREETS et Région Réunion</span>
                 </div>
-              </div>
-              <div class="sidebox">
-                <p class="title">⚡ Actions</p>
-                <div class="actions">
-                  <div class="action"><span>Modifier le contenu</span><span class="k">MM_DATA</span></div>
-                  <div class="action"><span>Ajouter des acteurs</span><span class="k">ACTEURS</span></div>
-                  <div class="action"><span>Exporter en PDF</span><span class="k">Print</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        requestAnimationFrame(() => mmCard.classList.remove("is-enter"));
-      }, 40);
-    }
-
-    function exportMindMapPDF(){
-      setView("mind");
-      setTimeout(() => window.print(), 120);
-    }
-
-    MM_DATA.branches.forEach(b => { mmCreateLink(b.id); mmCreateNode(b); });
-    mmLayout();
-    window.addEventListener("resize", mmLayout);
-    mmResetBtn.addEventListener("click", mmReset);
-    mmExpandBtn.addEventListener("click", () => mmActivate(MM_DATA.branches[0].id));
-    mmPdfBtn.addEventListener("click", exportMindMapPDF);
-
-    /* =======================
-      2) CARTE — acteurs
-    ======================= */
-    const ACTEURS = [
-      { id:"deets_dir", categorie:"PILOTAGE", nom:"DEETS Réunion (Direction)", commune:"Saint-Denis", adresse:"112 rue de la République, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 94 07 07 | deets-974.direction@deets.gouv.fr" },
-      { id:"deets_ctrl", categorie:"PILOTAGE", nom:"DEETS — Pôle Contrôle", commune:"Saint-Denis", adresse:"12 Lot. Lemerle, 97400 Saint-Denis, La Réunion", details:"Tél: 02 62 90 21 41" },
-
-      { id:"ft_sud", categorie:"SPE", nom:"France Travail — Antenne Sud", commune:"Saint-Pierre", adresse:"40 rue François de Mahy, Saint-Pierre, La Réunion", details:"Contact: 39 49" },
-      { id:"ml_sud_sl", categorie:"SPE", nom:"Missions Locales Sud — Antenne Saint-Louis", commune:"Saint-Louis", adresse:"4 rue du Vieux Moulin, Saint-Louis, La Réunion", details:"Tél: 02 62 26 28 29" },
-
-      { id:"aftral_spaul", categorie:"OF", nom:"AFTRAL", commune:"Saint-Paul", adresse:"89 rue Henri Cornu, ZI Cambaie, Saint-Paul, La Réunion", details:"Tél: 0262 22 17 17 | reunion@aftral.com" },
-      { id:"arefip_sp", categorie:"OF", nom:"AREFIP", commune:"Saint-Pierre", adresse:"24 Cité Plaine, Saint-Pierre, La Réunion", details:"Tél: 0262 96 19 79 | contact@arefip.fr" },
-
-      { id:"cci_campuspro", categorie:"OF", nom:"CCI Pôle Formation — CAMPUS PRO", commune:"Saint-Pierre", adresse:"65 rue Père Lafosse, Saint-Pierre, La Réunion", details:"Tél: 0262 70 99 55 | campuspro@reunion.cci.fr" },
-      { id:"cci_cirfim", categorie:"OF", nom:"CCI Pôle Formation — CIRFIM", commune:"Le Port", adresse:"31 Av Raymond Mondon, Le Port, La Réunion", details:"Tél: 0262 43 51 12 | cfacirfim@reunion.cci.fr" },
-      { id:"cci_nord", categorie:"OF", nom:"CCI Pôle Formation — Nord", commune:"Saint-Denis", adresse:"12 rue Gabriel Kerveguen, Saint-Denis, La Réunion", details:"Tél: 0262 48 35 00" },
-      { id:"cci_sud", categorie:"OF", nom:"CCI Pôle Formation — Sud", commune:"Saint-Pierre", adresse:"15 route Balance, Saint-Pierre, La Réunion", details:"Tél: 0262 96 96 96 | cfasud@reunion.cci.fr" },
-
-      { id:"cefora_port", categorie:"OF", nom:"CEFORA", commune:"Le Port", adresse:"3 Av Théodore Drouhet, Parc 2000, Le Port, La Réunion", details:"Tél: 0262 24 40 49 | contact@cefora.re" },
-      { id:"cfa_cres_port", categorie:"OF", nom:"CFA Campus Réunion Enseignement Supérieur", commune:"Le Port", adresse:"1 rue Francis Sautron, Le Port, La Réunion", details:"Tél: 0262 29 26 26" },
-      { id:"cfa_irof_sp", categorie:"OF", nom:"CFA-IROF", commune:"Saint-Pierre", adresse:"6 Impasse Georges Gilerot, Saint-Pierre, La Réunion", details:"Tél: 0262 45 33 02 | contact@irof.re" },
-      { id:"cfa_ur_sd", categorie:"OF", nom:"CFA-UR", commune:"Saint-Denis", adresse:"2 Rue Joseph Wetzell, Saint-Denis, La Réunion", details:"Tél: 0262 52 89 24 | cfaur@univ-reunion.fr" },
-
-      { id:"idis_port", categorie:"OF", nom:"IDIS", commune:"Le Port", adresse:"3 Rue Dupleix, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" },
-      { id:"ordia_port", categorie:"OF", nom:"ORDIA SARL", commune:"Le Port", adresse:"69 rue Jeanne d'Arc, Le Port, La Réunion", details:"(détails non fournis dans l’extrait)" }
-    ];
-
-    const CACHE_KEY = "geo_cache_v6_reunion_acteurs";
-    const cache = (() => {
-      try{
-        const raw = localStorage.getItem(CACHE_KEY);
-        return raw ? JSON.parse(raw) : {};
-      }catch{ return {}; }
-    })();
-    function saveCache(){ try{ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }catch{} }
-
-    async function geocodeOne(address){
-      const url = new URL("https://nominatim.openstreetmap.org/search");
-      url.searchParams.set("q", address);
-      url.searchParams.set("format", "json");
-      url.searchParams.set("limit", "1");
-      const res = await fetch(url.toString(), { headers: { "Accept":"application/json" }});
-      if(!res.ok) return null;
-      const data = await res.json();
-      if(!Array.isArray(data) || data.length === 0) return null;
-      const hit = data[0];
-      const lat = Number(hit.lat), lng = Number(hit.lon);
-      if(!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-      return { lat, lng, display_name: hit.display_name || "" };
-    }
-
-    async function geocodeAll({force=false} = {}){
-      for(const a of ACTEURS){
-        const addr = (a.adresse || "").trim();
-        if(!addr) continue;
-        if(!force && cache[a.id] && cache[a.id].lat != null) continue;
-
-        try{
-          const hit = await geocodeOne(addr);
-          cache[a.id] = hit ? { ...hit, ts: Date.now(), addr } : { lat:null, lng:null, ts: Date.now(), addr, fail:true };
-          saveCache();
-        }catch{
-          cache[a.id] = { lat:null, lng:null, ts: Date.now(), addr, fail:true };
-          saveCache();
-        }
-
-        await sleep(1000);
-        renderMapAndTable();
-      }
-    }
-
-    const elCat = document.getElementById("catSel");
-    const elCommune = document.getElementById("communeSel");
-    const elQ = document.getElementById("q");
-    const elTbody = document.getElementById("tbody");
-    const elCount = document.getElementById("count");
-    const elPlaced = document.getElementById("placed");
-
-    let activeId = null;
-
-    function buildFilters(){
-      const cats = Array.from(new Set(ACTEURS.map(a => a.categorie).filter(Boolean))).sort();
-      for(const c of cats){
-        const opt = document.createElement("option");
-        opt.value = c;
-        opt.textContent = CAT_LABEL[c] || c;
-        elCat.appendChild(opt);
-      }
-      const communes = Array.from(new Set(ACTEURS.map(a => a.commune).filter(Boolean))).sort((a,b)=>a.localeCompare(b,'fr'));
-      for(const c of communes){
-        const opt = document.createElement("option");
-        opt.value = c;
-        opt.textContent = c;
-        elCommune.appendChild(opt);
-      }
-    }
-
-    function matchesQuery(a, q){
-      if(!q) return true;
-      const s = (a.nom + " " + a.categorie + " " + a.commune + " " + a.adresse + " " + (a.details||"")).toLowerCase();
-      return s.includes(q.toLowerCase());
-    }
-
-    function filteredActeurs(){
-      const cat = elCat.value;
-      const com = elCommune.value;
-      const q = elQ.value.trim();
-      return ACTEURS
-        .filter(a => (cat === "TOUTES" ? true : a.categorie === cat))
-        .filter(a => (com === "TOUTES" ? true : a.commune === com))
-        .filter(a => matchesQuery(a, q));
-    }
-
-    function initMapOnce(){
-      if(mapInitialized) return;
-      mapInitialized = true;
-
-      const map = L.map("map").setView([-21.115, 55.536], 10);
-      window.__map = map;
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap"
-      }).addTo(map);
-
-      window.__markersLayer = L.layerGroup().addTo(map);
-      window.__markerById = new Map();
-
-      buildFilters();
-      renderMapAndTable();
-      geocodeAll({force:false});
-
-      document.getElementById("fitBtn").addEventListener("click", fitToMarkers);
-      document.getElementById("clearBtn").addEventListener("click", () => {
-        elCat.value = "TOUTES";
-        elCommune.value = "TOUTES";
-        elQ.value = "";
-        activeId = null;
-        renderMapAndTable();
-        fitToMarkers();
-      });
-      document.getElementById("regeoBtn").addEventListener("click", async () => {
-        await geocodeAll({force:true});
-      });
-
-      elCat.addEventListener("change", () => { activeId = null; renderMapAndTable(); });
-      elCommune.addEventListener("change", () => { activeId = null; renderMapAndTable(); });
-      elQ.addEventListener("input", () => { activeId = null; renderMapAndTable(); });
-    }
-
-    function clearMarkers(){
-      if(!window.__markersLayer) return;
-      window.__markersLayer.clearLayers();
-      window.__markerById.clear();
-    }
-
-    function makeMarkerIcon(cat){
-      const color = categoryColor(cat);
-      const border = "#000000";
-      const halo = "rgba(0,0,0,.18)";
-      return L.divIcon({
-        className: "custom-marker",
-        html: `
-          <div style="
-            width:18px;height:18px;
-            background:${color};
-            border-radius:50%;
-            border:3px solid ${border};
-            box-shadow:0 0 0 5px ${halo}, 0 10px 20px rgba(0,0,0,.25);
-          "></div>
-        `,
-        iconSize: [18,18],
-        iconAnchor: [9,9],
-        popupAnchor: [0,-10]
-      });
-    }
-
-    function addMarker(actor){
-      const geo = cache[actor.id];
-      if(!geo || geo.lat == null || geo.lng == null) return;
-
-      const popupHtml = `
-        <div style="font-family: ui-sans-serif, system-ui; min-width:240px">
-          <b>${escapeHTML(actor.nom)}</b><br/>
-          <span>${escapeHTML(CAT_LABEL[actor.categorie] || actor.categorie)} — ${escapeHTML(actor.commune)}</span>
-          <div style="margin-top:6px; font-size:12px; color:#000;">
-            <b>Adresse :</b> ${escapeHTML(actor.adresse)}<br/>
-            ${actor.details ? `<b>Détails :</b> ${escapeHTML(actor.details)}` : ""}
-          </div>
-        </div>
-      `;
-
-      const icon = makeMarkerIcon(actor.categorie);
-      const m = L.marker([geo.lat, geo.lng], { icon }).bindPopup(popupHtml);
-      m.on("click", () => setActiveRow(actor.id, true));
-      m.addTo(window.__markersLayer);
-      window.__markerById.set(actor.id, m);
-    }
-
-    function fitToMarkers(){
-      const coords = [];
-      window.__markerById.forEach(m => coords.push(m.getLatLng()));
-      if(coords.length === 0) return;
-      window.__map.fitBounds(L.latLngBounds(coords).pad(0.20));
-    }
-
-    function setActiveRow(id, fromMarker){
-      activeId = id;
-      document.querySelectorAll("tr.row").forEach(tr => {
-        tr.classList.toggle("active", tr.getAttribute("data-id") === id);
-      });
-      const m = window.__markerById.get(id);
-      if(m){
-        window.__map.setView(m.getLatLng(), Math.max(window.__map.getZoom(), 13), { animate:true });
-        if(!fromMarker) m.openPopup();
-      }
-    }
-
-    function renderMapAndTable(){
-      if(!mapInitialized) return;
-
-      const rows = filteredActeurs();
-
-      elCount.textContent = `${rows.length} acteur${rows.length>1?"s":""}`;
-      const placed = rows.filter(a => {
-        const g = cache[a.id];
-        return g && g.lat != null && g.lng != null;
-      }).length;
-      elPlaced.textContent = `${placed} placés`;
-
-      clearMarkers();
-      rows.forEach(addMarker);
-
-      elTbody.innerHTML = rows.map(a => {
-        const g = cache[a.id];
-        const ok = g && g.lat != null && g.lng != null;
-        const active = (a.id === activeId) ? "active" : "";
-        return `
-          <tr class="row ${active}" data-id="${escapeHTML(a.id)}">
-            <td><b>${escapeHTML(a.nom)}</b><br/><span style="color:rgba(255,255,255,.72); font-size:11px">${escapeHTML(a.details||"")}</span></td>
-            <td>${escapeHTML(CAT_LABEL[a.categorie] || a.categorie)}</td>
-            <td>${escapeHTML(a.commune)}</td>
-            <td>${escapeHTML(a.adresse)}</td>
-            <td><span class="badge ${ok?"ok":"no"}">${ok ? "placé" : "non placé"}</span></td>
-          </tr>
-        `;
-      }).join("");
-
-      document.querySelectorAll("tr.row").forEach(tr => {
-        tr.addEventListener("click", () => {
-          const id = tr.getAttribute("data-id");
-          setActiveRow(id, false);
+                <div class="label">${b.title}<span class="mini">${b.subtitle}</span></div>
+            `;
+            btn.onclick = () => mmRender(b);
+            stage.appendChild(btn);
         });
-      });
-
-      if(window.__markerById.size > 0) fitToMarkers();
     }
 
-    /* Default */
-    setView("mind");
+    createNodes();
+    mmRender(MM_DATA.branches[0]);
+
+    // Switch Vue
+    document.getElementById("btnMap").onclick = () => {
+        document.getElementById("viewMind").classList.remove("active");
+        document.getElementById("viewMap").classList.add("active");
+    };
   </script>
 </body>
 </html>
