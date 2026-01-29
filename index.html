@@ -5,59 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartographie FPA - La Réunion 2026</title>
     <style>
-        /* =========================================
-           STYLE (CSS INTÉGRÉ)
-           ========================================= */
+        /* --- STYLE GLOBAL --- */
         :root {
-            --primary: #2c3e50; /* Bleu foncé */
-            --accent: #e67e22;  /* Orange */
+            --primary: #2c3e50;
+            --accent: #e67e22;
             --bg: #f4f7f6;
             --text: #333;
             --white: #ffffff;
-            --linkedin: #0077b5;
-            --instagram: #E1306C;
-            --tiktok: #000000;
         }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
             padding: 20px;
-            /* ALIGNEMENT MOBILE OPTIMISÉ */
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            max-width: 800px;
-            width: 100%;
-        }
-        
+        header { text-align: center; margin-bottom: 30px; max-width: 800px; width: 100%; }
         h1 { color: var(--primary); margin-bottom: 5px; font-size: 1.8rem; }
         .subtitle { color: #7f8c8d; font-size: 0.9rem; }
 
-        /* CONTENEUR PRINCIPAL */
-        .tree-wrapper {
-            width: 100%;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        /* LES BULLES (BRANCHES) */
+        /* ARBRE & BRANCHES */
+        .tree-wrapper { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 0; }
+        
         .branch-node {
             background: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: transform 0.2s;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
         }
 
         .branch-header {
@@ -70,60 +50,62 @@
             align-items: center;
             border-left: 6px solid var(--accent);
         }
-
         .branch-header:hover { background: #34495e; }
         .branch-header h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; }
-        .branch-icon { font-size: 1.2rem; transition: transform 0.3s; }
 
-        /* CONTENU CACHÉ */
         .branch-content {
             display: none;
             padding: 20px;
             background: var(--white);
             border-top: 1px solid #eee;
-            animation: slideDown 0.3s ease-out;
         }
         .branch-content.open { display: block; }
 
-        /* TABLES ET LISTES */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.9rem; }
-        th { background: #eee; text-align: left; padding: 8px; font-size: 0.85rem; color: #555; }
-        td { border-bottom: 1px solid #eee; padding: 8px; vertical-align: top; }
-        
-        .info-block { margin-bottom: 20px; }
-        .block-title { color: var(--accent); font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #eee; display: inline-block; }
-
-        ul, ol { padding-left: 20px; margin: 0 0 15px 0; }
-        li { margin-bottom: 8px; line-height: 1.4; }
-
-        /* BOUTON LIEN */
-        .btn-link {
-            display: inline-block; background: var(--accent); color: white; 
-            padding: 8px 15px; text-decoration: none; border-radius: 5px; 
-            font-size: 0.9rem; margin-top: 5px;
+        /* CONNECTEUR */
+        .connector { 
+            width: 2px; 
+            height: 20px; 
+            background: #ccc; 
+            margin: 0 auto; 
+            z-index: 1;
         }
-        .btn-link:hover { background: #d35400; }
+
+        /* ELEMENTS DE CONTENU */
+        .info-block { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .info-block:last-child { border-bottom: none; }
+        .block-title { color: var(--accent); font-weight: bold; margin-bottom: 10px; display: block; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 10px; }
+        th { background: #eee; text-align: left; padding: 6px; }
+        td { border-bottom: 1px solid #eee; padding: 6px; vertical-align: top; }
+        
+        ul, ol { padding-left: 20px; margin: 0 0 10px 0; }
+        li { margin-bottom: 5px; line-height: 1.4; }
+
+        .btn-link {
+            display: inline-block; background: var(--accent); color: white;
+            padding: 8px 15px; text-decoration: none; border-radius: 4px;
+            font-size: 0.9rem; margin-top: 5px; text-align: center;
+        }
+        
+        /* SPECIFICITES BRANCHE 3 */
+        .scroll-list { 
+            max-height: 300px; 
+            overflow-y: auto; 
+            background: #fafafa; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            font-size: 0.85rem; 
+        }
+        .badge { 
+            display: inline-block; background: #e0e0e0; color: #333; 
+            padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin: 2px; 
+        }
 
         /* OPCO GRID */
         .opco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         @media (max-width: 400px) { .opco-grid { grid-template-columns: 1fr; } }
-        .opco-item { border: 1px solid #eee; padding: 10px; border-radius: 5px; font-size: 0.85rem; }
-
-        /* STYLES RÉSEAUX SOCIAUX & BADGES */
-        .social-link { text-decoration: none; font-weight: bold; font-size: 0.9rem; }
-        .lk { color: var(--linkedin); }
-        .insta { color: var(--instagram); }
-        .tik { color: var(--tiktok); }
-        
-        .badge-grid { display: flex; flex-wrap: wrap; gap: 5px; }
-        .badge { background: #f0f0f0; color: #333; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #ddd; }
-
-        /* SCROLLABLE LIST */
-        .scroll-list { max-height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 10px; background: #fafafa; font-size: 0.85rem; }
-
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .connector { height: 15px; width: 2px; background: #ccc; margin: 0 auto; }
+        .opco-item { border: 1px solid #eee; padding: 8px; font-size: 0.85rem; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -138,19 +120,286 @@
         <div class="branch-node">
             <div class="branch-header" onclick="toggleBranch(1)">
                 <h2>1. Pilotage & Contrôle</h2>
-                <span class="branch-icon" id="icon-1">▼</span>
+                <span>▼</span>
             </div>
             <div id="content-1" class="branch-content">
                 <div class="info-block">
-                    <div class="block-title">DEETS Réunion (État)</div>
+                    <span class="block-title">DEETS Réunion (État)</span>
                     <table>
                         <tr><td>Siège</td><td>112 rue de la République, St-Denis</td></tr>
                         <tr><td>Tél</td><td>02 62 94 07 07</td></tr>
-                        <tr><td>Pôle Contrôle</td><td>12 Lot. Lemerle, St-Denis | 02 62 90 21 41</td></tr>
+                        <tr><td>Contrôle</td><td>12 Lot. Lemerle, St-Denis | 02 62 90 21 41</td></tr>
                     </table>
                 </div>
                 <div class="info-block">
-                    <div class="block-title">Région Réunion</div>
+                    <span class="block-title">Région Réunion</span>
+                    <ul>
+                        <li><strong>Rôle :</strong> Autorité Compétente FP, Apprentissage.</li>
+                        <li><strong>Site :</strong> <a href="https://www.regionreunion.com" target="_blank">regionreunion.com</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="branch-node">
+            <div class="branch-header" onclick="toggleBranch(2)">
+                <h2>2. Financeurs (OPCO)</h2>
+                <span>▼</span>
+            </div>
+            <div id="content-2" class="branch-content">
+                <p>Les 11 OPCO par branches (Apprentissage, PDC) :</p>
+                <div class="opco-grid">
+                    <div class="opco-item"><strong>Mobilités</strong><br>01 49 71 55 00</div>
+                    <div class="opco-item"><strong>OPCO EP</strong><br>01 45 63 36 36</div>
+                    <div class="opco-item"><strong>AKTO</strong><br>01 44 87 30 00</div>
+                    <div class="opco-item"><strong>Atlas</strong><br>01 53 20 58 00</div>
+                    <div class="opco-item"><strong>Santé</strong><br>Standard</div>
+                    <div class="opco-item"><strong>Constructys</strong><br>Standard</div>
+                </div>
+                <br>
+                <a href="https://www.trouver-mon-opco.fr" target="_blank" class="btn-link">🔎 Trouver mon OPCO</a>
+            </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="branch-node">
+            <div class="branch-header" onclick="toggleBranch(3)">
+                <h2>3. Organismes de Formation</h2>
+                <span>▼</span>
+            </div>
+            <div id="content-3" class="branch-content">
+                
+                <div class="info-block" style="background:#e8f6f3; padding:10px; border-left:4px solid var(--accent);">
+                    <span class="block-title">Contacts Prioritaires Logistique</span>
+                    <ul>
+                        <li><strong>SUCCESS FORMATION</strong> (St Pierre)</li>
+                        <li><strong>AFTRAL :</strong> 0262 22 17 17</li>
+                        <li><strong>CCI Campus Pro :</strong> 0262 70 99 55</li>
+                        <li><strong>CEFORA :</strong> 0262 24 40 49</li>
+                        <li><strong>CFA Campus Réunion :</strong> 0262 29 26 26</li>
+                        <li><strong>CFA-IROF :</strong> 0262 45 33 02</li>
+                    </ul>
+                </div>
+
+                <div class="info-block">
+                    <span class="block-title">Résumé par Commune</span>
+                    <div>
+                        <span class="badge">ST PIERRE (13)</span>
+                        <span class="badge">LE PORT (7)</span>
+                        <span class="badge">ST DENIS (7)</span>
+                        <span class="badge">ST PAUL (4)</span>
+                        <span class="badge">STE MARIE (1)</span>
+                        <span class="badge">ST LOUIS (1)</span>
+                        <span class="badge">ST ANDRE (1)</span>
+                        <span class="badge">LES AVIRONS (1)</span>
+                        <span class="badge">BRAS PANON (1)</span>
+                        <span class="badge">L'ETANG SALE (1)</span>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <span class="block-title">Liste Complète - 38 OF/CFA Logistique</span>
+                    <div class="scroll-list">
+                        <ol>
+                            <li><strong>AFTRAL</strong> - ST PAUL - 0262 22 17 17</li>
+                            <li><strong>AREFIP</strong> - ST PIERRE - 0262 96 19 79</li>
+                            <li>AXE RESSOURCE CONSEIL - ST PIERRE</li>
+                            <li>AirLise Formation - ST PAUL</li>
+                            <li>BEFORMA - ST DENIS</li>
+                            <li>CAMAS FORMATION - STE MARIE</li>
+                            <li><strong>CCI CAMPUS PRO</strong> - ST PIERRE - 0262 70 99 55</li>
+                            <li><strong>CCI CIRFIM</strong> - LE PORT - 0262 43 51 12</li>
+                            <li>CCI Pôle Nord - ST DENIS - 0262 48 35 00</li>
+                            <li>CCI Pôle Sud - ST PIERRE - 0262 96 96 96</li>
+                            <li><strong>CEFORA</strong> - LE PORT - 0262 24 40 49</li>
+                            <li><strong>CFA CAMPUS RÉUNION</strong> - LE PORT - 0262 29 26 26</li>
+                            <li><strong>CFA-IROF</strong> - ST PIERRE - 0262 45 33 02</li>
+                            <li>CFA-UR - ST DENIS - 0262 52 89 24</li>
+                            <li>CMA Formation Ste Clotilde - ST DENIS</li>
+                            <li>CMA Formation St Gilles - ST PAUL</li>
+                            <li>CMA Formation St Pierre - ST PIERRE</li>
+                            <li>CNAM - LE PORT</li>
+                            <li>CONCEPT FORMATION - ST DENIS</li>
+                            <li>Centre FPEA - ST LOUIS</li>
+                            <li>DEVELOP A OU - LES AVIRONS</li>
+                            <li>ECI DEMAIN EN MAIN - BRAS PANON</li>
+                            <li>ECM - ST PIERRE</li>
+                            <li>ELFE COACHING ECCA - ST DENIS</li>
+                            <li>ENDEMIA FORMATION - ST ANDRE</li>
+                            <li>FORMATION AUDIGARD - ST PIERRE</li>
+                            <li>GIP FCIP - ST DENIS</li>
+                            <li>GROUPE GEM FORMATION - ST PIERRE</li>
+                            <li>ICCI FORMATIONS - ST DENIS</li>
+                            <li>IDIS - LE PORT</li>
+                            <li>IFORMA SUD - ST PIERRE</li>
+                            <li>ISEC FORMATION - ST PIERRE</li>
+                            <li>LM ACADEMIE - ST PIERRE</li>
+                            <li>ORDIA SARL - LE PORT</li>
+                            <li>Réunion Apprentissage - L'ETANG SALE</li>
+                            <li><strong>SUCCESS FORMATION</strong> - ST PIERRE</li>
+                            <li>TETRANERGY NORD - ST DENIS</li>
+                            <li>TETRANERGY SUD - ST PIERRE - 0262 29 26 26</li>
+                        </ol>
+                        <small>Source : Formanoo 22/01/2026</small>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <span class="block-title">Spécial Titre Pro FPA</span>
                     <table>
-                        <tr><td>Rôle</td><td>Programmation FP, Apprentissage, FSE</td></tr>
-                        <tr><td>Site</td><td><a href="https://www.regionreunion.com" target="_
+                        <tr><td>COURS ST-PAUL</td><td>TP FPA / Alternance</td></tr>
+                        <tr><td>PAM OI</td><td>TP FPA</td></tr>
+                        <tr><td>SPL AFPAR</td><td>TP FPA Session</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="branch-node">
+            <div class="branch-header" onclick="toggleBranch(4)">
+                <h2>4. Service Public & Emploi</h2>
+                <span>▼</span>
+            </div>
+            <div id="content-4" class="branch-content">
+                <div class="info-block">
+                    <span class="block-title">France Travail (Pôle Emploi)</span>
+                    <ul>
+                        <li><strong>Tél Unique :</strong> 39 49</li>
+                        <li><strong>Sud :</strong> 40 rue F. de Mahy, St-Pierre.</li>
+                    </ul>
+                </div>
+                <div class="info-block">
+                    <span class="block-title">Missions Locales Sud</span>
+                    <p>Siège : 02 62 25 77 20</p>
+                    <table>
+                        <tr><td>St-Louis</td><td>02 62 26 28 29</td></tr>
+                        <tr><td>Le Tampon</td><td>02 62 27 04 63</td></tr>
+                        <tr><td>St-Joseph</td><td>02 62 56 57 42</td></tr>
+                    </table>
+                </div>
+                <div class="info-block">
+                    <span class="block-title">Social & Urgences</span>
+                    <p><strong>Urgences :</strong> 15 (SAMU), 18 (Pompiers), 115 (Social).</p>
+                    <p><strong>CCAS St-Louis :</strong> 02 62 44 44 92</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="branch-node">
+            <div class="branch-header" onclick="toggleBranch(5)">
+                <h2>5. L’agenda des manifestations 2026</h2>
+                <span>▼</span>
+            </div>
+            <div id="content-5" class="branch-content">
+                <div class="info-block">
+                    <span class="block-title">Semaines Thématiques 2026</span>
+                    <table>
+                        <tr><td><strong>Tourisme</strong></td><td>2 au 8 février</td></tr>
+                        <tr><td><strong>Nucléaire</strong></td><td>9 au 13 mars</td></tr>
+                        <tr><td><strong>Soin</strong></td><td>30 mars au 3 avril</td></tr>
+                        <tr><td><strong>Missions Loc.</strong></td><td>7 au 16 octobre</td></tr>
+                        <tr><td><strong>Handicap</strong></td><td>Novembre</td></tr>
+                        <tr><td><strong>Création</strong></td><td>Décembre</td></tr>
+                    </table>
+                </div>
+                <div class="info-block">
+                    <span class="block-title">Grands Salons</span>
+                    <ul>
+                        <li><strong>DomTomJob (Nordev) :</strong> Printemps.</li>
+                        <li><strong>Salon de l’Emploi :</strong> Fin 2026.</li>
+                    </ul>
+                </div>
+                <div class="info-block">
+                    <span class="block-title">S'informer</span>
+                    <ul>
+                        <li><a href="https://mesevenementsemploi.francetravail.fr" target="_blank">mesevenementsemploi.francetravail.fr</a></li>
+                        <li><a href="https://salonemploi.re" target="_blank">salonemploi.re</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="branch-node">
+            <div class="branch-header" onclick="toggleBranch(6)">
+                <h2>6. Les Partenaires Logistique</h2>
+                <span>▼</span>
+            </div>
+            <div id="content-6" class="branch-content">
+                <div class="info-block">
+                    <span class="block-title">Acteurs à La Réunion</span>
+                    <ul>
+                        <li><strong>TLF Réunion :</strong> Syndicat patronal.<br><em>Contact :</em> <a href="mailto:president@tlfreunion.fr">president@tlfreunion.fr</a> | 0692 85 77 84</li>
+                        <li><strong>FNTR Réunion :</strong> Leader transport routier.</li>
+                        <li><strong>Salariés :</strong> UR 974, CGT, CGT-FO, CFDT.</li>
+                    </ul>
+                </div>
+                <div class="info-block">
+                    <span class="block-title">Acteurs Nationaux</span>
+                    <ul>
+                        <li><strong>Union TLF :</strong> <a href="https://e-tlf.com" target="_blank">e-tlf.com</a></li>
+                        <li><strong>FNTR :</strong> <a href="https://fntr.fr" target="_blank">fntr.fr</a></li>
+                        <li><strong>SNTL :</strong> <a href="https://sntl.fr" target="_blank">sntl.fr</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="branch-node">
+            <div class="branch-header" onclick="toggleBranch(7)">
+                <h2>7. Le Réseautage Professionnel</h2>
+                <span>▼</span>
+            </div>
+            <div id="content-7" class="branch-content">
+                <div class="info-block">
+                    <span class="block-title">Organismes d'État</span>
+                    <ul>
+                        <li><strong>France Compétences :</strong> <a href="https://fr.linkedin.com/company/francecompetences" target="_blank">LinkedIn</a></li>
+                        <li><strong>DGEFP :</strong> <a href="https://www.linkedin.com/company/dgefp" target="_blank">LinkedIn</a></li>
+                        <li><strong>Mon Compte Formation :</strong> <a href="https://moncompteformation.gouv.fr" target="_blank">Site web</a></li>
+                    </ul>
+                </div>
+                <div class="info-block">
+                    <span class="block-title">Logistique & Asso</span>
+                    <ul>
+                        <li><strong>France Logistique :</strong> <a href="https://fr.linkedin.com/company/plateforme-france-logistique" target="_blank">LinkedIn</a></li>
+                        <li><strong>France Supply Chain :</strong> <a href="https://www.francesupplychain.org" target="_blank">Site</a></li>
+                        <li><strong>Union TLF :</strong> <a href="https://fr.linkedin.com/company/union-tlf" target="_blank">LinkedIn</a></li>
+                        <li><strong>Afilog :</strong> <a href="https://afilog.org" target="_blank">Site</a></li>
+                    </ul>
+                </div>
+                <div class="info-block">
+                    <span class="block-title">Réseaux Sociaux</span>
+                    <ul>
+                        <li><strong>Insta :</strong> @travail_gouv, @francetravail, @Prefet974</li>
+                        <li><strong>TikTok :</strong> @onestlapourvous (France Travail)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleBranch(id) {
+            var content = document.getElementById('content-' + id);
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+            } else {
+                content.classList.add('open');
+            }
+        }
+    </script>
+
+</body>
+</html>
