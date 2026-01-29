@@ -119,6 +119,14 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 5px;
         }
+        /* STYLE DU LOGO DANS LA BULLE */
+        .info-logo {
+            display: block;
+            max-width: 150px;       /* Largeur max */
+            max-height: 80px;       /* Hauteur max */
+            margin: 0 auto 15px auto; /* Centré + marge bas */
+            object-fit: contain;
+        }
         
         .info-category { 
             font-size: 0.85em; 
@@ -138,7 +146,7 @@
             border-radius: 6px;
             margin-top: 5px;
         }
-        .info-address { 
+       {"category": "3. CFA / OF (Logistique)", "title": "SUCCESS FORMATION", "address": "22 allée de la piscine, Bâtiment 2C, Centre Casabona, 97410 Saint-Pierre, La Réunion", "color": "#27ae60", "logo": "logo_success.png"}, .info-address { 
             font-size: 1.1em; /* Adresse bien lisible */
             color: #333; 
             line-height: 1.5; 
@@ -148,8 +156,8 @@
             margin-top: 5px;
         }
         
-        .loading-msg { text-align: center; color: #e67e22; margin-top: 15px; font-style: italic; font-weight: bold; }
-    </style>
+        .loading-msg { text-align: center; color: #e67e22; margin-top: 15px; font-: italic; font-weight: bold; }
+    </>
 </head>
 <body>
     <a href="index.html" class="btn-back">⬅️ Retour liste</a>
@@ -255,7 +263,7 @@ Filtrez par familles d'acteurs en cliquant sur les catégories.
             geocoder = new google.maps.Geocoder();
             
             // Lancer le géocodage progressif (avec délai pour éviter les erreurs)
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading')..display = 'block';
             geocodeAndPlaceMarkers(0);
         }
 
