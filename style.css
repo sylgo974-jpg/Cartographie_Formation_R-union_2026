@@ -1,175 +1,156 @@
 :root {
-    --primary-color: #2c3e50; /* Bleu nuit */
-    --accent-color: #e67e22;  /* Orange dynamique */
-    --bg-color: #ecf0f1;
+    --primary-color: #2c3e50; /* Bleu Nuit */
+    --accent-color: #e67e22;  /* Orange Dynamique */
+    --bg-color: #f4f6f8;
     --card-bg: #ffffff;
+    --text-color: #333;
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-color);
+    color: var(--text-color);
     margin: 0;
-    padding: 40px 20px;
-    display: flex;
-    justify-content: center;
+    padding: 20px;
+    line-height: 1.6;
 }
 
+/* --- STRUCTURE PRINCIPALE --- */
 .tree-container {
-    max-width: 900px;
-    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 50px;
 }
 
-/* Style de la Bulle Principale */
+.node-container {
+    margin-bottom: 5px;
+}
+
+/* Ligne connectrice entre les bulles */
+.branch-connector {
+    width: 4px;
+    height: 30px;
+    background-color: #bdc3c7;
+    margin: 0 auto;
+}
+
+/* --- BULLES (BOUTONS) --- */
 .main-bubble {
     background: var(--primary-color);
     color: white;
-    padding: 30px;
-    border-radius: 15px;
+    padding: 20px;
+    border-radius: 12px;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    transition: all 0.3s ease;
-    border-left: 10px solid var(--accent-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, background 0.3s;
+    border-left: 6px solid var(--accent-color);
     position: relative;
-    z-index: 2;
 }
 
 .main-bubble:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    transform: translateY(-2px);
+    background: #34495e;
 }
 
-.main-bubble h2 { margin: 0 0 10px 0; font-size: 1.5rem; }
-.main-bubble p { margin: 0; font-size: 1.1rem; opacity: 0.9; }
+.main-bubble h2 { margin: 0; font-size: 1.2rem; }
+.main-bubble p { margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9; }
+.main-bubble .icon { font-size: 0.8rem; margin-top: 10px; display: block; }
 
-/* Animation du contenu caché */
+/* --- CONTENU CACHÉ & CARTES --- */
 .hidden-content {
-    display: none; /* Caché par défaut */
-    margin-top: 20px;
-    border-left: 4px dashed #bdc3c7; /* Ligne de connexion */
-    margin-left: 30px;
-    padding-left: 30px;
-    animation: slideDown 0.5s ease;
+    display: none;
+    padding: 20px 0;
+    animation: slideDown 0.4s ease-out;
 }
 
-.hidden-content.active {
-    display: block;
-}
+.hidden-content.active { display: block; }
 
-/* Cartes d'information */
 .info-card {
     background: var(--card-bg);
     border-radius: 8px;
-    padding: 25px;
-    margin-bottom: 20px;
+    padding: 20px;
+    margin-bottom: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-top: 3px solid transparent;
 }
+.info-card:hover { border-top: 3px solid var(--accent-color); }
 
 .card-header {
-    font-size: 1.2rem;
     font-weight: bold;
     color: var(--primary-color);
-    border-bottom: 2px solid var(--accent-color);
+    border-bottom: 1px solid #eee;
     padding-bottom: 10px;
     margin-bottom: 15px;
+    font-size: 1.1rem;
 }
 
-/* Tableaux */
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th, .data-table td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-.data-table th { background-color: #f8f9fa; color: #555; }
+/* --- TABLES --- */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.data-table th, .data-table td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
+.data-table th { background-color: #f8f9fa; color: #666; }
 .highlight { font-weight: bold; color: var(--primary-color); }
 
-/* Liste de contacts */
-.contact-block { margin-bottom: 20px; }
-.contact-block h4 { color: var(--accent-color); margin-bottom: 10px; }
-.contact-block ul { list-style: none; padding: 0; }
-.contact-block li { margin-bottom: 8px; line-height: 1.5; }
-.contact-block a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+/* --- GRILLES (OPCO) --- */
+.opco-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.opco-card {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.2s;
+}
+.opco-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: var(--accent-color); }
+
+.opco-name { font-weight: bold; color: var(--primary-color); font-size: 0.95rem; margin-bottom: 5px; }
+.opco-sector { font-size: 0.85rem; color: #666; margin-bottom: 10px; min-height: 35px; }
+.opco-tel { font-size: 0.8rem; background: #fff3e0; color: #d35400; padding: 3px 8px; border-radius: 4px; display: inline-block; font-weight: bold; }
+
+/* --- LISTES & BOUTONS --- */
+.contact-list, .check-list { list-style: none; padding: 0; }
+.contact-list li { margin-bottom: 8px; position: relative; padding-left: 25px; }
+.contact-list li::before { content: "📍"; position: absolute; left: 0; }
+.check-list li { margin-bottom: 8px; position: relative; padding-left: 25px; }
+.check-list li::before { content: "✅"; position: absolute; left: 0; }
+
+.cta-button {
+    display: inline-block;
+    background: #27ae60;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+.cta-button:hover { background: #2ecc71; }
+
+/* --- TIMELINE (Agenda) --- */
+.timeline { position: relative; border-left: 3px solid #eee; margin-left: 10px; padding-left: 20px; }
+.timeline-item { margin-bottom: 20px; position: relative; }
+.timeline-item::before {
+    content: ''; width: 12px; height: 12px; background: var(--accent-color);
+    border-radius: 50%; position: absolute; left: -27px; top: 5px; border: 2px solid white;
+}
+.timeline-date { font-size: 0.8rem; font-weight: bold; color: #999; text-transform: uppercase; }
+.timeline-content h3 { margin: 5px 0; font-size: 1rem; color: var(--primary-color); }
+.timeline-content p { margin: 0; font-size: 0.9rem; color: #666; }
+
+/* --- BADGES (Urgences) --- */
+.emergency-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+.emergency-badge {
+    background: #ffebee; color: #c0392b; border: 1px solid #e57373;
+    padding: 5px 12px; border-radius: 15px; font-weight: bold; font-size: 0.85rem;
+}
 
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
-    /* Ligne verticale entre les grosses bulles */
-.branch-connector {
-    width: 4px;
-    height: 40px; /* Espace entre les bulles */
-    background-color: #bdc3c7; /* Gris clair */
-    margin: 0 auto; /* Centré */
-    /* --- Styles spécifiques pour la Branche 2 (OPCO) --- */
-
-/* La Grille : crée des colonnes automatiques */
-.opco-grid {
-    display: grid;
-    /* Cela crée autant de colonnes de 200px que l'écran le permet */
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-    gap: 15px;
-    margin-bottom: 25px;
 }
-
-/* La Carte individuelle OPCO */
-.opco-card {
-    background: #fdfdfd;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.opco-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent-color);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.opco-name {
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
-
-.opco-sector {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 10px;
-    min-height: 40px; /* Aligne visuellement les cartes */
-}
-
-.opco-tel {
-    font-size: 0.85rem;
-    color: var(--accent-color);
-    font-weight: bold;
-    background: #fff3e0;
-    padding: 4px;
-    border-radius: 4px;
-    display: inline-block;
-}
-
-/* Le bouton d'appel à l'action (CTA) */
-.resource-box {
-    text-align: center;
-    margin-top: 20px;
-    padding: 20px;
-    background: #e8f6f3;
-    border-radius: 8px;
-    border: 1px dashed #1abc9c;
-}
-
-.cta-button {
-    display: inline-block;
-    background-color: #1abc9c;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: background 0.3s;
-}
-
-.cta-button:hover {
-    background-color: #16a085;
-}
-
