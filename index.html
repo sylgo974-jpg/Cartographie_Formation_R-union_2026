@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartographie des acteurs de la Formation professionnelle - La Réunion 2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         /* --- STYLE GLOBAL --- */
         :root {
@@ -12,6 +14,7 @@
             --bg: #f4f7f6;
             --text: #333;
             --white: #ffffff;
+            --pdf-btn: #e74c3c; /* Rouge pour le PDF */
         }
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -24,9 +27,7 @@
             align-items: center;
         }
 
-        /* =========================================
-           HEADER DESIGN (PHOTO RÉUNION)
-           ========================================= */
+        /* HEADER DESIGN */
         header {
             position: relative;
             width: 100%;
@@ -36,10 +37,7 @@
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             border: 4px solid white;
-            
-            /* IMAGE DE FOND LOCALE */
             background-image: url('pont.head.jpg'); 
-            
             background-size: cover;
             background-position: center;
             color: white;
@@ -47,120 +45,89 @@
             padding: 60px 20px;
         }
 
-        /* FILTRE SOMBRE (Pour le contraste) */
         header::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4); /* Noir transparent */
+            background: rgba(0, 0, 0, 0.4);
             z-index: 1;
         }
 
-        /* CONTENU DU HEADER */
-        .header-content {
-            position: relative;
-            z-index: 2;
-        }
+        .header-content { position: relative; z-index: 2; }
 
         h1 { 
-            color: #ffffff; 
-            margin: 0 0 10px 0; 
-            font-size: 1.8rem; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            line-height: 1.3;
+            color: #ffffff; margin: 0 0 10px 0; font-size: 1.8rem; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); line-height: 1.3;
         }
 
         .subtitle { 
-            color: #f1f1f1; 
-            font-size: 1.1rem; 
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(230, 126, 34, 0.9); /* Fond Orange */
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin-top: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            color: #f1f1f1; font-size: 1.1rem; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 1px;
+            background: rgba(230, 126, 34, 0.9);
+            display: inline-block; padding: 5px 15px; border-radius: 20px;
+            margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* BOUTON ROND VERS LA CARTE */
-        .map-btn-container {
-            text-align: center;
-            margin-top: 25px;
-        }
+        /* BOUTON CARTE (Rond & Turquoise) */
+        .map-btn-container { text-align: center; margin-top: 25px; }
         
         .btn-map-access {
-            display: inline-block;
-            /* Nouvelle couleur : Bleu Lagon / Turquoise */
+            display: inline-flex; justify-content: center; align-items: center;
             background: linear-gradient(135deg, #1abc9c, #16a085); 
-            color: white;
-            
-            /* Design Rond */
-            width: 80px;
-            height: 80px;
-            border-radius: 50%; /* C'est ça qui fait le rond parfait */
-            
-            /* Centrage du texte/icone */
-            line-height: 80px; 
-            text-align: center;
-            font-size: 2rem; /* Icône plus grande */
-            text-decoration: none;
-            
-            /* Effets */
+            color: white; width: 80px; height: 80px; border-radius: 50%;
+            font-size: 2rem; text-decoration: none;
             box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
-            border: 4px solid white;
-            transition: all 0.3s ease;
+            border: 4px solid white; transition: all 0.3s ease;
         }
 
         .btn-map-access:hover {
-            transform: scale(1.1) rotate(10deg); /* Effet "pop" au survol */
+            transform: scale(1.1) rotate(10deg);
             box-shadow: 0 8px 20px rgba(26, 188, 156, 0.6);
-            background: linear-gradient(135deg, #2ecc71, #27ae60); /* Devient vert au survol */
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
         }
+
+        /* STYLE DU BOUTON PDF */
+        .btn-pdf {
+            float: right; /* Place le bouton à droite */
+            background-color: var(--pdf-btn);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+        .btn-pdf:hover { background-color: #c0392b; }
 
         /* ARBRE & BRANCHES */
         .tree-wrapper { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 0; }
         
         .branch-node {
-            background: var(--white);
-            border-radius: 8px;
+            background: var(--white); border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 0;
-            position: relative;
-            z-index: 2;
+            overflow: hidden; margin-bottom: 0; position: relative; z-index: 2;
         }
 
         .branch-header {
-            background: var(--primary);
-            color: var(--white);
-            padding: 15px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 6px solid var(--accent);
+            background: var(--primary); color: var(--white); padding: 15px 20px;
+            cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; border-left: 6px solid var(--accent);
         }
         .branch-header:hover { background: #34495e; }
         .branch-header h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; }
 
         .branch-content {
-            display: none;
-            padding: 20px;
-            background: var(--white);
-            border-top: 1px solid #eee;
+            display: none; padding: 20px; background: var(--white); border-top: 1px solid #eee;
         }
         .branch-content.open { display: block; }
 
-        /* CONNECTEUR (LARGE & ORANGE) */
-        .connector { 
-            width: 8px;
-            height: 25px;
-            background: var(--accent);
-            margin: 0 auto;
-            z-index: 1;
-        }
+        .connector { width: 8px; height: 25px; background: var(--accent); margin: 0 auto; z-index: 1; }
 
         /* ELEMENTS DE CONTENU */
         .info-block { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
@@ -180,26 +147,12 @@
             font-size: 0.9rem; margin-top: 5px; text-align: center;
         }
         
-        /* SPECIFICITES BRANCHE 3 */
-        .scroll-list { 
-            max-height: 300px; 
-            overflow-y: auto; 
-            background: #fafafa; 
-            padding: 10px; 
-            border: 1px solid #ddd; 
-            font-size: 0.85rem; 
-        }
-        .badge { 
-            display: inline-block; background: #e0e0e0; color: #333; 
-            padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin: 2px; 
-        }
+        .scroll-list { max-height: 300px; overflow-y: auto; background: #fafafa; padding: 10px; border: 1px solid #ddd; font-size: 0.85rem; }
+        .badge { display: inline-block; background: #e0e0e0; color: #333; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin: 2px; }
 
-        /* OPCO GRID */
         .opco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         @media (max-width: 400px) { .opco-grid { grid-template-columns: 1fr; } }
         .opco-item { border: 1px solid #eee; padding: 8px; font-size: 0.85rem; border-radius: 4px; }
-        
-        /* STYLES SPÉCIFIQUES POUR OPCO DETAILLÉ */
         .opco-item strong { color: var(--primary); display: block; margin-bottom: 3px; }
         .opco-secteur { color: #666; font-size: 0.8rem; display: block; margin-bottom: 5px; min-height: 30px;}
         .opco-tel { font-weight: bold; color: var(--accent); }
@@ -229,6 +182,10 @@
                 <span>▼</span>
             </div>
             <div id="content-1" class="branch-content">
+                <button class="btn-pdf" onclick="generatePDF('content-1', '1_Pilotage_Controle.pdf')" data-html2canvas-ignore="true">
+                    📄 Enregistrer en PDF
+                </button>
+                
                 <div class="info-block">
                     <span class="block-title">DEETS Réunion (État)</span>
                     <table>
@@ -249,12 +206,16 @@
 
         <div class="connector"></div>
 
-   <div class="branch-node">
+        <div class="branch-node">
             <div class="branch-header" onclick="toggleBranch(2)">
                 <h2>2. Financeurs (OPCO)</h2>
                 <span id="icon-2">▼</span>
             </div>
             <div id="content-2" class="branch-content">
+                <button class="btn-pdf" onclick="generatePDF('content-2', '2_Financeurs_OPCO.pdf')" data-html2canvas-ignore="true">
+                    📄 Enregistrer en PDF
+                </button>
+
                 <p>Les 11 OPCO par branches (Apprentissage, PDC) :</p>
                 <div class="opco-grid">
                     <div class="opco-item">
@@ -327,7 +288,10 @@
                 <span id="icon-3">▼</span>
             </div>
             <div id="content-3" class="branch-content">
-                
+                <button class="btn-pdf" onclick="generatePDF('content-3', '3_OF_CFA_Logistique.pdf')" data-html2canvas-ignore="true">
+                    📄 Enregistrer en PDF
+                </button>
+
                 <div class="info-block" style="background:#e8f6f3; padding:10px; border-radius:5px; border-left:4px solid var(--accent);">
                     <div class="block-title">3.1 Contacts Prioritaires Logistique</div>
                     <ul style="margin:0;">
@@ -440,13 +404,16 @@
 
         <div class="connector"></div>
 
-       <div class="branch-node">
+        <div class="branch-node">
             <div class="branch-header" onclick="toggleBranch(4)">
                 <h2>4. Service Public & Emploi</h2>
                 <span>▼</span>
             </div>
             <div id="content-4" class="branch-content">
-                
+                <button class="btn-pdf" onclick="generatePDF('content-4', '4_Service_Public_Emploi.pdf')" data-html2canvas-ignore="true">
+                    📄 Enregistrer en PDF
+                </button>
+
                 <div class="info-block">
                     <span class="block-title">France Travail (17 Agences)</span>
                     <p><strong>Tél Unique :</strong> 39 49</p>
@@ -516,20 +483,23 @@
                 <div class="info-block">
                     <span class="block-title">Social & Urgences</span>
                     <p><strong>Urgences :</strong> 15 (SAMU), 18 (Pompiers), 115 (Social).</p>
+                    <p><strong>CCAS St-Louis :</strong> 5 rue Victor Hugo | 02 62 44 44 92</p>
                 </div>
-
             </div>
         </div>
 
         <div class="connector"></div>
 
-      <div class="branch-node">
+        <div class="branch-node">
             <div class="branch-header" onclick="toggleBranch(5)">
                 <h2>5. L’agenda des manifestations 2026</h2>
                 <span>▼</span>
             </div>
             <div id="content-5" class="branch-content">
-                
+                <button class="btn-pdf" onclick="generatePDF('content-5', '5_Agenda_2026.pdf')" data-html2canvas-ignore="true">
+                    📄 Enregistrer en PDF
+                </button>
+
                 <div class="info-block">
                     <span class="block-title">🇫🇷 Semaines Nationales France Travail</span>
                     <p style="font-size:0.9rem; color:#666;">Événements nationaux déclenchés localement (Forums, Job Datings, Visites).</p>
@@ -579,7 +549,6 @@
                         <li><strong>Réseaux Sociaux :</strong> Suivre France Travail 974 & Missions Locales.</li>
                     </ul>
                 </div>
-
             </div>
         </div>
 
@@ -591,6 +560,10 @@
                 <span>▼</span>
             </div>
             <div id="content-6" class="branch-content">
+                <button class="btn-pdf" onclick="generatePDF('content-6', '6_Partenaires_Logistique.pdf')" data-html2canvas-ignore="true">
+                    📄 Enregistrer en PDF
+                </button>
+
                 <div class="info-block">
                     <span class="block-title">Acteurs à La Réunion</span>
                     <ul>
@@ -614,10 +587,14 @@
 
         <div class="branch-node">
             <div class="branch-header" onclick="toggleBranch(7)">
-                <h2>7. Écosystème & Ressources</h2>
+                <h2>7. Les Réseaux Professionnels</h2>
                 <span>▼</span>
             </div>
             <div id="content-7" class="branch-content">
+                <button class="btn-pdf" onclick="generatePDF('content-7', '7_Reseaux_Professionnels.pdf')" data-html2canvas-ignore="true">
+                    📄 Enregistrer en PDF
+                </button>
+
                 <div class="info-block">
                     <span class="block-title">Organismes d'État</span>
                     <ul>
@@ -648,6 +625,7 @@
     </div>
 
     <script>
+        // Fonction pour ouvrir/fermer les branches
         function toggleBranch(id) {
             var content = document.getElementById('content-' + id);
             if (content.classList.contains('open')) {
@@ -655,6 +633,21 @@
             } else {
                 content.classList.add('open');
             }
+        }
+
+        // Fonction pour générer le PDF
+        function generatePDF(elementId, filename) {
+            const element = document.getElementById(elementId);
+            const opt = {
+                margin:       10,
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Génération
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 
