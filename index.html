@@ -3,130 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilotage et Contrôle - Ingénierie Pédagogique</title>
+    <title>Cartographie FPA - La Réunion 2026</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <header style="text-align: center; margin-bottom: 40px;">
+        <h1 style="color: #2c3e50;">🗺️ Cartographie des Acteurs FPA</h1>
+        <p style="color: #7f8c8d;">Formation Professionnelle des Adultes • La Réunion 2026</p>
+    </header>
+
     <main class="tree-container">
+
         <div class="node-container">
             <div class="bubble main-bubble" onclick="toggleNode('node-1')">
-                <h2>🌍 Pilotage et Contrôle</h2>
-                <p>L'ÉCOSYSTÈME INSTITUTIONNEL <br>DREETS et Région Réunion</p>
+                <h2>🌍 1. PILOTAGE & CONTRÔLE</h2>
+                <p>L'ÉCOSYSTÈME INSTITUTIONNEL (DREETS / Région)</p>
                 <span class="icon">▼</span>
             </div>
-
             <div id="node-1" class="hidden-content">
-                
                 <div class="info-card">
                     <div class="card-header">🏛️ Cadre Général</div>
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Institution</th>
-                                    <th>Rôle principal</th>
-                                    <th>Action majeure</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="highlight">Région Réunion</td>
-                                    <td>Pilote & Financeur</td>
-                                    <td>Achat de formations pour les demandeurs d'emploi.</td>
-                                </tr>
-                                <tr>
-                                    <td class="highlight">DREETS</td>
-                                    <td>Régulateur & Garant</td>
-                                    <td>Agrément des titres pros et contrôle des organismes.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Institution</th><th>Rôle</th><th>Action majeure</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">Région Réunion</td><td>Pilote & Financeur</td><td>Achat de formations</td></tr>
+                            <tr><td class="highlight">DREETS</td><td>Régulateur</td><td>Contrôle & Agréments</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-
                 <div class="info-card">
-                    <div class="card-header">📍 Coordonnées & Contacts</div>
-                    
+                    <div class="card-header">📍 Coordonnées</div>
                     <div class="contact-block">
                         <h4>DREETS (DEETS)</h4>
                         <ul>
-                            <li><strong>Siège :</strong> 112 rue de la République, 97400 Saint-Denis</li>
-                            <li><strong>Téléphone :</strong> 02 62 94 07 07</li>
-                            <li><strong>Email :</strong> <a href="mailto:deets-974.direction@deets.gouv.fr">deets-974.direction@deets.gouv.fr</a></li>
-                            <li><strong>Pôle Contrôle :</strong> 12 Lot. Lemerle, 97400 Saint-Denis | 02 62 90 21 41</li>
-                            <li><em>Rôles clés : Contrôle OF / Agréments / VAE / Apprentissage / Certifications</em></li>
-                        </ul>
-                    </div>
-
-                    <div class="contact-block">
-                        <h4>Région Réunion</h4>
-                        <ul>
-                            <li><strong>Siège :</strong> Région Réunion, Saint-Denis</li>
-                            <li><strong>Site :</strong> <a href="https://regionreunion.com" target="_blank">regionreunion.com</a></li>
-                            <li><em>Rôles clés : Programmation FP / Apprentissage / FSE / CPRDFOP</em></li>
+                            <li><strong>Siège :</strong> 112 rue de la République, St-Denis</li>
+                            <li><strong>Tél :</strong> 02 62 94 07 07</li>
+                            <li><strong>Email :</strong> deets-974.direction@deets.gouv.fr</li>
                         </ul>
                     </div>
                 </div>
-
             </div>
         </div>
+
         <div class="branch-connector"></div>
-<div class="node-container">
+
+        <div class="node-container">
             <div class="bubble main-bubble" onclick="toggleNode('node-2')">
-                <h2>💰 FINANCEURS (OPCO)</h2>
-                <p>Les 11 OPCO interviennent par branches professionnelles</p>
+                <h2>💰 2. FINANCEURS (OPCO)</h2>
+                <p>Les 11 OPCO par branches professionnelles</p>
                 <span class="icon">▼</span>
             </div>
-
             <div id="node-2" class="hidden-content">
-                
                 <div class="info-card">
-                    <div class="card-header">🏗️ Liste des Opérateurs de Compétences</div>
-                    
                     <div class="opco-grid">
-                        
-                        <div class="opco-card">
-                            <div class="opco-name">OPCO Mobilités</div>
-                            <div class="opco-sector">Transports, logistique</div>
-                            <div class="opco-tel">📞 01 49 71 55 00</div>
-                        </div>
-
-                        <div class="opco-card">
-                            <div class="opco-name">OPCO EP</div>
-                            <div class="opco-sector">Artisanat, proximité</div>
-                            <div class="opco-tel">📞 01 45 63 36 36</div>
-                        </div>
-
-                        <div class="opco-card">
-                            <div class="opco-name">AKTO</div>
-                            <div class="opco-sector">Services, intérim, OF</div>
-                            <div class="opco-tel">📞 01 44 87 30 00</div>
-                        </div>
-
-                        <div class="opco-card">
-                            <div class="opco-name">OPCO Atlas</div>
-                            <div class="opco-sector">Banque, numérique</div>
-                            <div class="opco-tel">📞 01 53 20 58 00</div>
-                        </div>
-
-                        <div class="opco-card"><div class="opco-name">OPCO Santé</div><div class="opco-sector">Médico-social</div><div class="opco-tel">📞 Standard</div></div>
-                        <div class="opco-card"><div class="opco-name">OCAPIAT</div><div class="opco-sector">Agriculture, pêche</div><div class="opco-tel">📞 Standard</div></div>
-                        <div class="opco-card"><div class="opco-name">Opcommerce</div><div class="opco-sector">Commerce, distri.</div><div class="opco-tel">📞 Standard</div></div>
-                        <div class="opco-card"><div class="opco-name">Constructys</div><div class="opco-sector">BTP</div><div class="opco-tel">📞 Standard</div></div>
-                        <div class="opco-card"><div class="opco-name">UNIFORMATION</div><div class="opco-sector">Économie sociale</div><div class="opco-tel">📞 Standard</div></div>
-                        <div class="opco-card"><div class="opco-name">AFDAS</div><div class="opco-sector">Culture, sport</div><div class="opco-tel">📞 Standard</div></div>
-                        <div class="opco-card"><div class="opco-name">OPCO 2i</div><div class="opco-sector">Industrie</div><div class="opco-tel">📞 Standard</div></div>
-
-                    </div> <div class="resource-box">
-                        <p>🔎 Vous ne connaissez pas votre OPCO ?</p>
-                        <a href="https://trouver-mon-opco.fr" target="_blank" class="cta-button">Accéder à trouver-mon-opco.fr</a>
+                        <div class="opco-card"><div class="opco-name">OPCO Mobilités</div><div class="opco-sector">Transports</div><div class="opco-tel">01 49 71 55 00</div></div>
+                        <div class="opco-card"><div class="opco-name">OPCO EP</div><div class="opco-sector">Artisanat</div><div class="opco-tel">01 45 63 36 36</div></div>
+                        <div class="opco-card"><div class="opco-name">AKTO</div><div class="opco-sector">Services / OF</div><div class="opco-tel">01 44 87 30 00</div></div>
+                        <div class="opco-card"><div class="opco-name">OPCO Atlas</div><div class="opco-sector">Banque / Numérique</div><div class="opco-tel">01 53 20 58 00</div></div>
+                        <div class="opco-card"><div class="opco-name">OPCO Santé</div><div class="opco-sector">Médico-social</div><div class="opco-tel">Standard</div></div>
+                        <div class="opco-card"><div class="opco-name">OCAPIAT</div><div class="opco-sector">Agri / Pêche</div><div class="opco-tel">Standard</div></div>
+                        <div class="opco-card"><div class="opco-name">Opcommerce</div><div class="opco-sector">Commerce</div><div class="opco-tel">Standard</div></div>
+                        <div class="opco-card"><div class="opco-name">Constructys</div><div class="opco-sector">BTP</div><div class="opco-tel">Standard</div></div>
+                        <div class="opco-card"><div class="opco-name">UNIFORMATION</div><div class="opco-sector">Social</div><div class="opco-tel">Standard</div></div>
+                        <div class="opco-card"><div class="opco-name">AFDAS</div><div class="opco-sector">Culture</div><div class="opco-tel">Standard</div></div>
+                        <div class="opco-card"><div class="opco-name">OPCO 2i</div><div class="opco-sector">Industrie</div><div class="opco-tel">Standard</div></div>
+                    </div>
+                    <div style="text-align:center; margin-top:15px;">
+                        <a href="https://trouver-mon-opco.fr" target="_blank" class="cta-button">🔎 Trouver mon OPCO</a>
                     </div>
                 </div>
-
             </div>
         </div>
-        
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="bubble main-bubble" onclick="toggleNode('node-3')">
+                <h2>🎓 3. ORGANISMES DE FORMATION</h2>
+                <p>Généralistes, CFA et Spécialistes FPA</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-3" class="hidden-content">
+                <div class="info-card">
+                    <div class="card-header">🏛️ Les Grands Généralistes</div>
+                    <div class="opco-grid">
+                        <div class="opco-card"><div class="opco-name">AFPA Réunion</div><div class="opco-sector">BTP, Tertiaire</div><div class="opco-tel">02 62 94 72 60</div></div>
+                        <div class="opco-card"><div class="opco-name">GRETA Réunion</div><div class="opco-sector">Éducation Nationale</div><div class="opco-tel">02 62 41 81 13</div></div>
+                        <div class="opco-card"><div class="opco-name">Université (SUFP)</div><div class="opco-sector">Licences Pro</div><div class="opco-tel">02 62 93 82 00</div></div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="card-header">👨‍🏫 Spécial Titre Pro FPA</div>
+                    <ul class="contact-list">
+                        <li><strong>COURS SAINT-PAUL :</strong> Saint-Paul (TP FPA / Alternance)</li>
+                        <li><strong>PAM OI :</strong> Réunion (TP FPA)</li>
+                        <li><strong>SPL AFPAR :</strong> Saint-Pierre (TP FPA Session)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="bubble main-bubble" onclick="toggleNode('node-4')">
+                <h2>🤝 4. SERVICE PUBLIC & SOCIAL</h2>
+                <p>Accompagnement, Handicap & Urgences</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-4" class="hidden-content">
+                <div class="info-card">
+                    <div class="card-header">🚀 Emploi (Focus Sud)</div>
+                    <ul class="contact-list">
+                        <li><strong>France Travail St-Pierre :</strong> 39 49</li>
+                        <li><strong>Mission Locale Sud :</strong> 02 62 25 77 20</li>
+                        <li><strong>Cap Emploi (Handicap) :</strong> 02 62 41 90 40</li>
+                    </ul>
+                </div>
+                <div class="info-card" style="border-left: 5px solid #e74c3c;">
+                    <div class="card-header" style="color: #e74c3c;">🆘 Urgences & Social 24/7</div>
+                    <div class="emergency-grid">
+                        <div class="emergency-badge">🚑 15 SAMU</div>
+                        <div class="emergency-badge">🚒 18 Pompiers</div>
+                        <div class="emergency-badge">🚓 17 Police</div>
+                        <div class="emergency-badge">👂 114 Sourds</div>
+                        <div class="emergency-badge">❤️ 3114 Suicide</div>
+                    </div>
+                    <p><strong>CCAS Saint-Louis :</strong> 02 62 44 44 92</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="bubble main-bubble" onclick="toggleNode('node-5')">
+                <h2>📅 5. AGENDA 2026</h2>
+                <p>Manifestations & Temps forts</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-5" class="hidden-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Février 2026</div>
+                        <div class="timeline-content"><h3>Rentrée de l'Apprentissage</h3><p>Campagne recrutement CFA</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Juin 2026</div>
+                        <div class="timeline-content"><h3>Mise à jour Cartographie</h3><p>Révision DEETS/Région</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Octobre 2026</div>
+                        <div class="timeline-content"><h3>Semaine de l'Emploi</h3><p>France Travail & Missions Locales</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="bubble main-bubble" onclick="toggleNode('node-6')">
+                <h2>🚚 6. PARTENAIRES LOGISTIQUE</h2>
+                <p>Transport & CACES</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-6" class="hidden-content">
+                <div class="info-card">
+                    <ul class="check-list">
+                        <li><strong>OPCO Mobilités :</strong> Financeur principal Transport</li>
+                        <li><strong>CFPA Saint-Pierre :</strong> Spécialiste Agro-logistique</li>
+                        <li><strong>AFPA :</strong> Formations Magasinier / Cariste</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="branch-connector"></div>
+
+        <div class="node-container">
+            <div class="bubble main-bubble" onclick="toggleNode('node-7')">
+                <h2>🌐 7. RÉSEAUTAGE PRO</h2>
+                <p>Outils & Communautés</p>
+                <span class="icon">▼</span>
+            </div>
+            <div id="node-7" class="hidden-content">
+                <div class="opco-grid">
+                    <a href="https://syop.re" target="_blank" class="opco-card" style="text-decoration:none;">
+                        <div class="opco-name">SyOP</div><div class="opco-sector">Coordination SPRO</div>
+                    </a>
+                    <a href="https://reunion.deets.gouv.fr" target="_blank" class="opco-card" style="text-decoration:none;">
+                        <div class="opco-name">DEETS</div><div class="opco-sector">Veille Juridique</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script src="script.js"></script>
