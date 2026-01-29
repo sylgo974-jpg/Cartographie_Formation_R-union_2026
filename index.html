@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartographie Formation professionnelle - Réunion 2026</title>
+    <title>Cartographie FPA - La Réunion 2026</title>
     <style>
         /* =========================================
            STYLE (CSS INTÉGRÉ)
@@ -14,6 +14,9 @@
             --bg: #f4f7f6;
             --text: #333;
             --white: #ffffff;
+            --linkedin: #0077b5;
+            --instagram: #E1306C;
+            --tiktok: #000000;
         }
 
         body {
@@ -22,7 +25,7 @@
             color: var(--text);
             margin: 0;
             padding: 20px;
-            /* ALIGNEMENT MOBILE GARANTI */
+            /* ALIGNEMENT MOBILE OPTIMISÉ */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -42,13 +45,13 @@
         /* CONTENEUR PRINCIPAL */
         .tree-wrapper {
             width: 100%;
-            max-width: 700px; /* Largeur lecture confortable */
+            max-width: 700px;
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Espace entre les branches */
+            gap: 15px;
         }
 
-        /* LES BULLES (BOUTONS) */
+        /* LES BULLES (BRANCHES) */
         .branch-node {
             background: var(--white);
             border-radius: 10px;
@@ -74,7 +77,7 @@
 
         /* CONTENU CACHÉ */
         .branch-content {
-            display: none; /* Caché par défaut */
+            display: none;
             padding: 20px;
             background: var(--white);
             border-top: 1px solid #eee;
@@ -90,12 +93,8 @@
         .info-block { margin-bottom: 20px; }
         .block-title { color: var(--accent); font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #eee; display: inline-block; }
 
-        ul { padding-left: 20px; margin: 0 0 15px 0; }
-        li { margin-bottom: 5px; }
-
-        /* BADGES URGENCES */
-        .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-        .badge { background: #ffebee; color: #c0392b; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; border: 1px solid #ef9a9a; }
+        ul, ol { padding-left: 20px; margin: 0 0 15px 0; }
+        li { margin-bottom: 8px; line-height: 1.4; }
 
         /* BOUTON LIEN */
         .btn-link {
@@ -105,9 +104,25 @@
         }
         .btn-link:hover { background: #d35400; }
 
+        /* OPCO GRID */
+        .opco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        @media (max-width: 400px) { .opco-grid { grid-template-columns: 1fr; } }
+        .opco-item { border: 1px solid #eee; padding: 10px; border-radius: 5px; font-size: 0.85rem; }
+
+        /* STYLES RÉSEAUX SOCIAUX & BADGES */
+        .social-link { text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .lk { color: var(--linkedin); }
+        .insta { color: var(--instagram); }
+        .tik { color: var(--tiktok); }
+        
+        .badge-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+        .badge { background: #f0f0f0; color: #333; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #ddd; }
+
+        /* SCROLLABLE LIST */
+        .scroll-list { max-height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 10px; background: #fafafa; font-size: 0.85rem; }
+
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* CONNECTEUR VISUEL */
         .connector { height: 15px; width: 2px; background: #ccc; margin: 0 auto; }
     </style>
 </head>
@@ -131,245 +146,11 @@
                     <table>
                         <tr><td>Siège</td><td>112 rue de la République, St-Denis</td></tr>
                         <tr><td>Tél</td><td>02 62 94 07 07</td></tr>
-                        <tr><td>Email</td><td>deets-974.direction@deets.gouv.fr</td></tr>
                         <tr><td>Pôle Contrôle</td><td>12 Lot. Lemerle, St-Denis | 02 62 90 21 41</td></tr>
-                        <tr><td>Ressource</td><td><a href="https://reunion.deets.gouv.fr/IMG/pdf/guide_of_2020.pdf" target="_blank">Guide OF 2020 (PDF)</a></td></tr>
                     </table>
                 </div>
                 <div class="info-block">
-                    <div class="block-title">Région Réunion (Autorité FP)</div>
+                    <div class="block-title">Région Réunion</div>
                     <table>
                         <tr><td>Rôle</td><td>Programmation FP, Apprentissage, FSE</td></tr>
-                        <tr><td>Site</td><td><a href="https://www.regionreunion.com" target="_blank">regionreunion.com</a></td></tr>
-                        <tr><td>Doc</td><td><a href="https://www.regionreunion.com/IMG/pdf/organigramme_general_nominatif_janv_2025.pdf" target="_blank">Organigramme 2025</a></td></tr>
-                    </table>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Coordination</div>
-                    <p><strong>CREFOP / SPRO :</strong> Coordination emploi-formation. <a href="https://syop.re" target="_blank">Voir SyOP.re</a></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="connector"></div>
-
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(2)">
-                <h2>2. Financeurs (OPCO)</h2>
-                <span class="branch-icon" id="icon-2">▼</span>
-            </div>
-            <div id="content-2" class="branch-content">
-                <p>Les 11 OPCO interviennent par branches (Apprentissage, PDC).</p>
-                <table>
-                    <thead><tr><th>OPCO</th><th>Secteurs</th><th>Tél</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>Mobilités</strong></td><td>Transport, auto</td><td>01 49 71 55 00</td></tr>
-                        <tr><td><strong>OPCO EP</strong></td><td>Artisanat, libéral</td><td>01 45 63 36 36</td></tr>
-                        <tr><td><strong>AKTO</strong></td><td>Services, Intérim</td><td>01 44 87 30 00</td></tr>
-                        <tr><td><strong>Atlas</strong></td><td>Banque, Numérique</td><td>01 53 20 58 00</td></tr>
-                        <tr><td><strong>Santé</strong></td><td>Médico-social</td><td>Standard</td></tr>
-                        <tr><td><strong>OCAPIAT</strong></td><td>Agri, Pêche</td><td>Standard</td></tr>
-                        <tr><td><strong>Opcommerce</strong></td><td>Commerce</td><td>Standard</td></tr>
-                        <tr><td><strong>Constructys</strong></td><td>BTP</td><td>Standard</td></tr>
-                        <tr><td><strong>Uniformation</strong></td><td>Social</td><td>Standard</td></tr>
-                        <tr><td><strong>Afdas</strong></td><td>Culture, Sport</td><td>Standard</td></tr>
-                        <tr><td><strong>OPCO 2i</strong></td><td>Industrie</td><td>Standard</td></tr>
-                    </tbody>
-                </table>
-                <div style="text-align:center">
-                    <a href="https://www.trouver-mon-opco.fr" target="_blank" class="btn-link">🔎 Trouver mon OPCO</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="connector"></div>
-
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(3)">
-                <h2>3. Organismes de Formation</h2>
-                <span class="branch-icon" id="icon-3">▼</span>
-            </div>
-            <div id="content-3" class="branch-content">
-                <div class="info-block">
-                    <div class="block-title">Grands Généralistes</div>
-                    <ul>
-                        <li><strong>AFPA :</strong> 02 62 94 72 60 | St-Denis, St-Pierre, St-Paul. (BTP, Tertiaire)</li>
-                        <li><strong>GRETA :</strong> 02 62 41 81 13 | Réseau Éduc. Nationale.</li>
-                        <li><strong>Université (SUFP) :</strong> 02 62 93 82 00 | Licences Pro, Continue.</li>
-                    </ul>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Apprentissage (CFA)</div>
-                    <ul>
-                        <li><strong>CFA Académique :</strong> 02 62 29 46 49</li>
-                        <li><strong>CFPA St-Pierre :</strong> Agricole / Agro-logistique</li>
-                        <li><strong>MFR St-André :</strong> 02 62 46 01 88 (Rural)</li>
-                    </ul>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Spécial Titre Pro FPA</div>
-                    <p><em>Formations Formateurs Adultes (Source Formanoo) :</em></p>
-                    <table>
-                        <tr><td>COURS ST-PAUL</td><td>St-Paul</td><td>TP FPA / Alternance</td></tr>
-                        <tr><td>PAM OI</td><td>Réunion</td><td>TP FPA</td></tr>
-                        <tr><td>SPL AFPAR</td><td>St-Pierre</td><td>TP FPA Session</td></tr>
-                    </table>
-                </div>
-                <a href="https://data.regionreunion.com/explore/dataset/region-liste-des-organismes-de-formation-et-des-cfa/" target="_blank" class="btn-link">📂 Liste complète OF (CSV)</a>
-            </div>
-        </div>
-
-        <div class="connector"></div>
-
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(4)">
-                <h2>4. Service Public & Emploi</h2>
-                <span class="branch-icon" id="icon-4">▼</span>
-            </div>
-            <div id="content-4" class="branch-content">
-                <div class="info-block">
-                    <div class="block-title">France Travail (Pôle Emploi)</div>
-                    <ul>
-                        <li><strong>Tél Unique :</strong> 39 49</li>
-                        <li><strong>Antenne Sud :</strong> 40 rue F. de Mahy, St-Pierre.</li>
-                        <li><strong>Siège :</strong> 62 Bd du Chaudron, Ste-Clotilde.</li>
-                    </ul>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Missions Locales Sud (16-25 ans)</div>
-                    <p><strong>Siège :</strong> 6 ch. M. Rivière, St-Pierre | 02 62 25 77 20</p>
-                    <table>
-                        <thead><tr><th>Antenne</th><th>Tél</th></tr></thead>
-                        <tbody>
-                            <tr><td>St-Louis</td><td>02 62 26 28 29</td></tr>
-                            <tr><td>Le Tampon</td><td>02 62 27 04 63</td></tr>
-                            <tr><td>St-Joseph</td><td>02 62 56 57 42</td></tr>
-                            <tr><td>Ravine Cabris</td><td>02 62 49 41 00</td></tr>
-                            <tr><td>Cilaos</td><td>02 62 28 92 82</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Handicap & Jeunesse</div>
-                    <ul>
-                        <li><strong>Cap Emploi :</strong> 02 62 41 90 40 (Insertion Handicap)</li>
-                        <li><strong>CRIJ :</strong> 02 62 48 97 00 (Info Jeunesse)</li>
-                        <li><strong>SIAF :</strong> Insertion sociale (Ste-Clotilde)</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="connector"></div>
-
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(5)">
-                <h2>5. Acteurs Sociaux & Ressources</h2>
-                <span class="branch-icon" id="icon-5">▼</span>
-            </div>
-            <div id="content-5" class="branch-content">
-                <div class="info-block">
-                    <div class="block-title">CCAS (Action Sociale)</div>
-                    <ul>
-                        <li><strong>St-Louis :</strong> 02 62 44 44 92 (Aide alimentaire, urgence)</li>
-                        <li><strong>St-Pierre :</strong> 02 62 25 31 16</li>
-                    </ul>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">MDPH (Handicap)</div>
-                    <ul>
-                        <li><strong>Siège :</strong> 02 62 94 89 89</li>
-                        <li><strong>Sud :</strong> 13 rue Archambaud, St-Pierre.</li>
-                    </ul>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Soutien Psy & Divers</div>
-                    <table>
-                        <tr><td>SOS Amitié</td><td>09 72 39 40 50 (24/7)</td></tr>
-                        <tr><td>3114</td><td>Prévention Suicide</td></tr>
-                        <tr><td>Croix Rouge</td><td>0 805 230 439</td></tr>
-                    </table>
-                    <p><strong>LGBTQIA+ :</strong> Requeer, Le Refuge, Planning Familial.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="connector"></div>
-
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(6)">
-                <h2>6. Urgences 24/24</h2>
-                <span class="branch-icon" id="icon-6">▼</span>
-            </div>
-            <div id="content-6" class="branch-content">
-                <div class="info-block">
-                    <div class="block-title" style="color:#c0392b">Urgences Vitales</div>
-                    <div class="badge-grid">
-                        <span class="badge">112 Europe</span>
-                        <span class="badge">15 SAMU</span>
-                        <span class="badge">18 Pompiers</span>
-                        <span class="badge">17 Police</span>
-                        <span class="badge">114 Sourds</span>
-                        <span class="badge">196 Mer</span>
-                    </div>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Social & Enfance</div>
-                    <ul>
-                        <li><strong>119 :</strong> Enfance en danger</li>
-                        <li><strong>115 :</strong> Samu Social (Hébergement)</li>
-                        <li><strong>39 19 :</strong> Violences femmes</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="connector"></div>
-
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(7)">
-                <h2>7. Ressources Documentaires</h2>
-                <span class="branch-icon" id="icon-7">▼</span>
-            </div>
-            <div id="content-7" class="branch-content">
-                <div class="info-block">
-                    <div class="block-title">Portails Officiels</div>
-                    <ul>
-                        <li><a href="https://www.formanoo.org/formations" target="_blank">Formanoo.org</a> (Offre régionale)</li>
-                        <li><a href="https://data.regionreunion.com" target="_blank">Data Région</a> (Open Data OF/CFA)</li>
-                        <li><a href="https://web.reunionprospectivecompetences.org" target="_blank">Réunion Prospective</a> (Cartes)</li>
-                    </ul>
-                </div>
-                <div class="info-block">
-                    <div class="block-title">Documents Utiles (PDF)</div>
-                    <ul>
-                        <li><a href="https://reunion.deets.gouv.fr/sites/reunion.deets.gouv.fr/IMG/pdf/guide_des_organismes_de_formation_professionnelle_-_03122020.pdf" target="_blank">Guide OF DEETS</a></li>
-                        <li><a href="https://regionreunion.com/IMG/pdf/liste_des_formations.pdf" target="_blank">Liste Formations Région</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        function toggleBranch(id) {
-            // Récupère le contenu et l'icône
-            var content = document.getElementById('content-' + id);
-            var icon = document.getElementById('icon-' + id);
-            
-            // Vérifie si ouvert ou fermé
-            if (content.classList.contains('open')) {
-                // Si ouvert -> on ferme
-                content.classList.remove('open');
-                icon.style.transform = "rotate(0deg)";
-            } else {
-                // Si fermé -> on ouvre
-                content.classList.add('open');
-                icon.style.transform = "rotate(180deg)";
-            }
-        }
-    </script>
-
-</body>
-</html>
+                        <tr><td>Site</td><td><a href="https://www.regionreunion.com" target="_
