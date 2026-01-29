@@ -90,4 +90,11 @@ body {
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+    /* Ligne verticale entre les grosses bulles */
+.branch-connector {
+    width: 4px;
+    height: 40px; /* Espace entre les bulles */
+    background-color: #bdc3c7; /* Gris clair */
+    margin: 0 auto; /* Centré */
 }
+
