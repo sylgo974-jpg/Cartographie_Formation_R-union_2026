@@ -37,7 +37,7 @@
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             border: 4px solid white;
-            background-image: url('pont.head.jpg'); 
+            background-image: url('pont.head.jpg');
             background-size: cover;
             background-position: center;
             color: white;
@@ -55,12 +55,12 @@
 
         .header-content { position: relative; z-index: 2; }
 
-        h1 { 
-            color: #ffffff; margin: 0 0 10px 0; font-size: 1.8rem; 
+        h1 {
+            color: #ffffff; margin: 0 0 10px 0; font-size: 1.8rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8); line-height: 1.3;
         }
 
-        .subtitle { 
+        .subtitle {
             color: #f1f1f1; font-size: 1.1rem; font-weight: bold;
             text-transform: uppercase; letter-spacing: 1px;
             background: rgba(230, 126, 34, 0.9);
@@ -70,10 +70,10 @@
 
         /* BOUTON CARTE (Rond & Turquoise) */
         .map-btn-container { text-align: center; margin-top: 25px; }
-        
+
         .btn-map-access {
             display: inline-flex; justify-content: center; align-items: center;
-            background: linear-gradient(135deg, #1abc9c, #16a085); 
+            background: linear-gradient(135deg, #1abc9c, #16a085);
             color: white; width: 80px; height: 80px; border-radius: 50%;
             font-size: 2rem; text-decoration: none;
             box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
@@ -107,7 +107,7 @@
 
         /* ARBRE & BRANCHES */
         .tree-wrapper { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 0; }
-        
+
         .branch-node {
             background: var(--white); border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -133,11 +133,11 @@
         .info-block { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .info-block:last-child { border-bottom: none; }
         .block-title { color: var(--accent); font-weight: bold; margin-bottom: 10px; display: block; }
-        
+
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 10px; }
         th { background: #eee; text-align: left; padding: 6px; }
         td { border-bottom: 1px solid #eee; padding: 6px; vertical-align: top; }
-        
+
         ul, ol { padding-left: 20px; margin: 0 0 10px 0; }
         li { margin-bottom: 5px; line-height: 1.4; }
 
@@ -146,7 +146,7 @@
             padding: 8px 15px; text-decoration: none; border-radius: 4px;
             font-size: 0.9rem; margin-top: 5px; text-align: center;
         }
-        
+
         .scroll-list { max-height: 300px; overflow-y: auto; background: #fafafa; padding: 10px; border: 1px solid #ddd; font-size: 0.85rem; }
         .badge { display: inline-block; background: #e0e0e0; color: #333; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin: 2px; }
 
@@ -156,6 +156,33 @@
         .opco-item strong { color: var(--primary); display: block; margin-bottom: 3px; }
         .opco-secteur { color: #666; font-size: 0.8rem; display: block; margin-bottom: 5px; min-height: 30px;}
         .opco-tel { font-weight: bold; color: var(--accent); }
+
+        /* =========================
+           ✅ FIX EXPORT PDF (stable)
+        ========================== */
+        .pdf-export{
+            background: #fff;
+            color: #333;
+            padding: 14px;
+            border-radius: 8px;
+        }
+        /* évite les coupures moches */
+        .pdf-export .info-block,
+        .pdf-export table,
+        .pdf-export tr,
+        .pdf-export td,
+        .pdf-export ul,
+        .pdf-export ol,
+        .pdf-export li,
+        .pdf-export .opco-item,
+        .pdf-export .scroll-list{
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        /* optionnel : pendant export, retirer ombres */
+        body.is-exporting .branch-node{
+            box-shadow: none !important;
+        }
     </style>
 </head>
 <body>
@@ -164,28 +191,31 @@
     <div class="header-content">
         <h1>🗺️ Cartographie des acteurs<br>de la Formation Professionnelle Réunion🌋</h1>
         <div class="subtitle">Annuaire Acteurs & Ressources 2026</div>
-        
+
         <div class="map-btn-container">
             <a href="carte.html" class="btn-map-access" title="Voir la carte interactive">
                 🗺️
             </a>
             <div style="margin-top:5px; font-size:0.9rem; color:white; font-weight:bold;">Voir la Carte</div>
-        </div>      
+        </div>
     </div>
 </header>
 
-    <div class="tree-wrapper">
+<div class="tree-wrapper">
 
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(1)">
-                <h2>1. Pilotage & Contrôle</h2>
-                <span>▼</span>
-            </div>
-            <div id="content-1" class="branch-content">
-                <button class="btn-pdf" onclick="generatePDF('content-1', '1_Pilotage_Controle.pdf')" data-html2canvas-ignore="true">
-                    📄 Enregistrer en PDF
-                </button>
-                
+    <div class="branch-node">
+        <div class="branch-header" onclick="toggleBranch(1)">
+            <h2>1. Pilotage & Contrôle</h2>
+            <span>▼</span>
+        </div>
+
+        <div id="content-1" class="branch-content">
+            <!-- ✅ Exporte export-1 (pas content-1) -->
+            <button class="btn-pdf" onclick="generatePDF('export-1', '1_Pilotage_Controle.pdf')" data-html2canvas-ignore="true">
+                📄 Enregistrer en PDF
+            </button>
+
+            <div id="export-1" class="pdf-export">
                 <div class="info-block">
                     <span class="block-title">DEETS Réunion (État)</span>
                     <table>
@@ -203,19 +233,22 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="connector"></div>
+    <div class="connector"></div>
 
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(2)">
-                <h2>2. Financeurs (OPCO)</h2>
-                <span id="icon-2">▼</span>
-            </div>
-            <div id="content-2" class="branch-content">
-                <button class="btn-pdf" onclick="generatePDF('content-2', '2_Financeurs_OPCO.pdf')" data-html2canvas-ignore="true">
-                    📄 Enregistrer en PDF
-                </button>
+    <div class="branch-node">
+        <div class="branch-header" onclick="toggleBranch(2)">
+            <h2>2. Financeurs (OPCO)</h2>
+            <span id="icon-2">▼</span>
+        </div>
 
+        <div id="content-2" class="branch-content">
+            <button class="btn-pdf" onclick="generatePDF('export-2', '2_Financeurs_OPCO.pdf')" data-html2canvas-ignore="true">
+                📄 Enregistrer en PDF
+            </button>
+
+            <div id="export-2" class="pdf-export">
                 <p>Les 11 OPCO par branches (Apprentissage, PDC) :</p>
                 <div class="opco-grid">
                     <div class="opco-item">
@@ -279,19 +312,22 @@
                 </div>
             </div>
         </div>
-    
-        <div class="connector"></div>
-        
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(3)">
-                <h2>3. Organismes de Formation</h2>
-                <span id="icon-3">▼</span>
-            </div>
-            <div id="content-3" class="branch-content">
-                <button class="btn-pdf" onclick="generatePDF('content-3', '3_OF_CFA_Logistique.pdf')" data-html2canvas-ignore="true">
-                    📄 Enregistrer en PDF
-                </button>
+    </div>
 
+    <div class="connector"></div>
+
+    <div class="branch-node">
+        <div class="branch-header" onclick="toggleBranch(3)">
+            <h2>3. Organismes de Formation</h2>
+            <span id="icon-3">▼</span>
+        </div>
+
+        <div id="content-3" class="branch-content">
+            <button class="btn-pdf" onclick="generatePDF('export-3', '3_OF_CFA_Logistique.pdf')" data-html2canvas-ignore="true">
+                📄 Enregistrer en PDF
+            </button>
+
+            <div id="export-3" class="pdf-export">
                 <div class="info-block" style="background:#e8f6f3; padding:10px; border-radius:5px; border-left:4px solid var(--accent);">
                     <div class="block-title">3.1 Contacts Prioritaires Logistique</div>
                     <ul style="margin:0;">
@@ -401,19 +437,22 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="connector"></div>
+    <div class="connector"></div>
 
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(4)">
-                <h2>4. Service Public & Emploi</h2>
-                <span>▼</span>
-            </div>
-            <div id="content-4" class="branch-content">
-                <button class="btn-pdf" onclick="generatePDF('content-4', '4_Service_Public_Emploi.pdf')" data-html2canvas-ignore="true">
-                    📄 Enregistrer en PDF
-                </button>
+    <div class="branch-node">
+        <div class="branch-header" onclick="toggleBranch(4)">
+            <h2>4. Service Public & Emploi</h2>
+            <span>▼</span>
+        </div>
 
+        <div id="content-4" class="branch-content">
+            <button class="btn-pdf" onclick="generatePDF('export-4', '4_Service_Public_Emploi.pdf')" data-html2canvas-ignore="true">
+                📄 Enregistrer en PDF
+            </button>
+
+            <div id="export-4" class="pdf-export">
                 <div class="info-block">
                     <span class="block-title">France Travail (17 Agences)</span>
                     <p><strong>Tél Unique :</strong> 39 49</p>
@@ -450,7 +489,7 @@
                             <li><strong>Le Tampon :</strong> 2 rue Victor Le Vigoureux</li>
                             <li><strong>St-Joseph :</strong> 334 rue Raphael Babet</li>
                         </ul>
-                        
+
                         <p style="background:#eee; padding:5px; font-weight:bold;">OUEST (MIO)</p>
                         <ul>
                             <li><strong>St-Paul :</strong> 65 rue du Kovil</li>
@@ -483,23 +522,25 @@
                 <div class="info-block">
                     <span class="block-title">Social & Urgences</span>
                     <p><strong>Urgences :</strong> 15 (SAMU), 18 (Pompiers), 115 (Social).</p>
-                    
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="connector"></div>
+    <div class="connector"></div>
 
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(5)">
-                <h2>5. L’agenda des manifestations 2026</h2>
-                <span>▼</span>
-            </div>
-            <div id="content-5" class="branch-content">
-                <button class="btn-pdf" onclick="generatePDF('content-5', '5_Agenda_2026.pdf')" data-html2canvas-ignore="true">
-                    📄 Enregistrer en PDF
-                </button>
+    <div class="branch-node">
+        <div class="branch-header" onclick="toggleBranch(5)">
+            <h2>5. L’agenda des manifestations 2026</h2>
+            <span>▼</span>
+        </div>
 
+        <div id="content-5" class="branch-content">
+            <button class="btn-pdf" onclick="generatePDF('export-5', '5_Agenda_2026.pdf')" data-html2canvas-ignore="true">
+                📄 Enregistrer en PDF
+            </button>
+
+            <div id="export-5" class="pdf-export">
                 <div class="info-block">
                     <span class="block-title">🇫🇷 Semaines Nationales France Travail</span>
                     <p style="font-size:0.9rem; color:#666;">Événements nationaux déclenchés localement (Forums, Job Datings, Visites).</p>
@@ -551,19 +592,22 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="connector"></div>
+    <div class="connector"></div>
 
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(6)">
-                <h2>6. Les Partenaires Logistique</h2>
-                <span>▼</span>
-            </div>
-            <div id="content-6" class="branch-content">
-                <button class="btn-pdf" onclick="generatePDF('content-6', '6_Partenaires_Logistique.pdf')" data-html2canvas-ignore="true">
-                    📄 Enregistrer en PDF
-                </button>
+    <div class="branch-node">
+        <div class="branch-header" onclick="toggleBranch(6)">
+            <h2>6. Les Partenaires Logistique</h2>
+            <span>▼</span>
+        </div>
 
+        <div id="content-6" class="branch-content">
+            <button class="btn-pdf" onclick="generatePDF('export-6', '6_Partenaires_Logistique.pdf')" data-html2canvas-ignore="true">
+                📄 Enregistrer en PDF
+            </button>
+
+            <div id="export-6" class="pdf-export">
                 <div class="info-block">
                     <span class="block-title">Acteurs à La Réunion</span>
                     <ul>
@@ -582,19 +626,22 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="connector"></div>
+    <div class="connector"></div>
 
-        <div class="branch-node">
-            <div class="branch-header" onclick="toggleBranch(7)">
-                <h2>7. Les Réseaux Professionnels</h2>
-                <span>▼</span>
-            </div>
-            <div id="content-7" class="branch-content">
-                <button class="btn-pdf" onclick="generatePDF('content-7', '7_Reseaux_Professionnels.pdf')" data-html2canvas-ignore="true">
-                    📄 Enregistrer en PDF
-                </button>
+    <div class="branch-node">
+        <div class="branch-header" onclick="toggleBranch(7)">
+            <h2>7. Les Réseaux Professionnels</h2>
+            <span>▼</span>
+        </div>
 
+        <div id="content-7" class="branch-content">
+            <button class="btn-pdf" onclick="generatePDF('export-7', '7_Reseaux_Professionnels.pdf')" data-html2canvas-ignore="true">
+                📄 Enregistrer en PDF
+            </button>
+
+            <div id="export-7" class="pdf-export">
                 <div class="info-block">
                     <span class="block-title">Organismes d'État</span>
                     <ul>
@@ -621,35 +668,60 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <script>
-        // Fonction pour ouvrir/fermer les branches
-        function toggleBranch(id) {
-            var content = document.getElementById('content-' + id);
-            if (content.classList.contains('open')) {
-                content.classList.remove('open');
-            } else {
-                content.classList.add('open');
-            }
-        }
+</div>
 
-        // Fonction pour générer le PDF
-        function generatePDF(elementId, filename) {
-            const element = document.getElementById(elementId);
-            const opt = {
-                margin:       10,
-                filename:     filename,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            
-            // Génération
-            html2pdf().set(opt).from(element).save();
+<script>
+    // Fonction pour ouvrir/fermer les branches
+    function toggleBranch(id) {
+        var content = document.getElementById('content-' + id);
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+        } else {
+            content.classList.add('open');
         }
-    </script>
+    }
+
+    // ✅ Fonction pour générer le PDF (1 par branche, limites cohérentes)
+    function generatePDF(elementId, filename) {
+        const element = document.getElementById(elementId);
+
+        // mode export (optionnel, enlève les ombres)
+        document.body.classList.add("is-exporting");
+
+        const opt = {
+            margin: [10, 10, 12, 10], // mm: top, right, bottom, left
+            filename: filename,
+            image: { type: "jpeg", quality: 0.98 },
+
+            html2canvas: {
+                scale: 2,
+                backgroundColor: "#ffffff",
+                useCORS: true,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: element.scrollWidth
+            },
+
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+
+            // évite les découpes crades
+            pagebreak: {
+                mode: ["css", "legacy"],
+                avoid: ["table", "tr", ".info-block", "li", ".opco-item", ".scroll-list"]
+            }
+        };
+
+        html2pdf()
+            .set(opt)
+            .from(element)
+            .save()
+            .finally(() => {
+                document.body.classList.remove("is-exporting");
+            });
+    }
+</script>
 
 </body>
 </html>
