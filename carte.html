@@ -77,6 +77,35 @@
             border: 5px solid white;
         }
 
+        /* NOUVEAU : Style pour le lecteur podcast */
+        .podcast-container {
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 30px;
+            padding: 25px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .podcast-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 3px solid #16a085;
+            padding-bottom: 10px;
+        }
+
+        .podcast-description {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
         .info-window { 
             padding: 15px; 
             min-width: 300px;
@@ -146,6 +175,13 @@
     <div id="map"></div>
     <div id="loading" class="loading-msg">📍 Chargement des points sur la carte...</div>
 
+    <!-- NOUVEAU : Section Podcast -->
+    <div class="podcast-container">
+        <div class="podcast-title">🎙️ Podcast : Découvrez le Secteur Logistique à La Réunion</div>
+        <div class="podcast-description">Écoutez notre épisode dédié aux opportunités dans la logistique réunionnaise</div>
+        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/episode/6OL2ddhNa7EZalFxbyHXFU?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
     <div class="btn-back-container">
         <a href="index.html" class="btn-back">⬅️ RETOUR À LA LISTE DES ACTEURS</a>
     </div>
@@ -181,8 +217,6 @@
             {"category": "5. LOGISTIQUE", "title": "TLF Réunion", "address": "Zone Portuaire, 97420 Le Port, La Réunion", "color": "#8e44ad"}, 
             {"category": "5. LOGISTIQUE", "title": "FNTR Réunion", "address": "Zone Industrielle N°1, 97420 Le Port, La Réunion", "color": "#8e44ad"},
 
-            // === ENTREPRISES LOGISTIQUES (52 entreprises) ===
-            // Transport et Logistique
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Pôle Logistique Réunion (SOTRAM)", "address": "8 impasse Henri Madoré, ZA les Dunes, 97427 L'Etang-Salé, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Réunion Transit", "address": "Le Port, 97420, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "TAMATRANS", "address": "Saint-Pierre, 97410, La Réunion", "color": "#16a085"},
@@ -194,8 +228,6 @@
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Le Port Site 1", "address": "7 rue Charles Darwin, ZAC 2000, 97420 Le Port, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Le Port Site 2", "address": "Avenue du 20 Décembre 1848, 97420 Le Port, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Saint-Paul", "address": "99 rue Henri Cornu, ZA de Cambaie, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
-
-            // Carrefour
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Sainte-Clotilde", "address": "75 Rue du Karting, 97495 Sainte-Clotilde, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Sainte-Suzanne", "address": "BP 4 Quartier Français, 97441 Sainte-Suzanne, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Saint-Benoît", "address": "6 Chemin Goyaves, 97470 Saint-Benoît, La Réunion", "color": "#16a085"},
@@ -208,14 +240,10 @@
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Le Port", "address": "5 rue du 14 Juillet 1789, 97420 Le Port, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Saint-Joseph", "address": "1 Rue Scholastique Malet, 97480 Saint-Joseph, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Saint-Gilles", "address": "94 avenue de Bourbon, 97434 Saint-Gilles, La Réunion", "color": "#16a085"},
-
-            // Mr.Bricolage
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Denis", "address": "19 rue Lislet Geoffroy, ZI Chaudron, 97490 Sainte-Clotilde, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Paul", "address": "7 rue du Kovil, ZA Savannah, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Pierre", "address": "ZAC Canabady, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Sainte-Suzanne", "address": "Centre commercial Carrefour Grand Est, 4 av. Gandhi, 97441 Sainte-Suzanne, La Réunion", "color": "#16a085"},
-
-            // E.Leclerc
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc La Possession", "address": "Rue Sarda Garriga, 97419 La Possession, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Le Port", "address": "Rue du 14 Juillet 1789, 97420 Le Port, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Le Tampon", "address": "Rue Hubert Delisle, 97430 Le Tampon, La Réunion", "color": "#16a085"},
@@ -231,8 +259,6 @@
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Joseph 2", "address": "Rue Amiral Lacaze, 97480 Saint-Joseph, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Louis", "address": "Rue du Professeur Lapierre ZAC Palissade, 97450 Saint-Louis, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Paul", "address": "Le Triangle Savannah, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
-
-            // Système U
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Les Trois-Bassins", "address": "13 rue des Franciceas, 97426 Les Trois-Bassins, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Paul Eperon", "address": "25 rue d'Eden Eperon, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Paul Chaussée Royale", "address": "109 chaussée Royale, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
@@ -241,11 +267,7 @@
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Joseph", "address": "25 rue des Marsouins, 97480 Saint-Joseph, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-André", "address": "200 rue du lycée, 97440 Saint-André, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Leu-Piton", "address": "149 CD 11 Piton Saint-Leu, 97424 Saint-Leu, La Réunion", "color": "#16a085"},
-
-            // Auchan
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Auchan Saint-Louis", "address": "16 rue Lambert, ZI de Bel Air, 97450 Saint-Louis, La Réunion", "color": "#16a085"},
-
-            // Matériaux
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "SNI Export", "address": "ZAC 2000, 19 rue Charles Darwin, 97420 Le Port, La Réunion", "color": "#16a085"}
         ];
 
