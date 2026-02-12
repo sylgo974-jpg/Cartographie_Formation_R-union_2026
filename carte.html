@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte Interactive - Acteurs FPA Réunion</title>
+    <title>Carte Interactive - Acteurs FPA et Logistique Réunion</title>
     <style>
-        /* --- STYLE GLOBAL --- */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; }
         h1 { color: #2c3e50; text-align: center; margin-bottom: 30px; }
 
-        /* --- NOUVEAU STYLE BOUTON RETOUR (SOUS LA CARTE) --- */
         .btn-back-container {
             width: 100%;
             text-align: center;
@@ -37,7 +35,6 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         }
 
-        /* --- FILTRES --- */
         .filter-container {
             margin-bottom: 20px;
             display: flex;
@@ -63,7 +60,6 @@
         .filter-btn:hover { transform: scale(1.05); }
         .filter-btn.inactive { opacity: 0.3; transform: scale(0.95); }
 
-        /* Couleurs des boutons */
         .btn-pilotage { background-color: #2c3e50; }
         .btn-financeurs { background-color: #e67e22; }
         .btn-of { background-color: #27ae60; }
@@ -72,7 +68,6 @@
         .btn-entreprises { background-color: #16a085; }
         .btn-all { background-color: #555; }
 
-        /* --- CARTE --- */
         #map {
             height: 650px;
             width: 100%;
@@ -82,7 +77,6 @@
             border: 5px solid white;
         }
 
-        /* --- INFO WINDOW (Bulle personnalisée) --- */
         .info-window { 
             padding: 15px; 
             min-width: 300px;
@@ -137,27 +131,26 @@
 </head>
 <body>
 
-    <h1>🗺️ Carte des Acteurs de la Formation et Logistique - Réunion</h1>
+    <h1>🗺️ Carte Complète des Acteurs Formation & Logistique - Réunion</h1>
 
     <div class="filter-container">
         <button class="filter-btn btn-pilotage" onclick="filterMarkers('1. PILOTAGE', this)">1. PILOTAGE</button>
         <button class="filter-btn btn-financeurs" onclick="filterMarkers('2. FINANCEURS (OPCO)', this)">2. FINANCEURS</button>
-        <button class="filter-btn btn-of" onclick="filterMarkers('3. CFA / OF (Logistique)', this)">3. OF / CFA "identifiés Logistique"</button>
+        <button class="filter-btn btn-of" onclick="filterMarkers('3. CFA / OF (Logistique)', this)">3. OF / CFA</button>
         <button class="filter-btn btn-public" onclick="filterMarkers('4. SERVICE PUBLIC', this)">4. SERVICE PUBLIC</button>
-        <button class="filter-btn btn-logistique" onclick="filterMarkers('5. LOGISTIQUE', this)">5. LOGISTIQUE</button>
-        <button class="filter-btn btn-entreprises" onclick="filterMarkers('6. ENTREPRISES LOGISTIQUES', this)">6. ENTREPRISES LOGISTIQUES</button>
+        <button class="filter-btn btn-logistique" onclick="filterMarkers('5. LOGISTIQUE', this)">5. ORGA LOGISTIQUE</button>
+        <button class="filter-btn btn-entreprises" onclick="filterMarkers('6. ENTREPRISES LOGISTIQUES', this)">6. ENTREPRISES</button>
         <button class="filter-btn btn-all" onclick="showAll(this)">VOIR TOUT</button>
     </div>
 
     <div id="map"></div>
-    <div id="loading" class="loading-msg">📍 Chargement et placement des points en cours...</div>
+    <div id="loading" class="loading-msg">📍 Chargement des points sur la carte...</div>
 
     <div class="btn-back-container">
         <a href="index.html" class="btn-back">⬅️ RETOUR À LA LISTE DES ACTEURS</a>
     </div>
 
     <script>
-        // --- DONNÉES EXTRAITES DU CSV ---
         const actors = [
             {"category": "1. PILOTAGE", "title": "DEETS Réunion", "address": "112 rue de la République, 97400 St-Denis, La Réunion", "color": "#2c3e50"}, 
             {"category": "1. PILOTAGE", "title": "Pôle Contrôle DEETS", "address": "12 Lot. Lemerle, 97400 St-Denis, La Réunion", "color": "#2c3e50"}, 
@@ -173,76 +166,87 @@
             {"category": "2. FINANCEURS (OPCO)", "title": "UNIFORMATION", "address": "42 rue Alexis de Villeneuve, 97400 Saint-Denis, La Réunion", "color": "#e67e22"}, 
             {"category": "2. FINANCEURS (OPCO)", "title": "AFDAS", "address": "Cité des Arts, 23 rue Léopold Rambaud, 97490 Sainte-Clotilde, La Réunion", "color": "#e67e22"}, 
             {"category": "2. FINANCEURS (OPCO)", "title": "OPCO 2i", "address": "ADIR, 30 rue Léon de Lépervanche, 97420 Le Port, La Réunion", "color": "#e67e22"}, 
-
             {"category": "3. CFA / OF (Logistique)", "title": "SUCCESS FORMATION", "address": "22 allée de la piscine, Bâtiment 2C, Centre Casabona, 97410 Saint-Pierre, La Réunion", "color": "#27ae60", "logo": "logo_success.png"}, 
-
             {"category": "3. CFA / OF (Logistique)", "title": "AFTRAL", "address": "89 rue Henri Cornu ZI Cambaie, 97460 Saint-Paul, La Réunion", "color": "#27ae60"}, 
             {"category": "3. CFA / OF (Logistique)", "title": "CCI Pôle Formation CAMPUS PRO", "address": "65 rue Père Lafosse, 97410 Saint-Pierre, La Réunion", "color": "#27ae60"}, 
             {"category": "3. CFA / OF (Logistique)", "title": "CCI Pôle Formation CIRFIM", "address": "31 Av Raymond Mondon, 97420 Le Port, La Réunion", "color": "#27ae60"}, 
             {"category": "3. CFA / OF (Logistique)", "title": "CEFORA", "address": "3 Av Théodore Drouhet Parc 2000, 97420 Le Port, La Réunion", "color": "#27ae60"}, 
             {"category": "3. CFA / OF (Logistique)", "title": "CFA CAMPUS RÉUNION", "address": "1 rue Francis Sautron, 97420 Le Port, La Réunion", "color": "#27ae60"}, 
             {"category": "3. CFA / OF (Logistique)", "title": "CFA-IROF", "address": "6 Impasse Georges Gilerot, 97410 Saint-Pierre, La Réunion", "color": "#27ae60"}, 
-            {"category": "3. CFA / OF (Logistique)", "title": "Autres OF Logistique (30+)", "address": "Saint-Pierre, La Réunion", "color": "#27ae60"}, 
             {"category": "4. SERVICE PUBLIC", "title": "France Travail (Siège)", "address": "62 Boulevard du Chaudron, 97490 Sainte-Clotilde, La Réunion", "color": "#c0392b"}, 
             {"category": "4. SERVICE PUBLIC", "title": "France Travail St-Pierre", "address": "40 rue François de Mahy, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Siège", "address": "6 chemin Maxime Rivière, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Le Tampon", "address": "14 rue du Tampon, 97430 Le Tampon, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Joseph", "address": "296 rue Raphaël Babet, 97480 Saint-Joseph, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Louis", "address": "10 rue du Docteur Schweitzer, 97450 Saint-Louis, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Cilaos", "address": "4 rue des Ecoles, 97413 Cilaos, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne L'Etang-Salé", "address": "68 avenue Raymond Barre, 97427 L'Étang-Salé, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Les Avirons", "address": "4 bis avenue du Général de Gaulle, 97425 Les Avirons, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Petite-Ile", "address": "194 rue Mahé de Labourdonnais, 97429 Petite-Île, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Entre-Deux", "address": "2 rue Fortuné Hoarau, 97414 Entre-Deux, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Philippe", "address": "42 rue Leconte de Lisle, 97442 Saint-Philippe, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "MIO - Siège Sud", "address": "6 chemin Maxime Rivière, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
             {"category": "4. SERVICE PUBLIC", "title": "MIO - Siège Nord", "address": "34 rue de la Source, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Sainte-Marie", "address": "3 rue de la République, 97438 Sainte-Marie, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Sainte-Suzanne", "address": "3 rue du Père Laval, 97441 Sainte-Suzanne, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Siège Est", "address": "60 rue du Pont, 97440 Saint-André, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Benoît", "address": "34 rue Georges Pompidou, 97470 Saint-Benoît, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Bras-Panon", "address": "RN2, 97412 Bras-Panon, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Plaine des Palmistes", "address": "245 rue de la République, 97431 La Plaine-des-Palmistes, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Salazie", "address": "1 rue George Pompidou, 97433 Salazie, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Paul", "address": "65 rue du Kovil, 97460 Saint-Paul, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Le Port", "address": "99 Avenue du 20 Décembre 1848, 97420 Le Port, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Antenne Saint-Leu", "address": "5 rue de l'Usine (1er étage - Picard), 97436 Piton Saint-Leu, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme Plateau-Caillou", "address": "23 avenue Julius Bénard, 97460 Plateau-Caillou, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme Le Guillaume", "address": "3 chemin des Palmiers, 97432 Le Guillaume, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme La Saline", "address": "266 bis rue Jean Albany, 97422 La Saline-les-Hauts, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Plateforme Rivière-des-Galets", "address": "6 rue Karl Marx, Rivière-des-Galets, 97420 Le Port, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Permanence La Possession", "address": "3 rue Barakani, 97419 La Possession, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MIO - Permanence Trois-Bassins", "address": "2 rue du Général de Gaulle, 97426 Les Trois-Bassins, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "Cap Emploi (Handicap)", "address": "40 rue François de Mahy, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "CCAS St-Louis", "address": "156 Avenue Principale, 97450 Saint-Louis, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "CCAS St-Pierre", "address": "Rue des Bons Enfants, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MDPH (Siège)", "address": "13 rue Fénelon, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "MDPH (Sud)", "address": "13 rue Archambaud, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "CRIJ Réunion", "address": "28 rue Jean Chatel, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "SIAF", "address": "36 rue de la Source, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
-            {"category": "4. SERVICE PUBLIC", "title": "CH St-Pierre (SAMU)", "address": "Avenue du Président Mitterrand, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
+            {"category": "4. SERVICE PUBLIC", "title": "Cap Emploi", "address": "40 rue François de Mahy, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
             {"category": "5. LOGISTIQUE", "title": "TLF Réunion", "address": "Zone Portuaire, 97420 Le Port, La Réunion", "color": "#8e44ad"}, 
             {"category": "5. LOGISTIQUE", "title": "FNTR Réunion", "address": "Zone Industrielle N°1, 97420 Le Port, La Réunion", "color": "#8e44ad"},
 
-            // --- NOUVELLES ENTREPRISES LOGISTIQUES ---
+            // === ENTREPRISES LOGISTIQUES (52 entreprises) ===
+            // Transport et Logistique
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Pôle Logistique Réunion (SOTRAM)", "address": "8 impasse Henri Madoré, ZA les Dunes, 97427 L'Etang-Salé, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Réunion Transit", "address": "Le Port, 97420, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "TAMATRANS", "address": "Saint-Pierre, 97410, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "TTRAM - Bureau Le Port", "address": "ZAC Belvédère, Boulevard des Mascareignes, 97821 Le Port, La Réunion", "color": "#16a085"},
-            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "TTRAM - Aéroport", "address": "Aérogare Fret Roland Garros, 97438 Sainte-Marie, La Réunion", "color": "#16a085"},
-            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "COR - Coopérative Ouvrière", "address": "1 Enclos du Port, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "TTRAM - Aéroport", "address": "Aérogare Fret Roland Garros, Bal 39, 97438 Sainte-Marie, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "COR - Siège", "address": "1 Enclos du Port, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "COR - Site 2", "address": "Rue Pierre Brossolette, ZAC Mascareignes, 97420 Le Port, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Siège", "address": "3 rue Gustave Eiffel, ZAC Ravine à Marquet, 97419 La Possession, La Réunion", "color": "#16a085"},
-            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Le Port", "address": "7 rue Charles Darwin, ZAC 2000, 97420 Le Port, La Réunion", "color": "#16a085"},
-            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "SNI Export", "address": "ZAC 2000, 19 rue Charles Darwin, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Le Port Site 1", "address": "7 rue Charles Darwin, ZAC 2000, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Le Port Site 2", "address": "Avenue du 20 Décembre 1848, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Saint-Paul", "address": "99 rue Henri Cornu, ZA de Cambaie, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
+
+            // Carrefour
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Sainte-Clotilde", "address": "75 Rue du Karting, 97495 Sainte-Clotilde, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Sainte-Suzanne", "address": "BP 4 Quartier Français, 97441 Sainte-Suzanne, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Saint-Benoît", "address": "6 Chemin Goyaves, 97470 Saint-Benoît, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Le Port", "address": "Rond-Point Sacré Cœur, 97420 Le Port, La Réunion", "color": "#16a085"},
-            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Saint-Pierre", "address": "1 Avenue des Oceanites ZAC Canabady, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Saint-Pierre Grand Large", "address": "Rue de la Poudrière ZI N°1, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Saint-Pierre Canabady", "address": "1 Avenue des Oceanites ZAC Canabady, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Saint-Louis", "address": "1 rue M&A Jamblond, 97450 Saint-Louis, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Le Tampon", "address": "5 rue Charles Baudelaire, 97430 Le Tampon, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Saint-Denis Chatel", "address": "58 rue Jean Chatel, 97400 Saint-Denis, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Le Port", "address": "5 rue du 14 Juillet 1789, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Saint-Joseph", "address": "1 Rue Scholastique Malet, 97480 Saint-Joseph, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Market Saint-Gilles", "address": "94 avenue de Bourbon, 97434 Saint-Gilles, La Réunion", "color": "#16a085"},
+
+            // Mr.Bricolage
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Denis", "address": "19 rue Lislet Geoffroy, ZI Chaudron, 97490 Sainte-Clotilde, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Paul", "address": "7 rue du Kovil, ZA Savannah, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Pierre", "address": "ZAC Canabady, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Sainte-Suzanne", "address": "Centre commercial Carrefour Grand Est, 4 av. Gandhi, 97441 Sainte-Suzanne, La Réunion", "color": "#16a085"},
+
+            // E.Leclerc
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc La Possession", "address": "Rue Sarda Garriga, 97419 La Possession, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Le Port", "address": "Rue du 14 Juillet 1789, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Le Tampon", "address": "Rue Hubert Delisle, 97430 Le Tampon, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Le Tampon 400", "address": "Rue des Cardamomes, 97430 Le Tampon, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Piton Saint-Leu", "address": "Rue du Moulin, 97424 Piton Saint-Leu, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Plaine Des Cafres", "address": "Rue Jean de Fos du Rau, 97418 Plaine Des Cafres, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Ravine Des Cabris", "address": "Rue Pierre Blas, 97432 Ravine Des Cabris, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Pierre", "address": "2 Chemin du Bassin Plat, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Benoît", "address": "Rue des Goyaves, 97470 Saint-Benoît, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Benoît 2", "address": "4 Rue des Lilas, 97412 Saint-Benoît, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Denis Butor", "address": "Angle Rues Monthyon et Jacob, 97400 Saint-Denis, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Joseph", "address": "1 Rue Achille Malet, 97480 Saint-Joseph, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Joseph 2", "address": "Rue Amiral Lacaze, 97480 Saint-Joseph, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Louis", "address": "Rue du Professeur Lapierre ZAC Palissade, 97450 Saint-Louis, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Paul", "address": "Le Triangle Savannah, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
+
+            // Système U
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Les Trois-Bassins", "address": "13 rue des Franciceas, 97426 Les Trois-Bassins, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Paul Eperon", "address": "25 rue d'Eden Eperon, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Paul Chaussée Royale", "address": "109 chaussée Royale, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U L'Etang-Salé", "address": "22 rue du Père Van Berlo les Hauts, 97427 L'Etang-Salé, La Réunion", "color": "#16a085"},
             {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Hyper U Le Tampon", "address": "9 rue d'Italie ZAC la Chatoire, 97430 Le Tampon, La Réunion", "color": "#16a085"},
-            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Auchan Saint-Louis", "address": "16 rue Lambert, ZI de Bel Air, 97450 Saint-Louis, La Réunion", "color": "#16a085"}
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Joseph", "address": "25 rue des Marsouins, 97480 Saint-Joseph, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-André", "address": "200 rue du lycée, 97440 Saint-André, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Système U Saint-Leu-Piton", "address": "149 CD 11 Piton Saint-Leu, 97424 Saint-Leu, La Réunion", "color": "#16a085"},
+
+            // Auchan
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Auchan Saint-Louis", "address": "16 rue Lambert, ZI de Bel Air, 97450 Saint-Louis, La Réunion", "color": "#16a085"},
+
+            // Matériaux
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "SNI Export", "address": "ZAC 2000, 19 rue Charles Darwin, 97420 Le Port, La Réunion", "color": "#16a085"}
         ];
 
         let map;
@@ -250,7 +254,6 @@
         let geocoder;
 
         function initMap() {
-            // Initialisation de la carte centrée sur La Réunion
             map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 10,
                 center: { lat: -21.1151, lng: 55.5364 },
@@ -267,7 +270,7 @@
         function geocodeAndPlaceMarkers(index) {
             if (index >= actors.length) {
                 document.getElementById('loading').style.display = 'none';
-                console.log("Géolocalisation terminée : " + markers.length + " marqueurs placés.");
+                console.log("✅ Géolocalisation terminée : " + markers.length + " marqueurs placés.");
                 return;
             }
 
@@ -311,12 +314,12 @@
 
                     markers.push(marker);
                 } else {
-                    console.warn("Erreur géocodage pour " + actor.title + " ("+status+")");
+                    console.warn("⚠️ Erreur géocodage pour " + actor.title + " ("+status+")");
                 }
 
                 setTimeout(() => {
                     geocodeAndPlaceMarkers(index + 1);
-                }, 300);
+                }, 250);
             });
         }
 
