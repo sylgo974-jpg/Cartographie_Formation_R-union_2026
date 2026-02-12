@@ -12,19 +12,19 @@
         /* --- NOUVEAU STYLE BOUTON RETOUR (SOUS LA CARTE) --- */
         .btn-back-container {
             width: 100%;
-            text-align: center; /* Pour centrer le bouton */
-            margin-top: 25px;   /* Espace entre la carte et le bouton */
-            margin-bottom: 40px; /* Espace en bas de page */
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 40px;
         }
 
         .btn-back {
             display: inline-block;
-            background-color: #2c3e50; /* Bleu foncé */
+            background-color: #2c3e50;
             color: white;
-            padding: 15px 40px;        /* Bouton large */
-            border-radius: 50px;       /* Bords arrondis */
+            padding: 15px 40px;
+            border-radius: 50px;
             text-decoration: none;
-            font-size: 1.1rem;         /* Texte plus gros */
+            font-size: 1.1rem;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             transition: transform 0.2s, background 0.2s;
@@ -44,7 +44,7 @@
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            max-width: 1000px;
+            max-width: 1200px;
         }
 
         .filter-btn {
@@ -69,6 +69,7 @@
         .btn-of { background-color: #27ae60; }
         .btn-public { background-color: #c0392b; }
         .btn-logistique { background-color: #8e44ad; }
+        .btn-entreprises { background-color: #16a085; }
         .btn-all { background-color: #555; }
 
         /* --- CARTE --- */
@@ -86,13 +87,12 @@
             padding: 15px; 
             min-width: 300px;
             max-width: 350px; 
-            border: 5px solid #ccc; /* Sera coloré par le JS */
+            border: 5px solid #ccc;
             border-radius: 12px;
             background-color: white;
             text-align: center;
         }
-        
-        /* STYLE DU LOGO */
+
         .info-logo {
             display: block;
             max-width: 150px; 
@@ -110,7 +110,7 @@
             padding-bottom: 5px;
             text-align: left;
         }
-        
+
         .info-category { 
             font-size: 0.85em; 
             color: #7f8c8d; 
@@ -120,7 +120,7 @@
             letter-spacing: 1px;
             text-align: left;
         }
-        
+
         .info-address { 
             font-size: 1.1em;
             color: #333; 
@@ -131,25 +131,26 @@
             margin-top: 5px;
             text-align: left;
         }
-        
+
         .loading-msg { text-align: center; color: #e67e22; margin-top: 15px; font-style: italic; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>🗺️ Carte des Acteurs de la Formation - Réunion</h1>
+    <h1>🗺️ Carte des Acteurs de la Formation et Logistique - Réunion</h1>
 
     <div class="filter-container">
         <button class="filter-btn btn-pilotage" onclick="filterMarkers('1. PILOTAGE', this)">1. PILOTAGE</button>
         <button class="filter-btn btn-financeurs" onclick="filterMarkers('2. FINANCEURS (OPCO)', this)">2. FINANCEURS</button>
-        <button class="filter-btn btn-of" onclick="filterMarkers('3. CFA / OF (Logistique)', this)">3. OF / CFA " identifiés Logistique"</button>
+        <button class="filter-btn btn-of" onclick="filterMarkers('3. CFA / OF (Logistique)', this)">3. OF / CFA "identifiés Logistique"</button>
         <button class="filter-btn btn-public" onclick="filterMarkers('4. SERVICE PUBLIC', this)">4. SERVICE PUBLIC</button>
         <button class="filter-btn btn-logistique" onclick="filterMarkers('5. LOGISTIQUE', this)">5. LOGISTIQUE</button>
+        <button class="filter-btn btn-entreprises" onclick="filterMarkers('6. ENTREPRISES LOGISTIQUES', this)">6. ENTREPRISES LOGISTIQUES</button>
         <button class="filter-btn btn-all" onclick="showAll(this)">VOIR TOUT</button>
     </div>
 
     <div id="map"></div>
-    <div id="loading" class="loading-msg">📍 Chargement et placement des 63 points en cours...</div>
+    <div id="loading" class="loading-msg">📍 Chargement et placement des points en cours...</div>
 
     <div class="btn-back-container">
         <a href="index.html" class="btn-back">⬅️ RETOUR À LA LISTE DES ACTEURS</a>
@@ -172,9 +173,9 @@
             {"category": "2. FINANCEURS (OPCO)", "title": "UNIFORMATION", "address": "42 rue Alexis de Villeneuve, 97400 Saint-Denis, La Réunion", "color": "#e67e22"}, 
             {"category": "2. FINANCEURS (OPCO)", "title": "AFDAS", "address": "Cité des Arts, 23 rue Léopold Rambaud, 97490 Sainte-Clotilde, La Réunion", "color": "#e67e22"}, 
             {"category": "2. FINANCEURS (OPCO)", "title": "OPCO 2i", "address": "ADIR, 30 rue Léon de Lépervanche, 97420 Le Port, La Réunion", "color": "#e67e22"}, 
-            
+
             {"category": "3. CFA / OF (Logistique)", "title": "SUCCESS FORMATION", "address": "22 allée de la piscine, Bâtiment 2C, Centre Casabona, 97410 Saint-Pierre, La Réunion", "color": "#27ae60", "logo": "logo_success.png"}, 
-            
+
             {"category": "3. CFA / OF (Logistique)", "title": "AFTRAL", "address": "89 rue Henri Cornu ZI Cambaie, 97460 Saint-Paul, La Réunion", "color": "#27ae60"}, 
             {"category": "3. CFA / OF (Logistique)", "title": "CCI Pôle Formation CAMPUS PRO", "address": "65 rue Père Lafosse, 97410 Saint-Pierre, La Réunion", "color": "#27ae60"}, 
             {"category": "3. CFA / OF (Logistique)", "title": "CCI Pôle Formation CIRFIM", "address": "31 Av Raymond Mondon, 97420 Le Port, La Réunion", "color": "#27ae60"}, 
@@ -220,7 +221,28 @@
             {"category": "4. SERVICE PUBLIC", "title": "SIAF", "address": "36 rue de la Source, 97400 Saint-Denis, La Réunion", "color": "#c0392b"}, 
             {"category": "4. SERVICE PUBLIC", "title": "CH St-Pierre (SAMU)", "address": "Avenue du Président Mitterrand, 97410 Saint-Pierre, La Réunion", "color": "#c0392b"}, 
             {"category": "5. LOGISTIQUE", "title": "TLF Réunion", "address": "Zone Portuaire, 97420 Le Port, La Réunion", "color": "#8e44ad"}, 
-            {"category": "5. LOGISTIQUE", "title": "FNTR Réunion", "address": "Zone Industrielle N°1, 97420 Le Port, La Réunion", "color": "#8e44ad"}
+            {"category": "5. LOGISTIQUE", "title": "FNTR Réunion", "address": "Zone Industrielle N°1, 97420 Le Port, La Réunion", "color": "#8e44ad"},
+
+            // --- NOUVELLES ENTREPRISES LOGISTIQUES ---
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Pôle Logistique Réunion (SOTRAM)", "address": "8 impasse Henri Madoré, ZA les Dunes, 97427 L'Etang-Salé, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "TTRAM - Bureau Le Port", "address": "ZAC Belvédère, Boulevard des Mascareignes, 97821 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "TTRAM - Aéroport", "address": "Aérogare Fret Roland Garros, 97438 Sainte-Marie, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "COR - Coopérative Ouvrière", "address": "1 Enclos du Port, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Siège", "address": "3 rue Gustave Eiffel, ZAC Ravine à Marquet, 97419 La Possession, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "CEVA Logistics - Le Port", "address": "7 rue Charles Darwin, ZAC 2000, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "SNI Export", "address": "ZAC 2000, 19 rue Charles Darwin, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Sainte-Clotilde", "address": "75 Rue du Karting, 97495 Sainte-Clotilde, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Le Port", "address": "Rond-Point Sacré Cœur, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Carrefour Hypermarché Saint-Pierre", "address": "1 Avenue des Oceanites ZAC Canabady, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Denis", "address": "19 rue Lislet Geoffroy, ZI Chaudron, 97490 Sainte-Clotilde, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Paul", "address": "7 rue du Kovil, ZA Savannah, 97460 Saint-Paul, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Mr.Bricolage Saint-Pierre", "address": "ZAC Canabady, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc La Possession", "address": "Rue Sarda Garriga, 97419 La Possession, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Le Port", "address": "Rue du 14 Juillet 1789, 97420 Le Port, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Pierre", "address": "2 Chemin du Bassin Plat, 97410 Saint-Pierre, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "E.Leclerc Saint-Louis", "address": "Rue du Professeur Lapierre ZAC Palissade, 97450 Saint-Louis, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Hyper U Le Tampon", "address": "9 rue d'Italie ZAC la Chatoire, 97430 Le Tampon, La Réunion", "color": "#16a085"},
+            {"category": "6. ENTREPRISES LOGISTIQUES", "title": "Auchan Saint-Louis", "address": "16 rue Lambert, ZI de Bel Air, 97450 Saint-Louis, La Réunion", "color": "#16a085"}
         ];
 
         let map;
@@ -231,36 +253,33 @@
             // Initialisation de la carte centrée sur La Réunion
             map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 10,
-                center: { lat: -21.1151, lng: 55.5364 }, // Centre de l'île
+                center: { lat: -21.1151, lng: 55.5364 },
                 mapTypeControl: false,
                 streetViewControl: false
             });
 
             geocoder = new google.maps.Geocoder();
-            
-            // Lancer le géocodage progressif (avec délai pour éviter les erreurs)
+
             document.getElementById('loading').style.display = 'block';
             geocodeAndPlaceMarkers(0);
         }
 
-        // Fonction récursive avec délai pour ne pas saturer l'API Google
         function geocodeAndPlaceMarkers(index) {
             if (index >= actors.length) {
                 document.getElementById('loading').style.display = 'none';
-                console.log("Géolocalisation terminée.");
+                console.log("Géolocalisation terminée : " + markers.length + " marqueurs placés.");
                 return;
             }
 
             const actor = actors[index];
-            
+
             geocoder.geocode({ address: actor.address }, (results, status) => {
                 if (status === "OK") {
-                    // Création du marqueur (Cercle de couleur)
                     const marker = new google.maps.Marker({
                         map: map,
                         position: results[0].geometry.location,
                         title: actor.title,
-                        category: actor.category, // Pour le filtre
+                        category: actor.category,
                         icon: {
                             path: google.maps.SymbolPath.CIRCLE,
                             scale: 7,
@@ -271,7 +290,6 @@
                         }
                     });
 
-                    // --- GESTION DU LOGO ET DU CADRE COLORÉ ---
                     let logoHtml = '';
                     if (actor.logo) {
                         logoHtml = `<img src="${actor.logo}" class="info-logo" alt="Logo">`;
@@ -296,25 +314,21 @@
                     console.warn("Erreur géocodage pour " + actor.title + " ("+status+")");
                 }
 
-                // Passer au suivant avec un délai de 300ms
                 setTimeout(() => {
                     geocodeAndPlaceMarkers(index + 1);
                 }, 300);
             });
         }
 
-        // --- GESTION DES FILTRES ---
         function filterMarkers(category, btn) {
-            // Activer/Désactiver le bouton
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(b => b.classList.add('inactive')); 
             btn.classList.remove('inactive'); 
 
-            // Filtrer les marqueurs sur la carte
             markers.forEach(marker => {
                 if (marker.category === category) {
                     marker.setVisible(true);
-                    marker.setAnimation(google.maps.Animation.DROP); // Animation
+                    marker.setAnimation(google.maps.Animation.DROP);
                 } else {
                     marker.setVisible(false);
                 }
